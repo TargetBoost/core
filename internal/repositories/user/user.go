@@ -28,3 +28,7 @@ func (r *Repository) GetUserByID(id int64) models.User {
 
 	return u
 }
+
+func (r *Repository) CreateUser(user models.User) {
+	r.db.Table("users").Create(user)
+}

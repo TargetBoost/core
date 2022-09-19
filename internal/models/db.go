@@ -10,9 +10,11 @@ type User struct {
 	MainImage  string `json:"main_image"`
 	SmallImage string `json:"small_image"`
 
-	FirstName  string `json:"first_name"`
-	MiddleName string `json:"middle_name"`
-	LastName   string `json:"last_name"`
+	FirstName   string `json:"first_name"`
+	MiddleName  string `json:"middle_name"`
+	LastName    string `json:"last_name"`
+	NumberPhone int64  `json:"number_phone"`
+	Password    string `json:"password"`
 
 	Execute bool `json:"execute"`
 

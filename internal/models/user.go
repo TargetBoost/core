@@ -15,4 +15,8 @@ type UserService struct {
 	FirstName  string `json:"first_name"`
 	MiddleName string `json:"middle_name"`
 	LastName   string `json:"last_name"`
+
+	NumberPhone int64 `json:"number_phone"`
+
+	Execute bool `json:"execute"`
 }

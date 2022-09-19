@@ -1,6 +1,9 @@
 package handler
 
-import "github.com/kataras/iris/v12"
+import (
+	"core/internal/models"
+	"github.com/kataras/iris/v12"
+)
 
 // GetAllUsers all users returned
 func (h *Handler) GetAllUsers(ctx iris.Context) {
@@ -12,6 +15,30 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 			"message": nil,
 		},
 		"data": users,
+	})
+}
+
+// GetAllUsers all users returned
+func (h *Handler) CreateUser(ctx iris.Context) {
+	var u models.User
+	err := ctx.ReadJSON(&u)
+	if err != nil {
+		ctx.StatusCode(400)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": nil,
+			},
+			"data": nil,
+		})
+	}
+
+	h.Service.User.CreateUser(u)
+
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
 	})
 }
 

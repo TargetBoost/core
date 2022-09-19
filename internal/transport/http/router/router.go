@@ -21,6 +21,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 
 	// System
 	system.Handle("GET", "/health_check", serv.HealthCheck)
+	system.Handle("GET", "registration", serv.)
 
 	// User
 	service.Handle("GET", "/users", serv.GetAllUsers)

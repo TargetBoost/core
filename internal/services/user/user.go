@@ -51,3 +51,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 
 	return userService
 }
+
+func (s *Service) CreateUser(user models.User) {
+	s.userRepository.CreateUser(user)
+}
