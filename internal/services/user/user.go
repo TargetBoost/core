@@ -52,6 +52,9 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	return userService
 }
 
-func (s *Service) CreateUser(user models.CreateUser) {
-	s.userRepository.CreateUser(user)
+func (s *Service) CreateUser(user models.CreateUser) error {
+	if err := s.userRepository.CreateUser(user); err != nil {
+		return err
+	}
+	return nil
 }

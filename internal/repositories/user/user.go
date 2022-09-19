@@ -2,6 +2,7 @@ package user
 
 import (
 	"core/internal/models"
+	"github.com/kataras/iris/v12/x/errors"
 	"gorm.io/gorm"
 )
 
@@ -29,11 +30,29 @@ func (r *Repository) GetUserByID(id int64) models.User {
 	return u
 }
 
-func (r *Repository) CreateUser(user models.CreateUser) {
+func (r *Repository) GetUserByLogin(login string) bool {
+	var u models.User
+	r.db.Table("users").Where("login = ? AND deleted_at is null", login).Find(&u)
+
+	if u.ID != 0 {
+		return true
+	}
+	return false
+}
+
+func (r *Repository) CreateUser(user models.CreateUser) error {
 	var u models.User
 
 	u.Login = user.Login
 	u.Password = user.Password
 
+	if r.GetUserByLogin(u.Login) {
+		return errors.New("user exists")
+	}
+
 	r.db.Table("users").Create(&u)
+
+	return nil
 }
+
+
