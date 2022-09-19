@@ -62,7 +62,7 @@ func (s *Service) CreateUser(user models.CreateUser) error {
 
 	user.Token = token
 
-	if err := s.userRepository.CreateUser(user); err != nil {
+	if err := s.userRepository.CreateUser(&user); err != nil {
 		return err
 	}
 	return nil

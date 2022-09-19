@@ -40,7 +40,7 @@ func (r *Repository) GetUserByLogin(login string) bool {
 	return false
 }
 
-func (r *Repository) CreateUser(user models.CreateUser) error {
+func (r *Repository) CreateUser(user *models.CreateUser) error {
 	var u models.User
 
 	u.Login = user.Login
