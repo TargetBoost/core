@@ -5,7 +5,6 @@ import (
 	"core/internal/repositories/user"
 	"crypto/sha256"
 	"encoding/base64"
-	"github.com/ivahaev/go-logger"
 	"time"
 )
 
@@ -62,7 +61,6 @@ func (s *Service) CreateUser(user models.CreateUser) error {
 	token := createToken(user.Login, user.Password, time.Now())
 
 	user.Token = token
-	logger.Info(user)
 
 	if err := s.userRepository.CreateUser(&user); err != nil {
 		return err
