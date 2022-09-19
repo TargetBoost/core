@@ -38,9 +38,8 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 		ctx.StatusCode(400)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": nil,
+				"message": err,
 			},
-			"data": err,
 		})
 		return
 	}
