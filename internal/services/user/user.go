@@ -3,7 +3,10 @@ package user
 import (
 	"core/internal/models"
 	"core/internal/repositories/user"
+	"math/rand"
 )
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Service struct {
 	userRepository *user.Repository
@@ -53,8 +56,20 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 }
 
 func (s *Service) CreateUser(user models.CreateUser) error {
-	if err := s.userRepository.CreateUser(user); err != nil {
+	token := createToken(rand.Int())
+
+	user.Token = token
+
+	if err := s.userRepository.CreateUser(&user); err != nil {
 		return err
 	}
 	return nil
+}
+
+func createToken(n int) string {
+	b := make([]rune, 10)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
