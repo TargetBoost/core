@@ -20,3 +20,8 @@ type UserService struct {
 
 	Execute bool `json:"execute"`
 }
+
+type CreateUser struct {
+	Login    string `json:"login"`
+	Password string `json:"password"`
+}

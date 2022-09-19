@@ -20,7 +20,7 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 
 // GetAllUsers all users returned
 func (h *Handler) CreateUser(ctx iris.Context) {
-	var u models.User
+	var u models.CreateUser
 	err := ctx.ReadJSON(&u)
 	if err != nil {
 		ctx.StatusCode(400)
