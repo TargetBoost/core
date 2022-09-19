@@ -45,6 +45,7 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 
 	u.Login = user.Login
 	u.Password = user.Password
+	u.Token = user.Token
 
 	if r.GetUserByLogin(u.Login) {
 		return errors.New("user exists")
