@@ -3,7 +3,9 @@ package user
 import (
 	"core/internal/models"
 	"core/internal/repositories/user"
-	"math/rand"
+	"crypto/sha256"
+	"encoding/base64"
+	"time"
 )
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -56,7 +58,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 }
 
 func (s *Service) CreateUser(user models.CreateUser) error {
-	token := createToken(rand.Intn(10000-1) + 1)
+	token := createToken(user.Login, user.Password, time.Now())
 
 	user.Token = token
 
@@ -66,10 +68,10 @@ func (s *Service) CreateUser(user models.CreateUser) error {
 	return nil
 }
 
-func createToken(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
+func createToken(login, password string, time time.Time) string {
+	hash := sha256.New()
+	hash.Write([]byte(login + password + time.String()))
+	sha := base64.URLEncoding.EncodeToString(hash.Sum(nil))
+
+	return sha
 }
