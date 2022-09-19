@@ -14,6 +14,10 @@ type User struct {
 	MiddleName string `json:"middle_name"`
 	LastName   string `json:"last_name"`
 
+	Execute bool `json:"execute"`
+
+	Admin bool `json:"admin"`
+
 	Token string `json:"token"`
 }
 
