@@ -56,7 +56,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 }
 
 func (s *Service) CreateUser(user models.CreateUser) error {
-	token := createToken(rand.Int())
+	token := createToken(rand.Intn(10000-1) + 1)
 
 	user.Token = token
 
