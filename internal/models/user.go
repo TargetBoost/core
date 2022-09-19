@@ -22,7 +22,8 @@ type UserService struct {
 }
 
 type CreateUser struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
+	Login       string `json:"login"`
+	Password    string `json:"password"`
+	Token       string `json:"token"`
+	NumberPhone int64  `json:"number_phone"`
 }
