@@ -67,7 +67,7 @@ func (s *Service) CreateUser(user models.CreateUser) error {
 }
 
 func createToken(n int) string {
-	b := make([]rune, 10)
+	b := make([]rune, n)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
