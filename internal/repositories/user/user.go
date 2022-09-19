@@ -35,5 +35,5 @@ func (r *Repository) CreateUser(user models.CreateUser) {
 	u.Login = user.Login
 	u.Password = user.Password
 
-	r.db.Table("users").Create(&user)
+	r.db.Table("users").Create(&u)
 }

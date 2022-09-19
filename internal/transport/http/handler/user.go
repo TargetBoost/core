@@ -30,6 +30,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 			},
 			"data": nil,
 		})
+		return
 	}
 
 	h.Service.User.CreateUser(u)
