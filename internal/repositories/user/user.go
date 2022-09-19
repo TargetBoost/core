@@ -51,7 +51,6 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	if r.GetUserByLogin(u.Login) {
 		return errors.New("user exists")
 	}
-
 	r.db.Table("users").Create(&u)
 
 	return nil
