@@ -16,7 +16,8 @@ type User struct {
 	NumberPhone int64  `json:"number_phone"`
 	Password    string `json:"password"`
 
-	Execute bool `json:"execute"`
+	Execute          bool `json:"execute"`
+	PostRegistration bool `json:"post_registration"`
 
 	Admin bool `json:"admin"`
 
