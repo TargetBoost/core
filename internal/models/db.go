@@ -44,3 +44,7 @@ type FileStorage struct {
 	Ext  string `json:"ext"`
 	Type string `json:"type"`
 }
+
+type Settings struct {
+	Snow bool `json:"snow"`
+}
