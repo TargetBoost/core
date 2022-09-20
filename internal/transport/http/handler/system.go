@@ -17,3 +17,16 @@ func (h *Handler) HealthCheck(ctx iris.Context) {
 		},
 	})
 }
+
+func (h *Handler) Settings(ctx iris.Context) {
+	ctx.StatusCode(200)
+
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{
+			"snow": true,
+		},
+	})
+}
