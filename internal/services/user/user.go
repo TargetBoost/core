@@ -58,19 +58,19 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	return userService
 }
 
-func (s *Service) CreateUser(user models.CreateUser) error {
+func (s *Service) CreateUser(user models.CreateUser) (string, error) {
 	token := createToken(user.Login, user.Password, time.Now())
 
 	user.Token = token
 
 	if user.NumberPhone == 0 || len(user.Login) == 0 {
-		return errors.New("bad request")
+		return "", errors.New("bad request")
 	}
 
 	if err := s.userRepository.CreateUser(&user); err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return token, nil
 }
 
 func createToken(login, password string, time time.Time) string {
