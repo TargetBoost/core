@@ -64,7 +64,7 @@ func makeAccessLog() *accesslog.AccessLog {
 	ac.BytesSent = false
 	ac.BodyMinify = true
 	ac.RequestBody = true
-	ac.ResponseBody = false
+	ac.ResponseBody = true
 	ac.KeepMultiLineError = true
 	ac.PanicLog = accesslog.LogHandler
 
