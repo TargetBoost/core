@@ -82,16 +82,16 @@ func createToken(login, password string, time time.Time) string {
 	return sha
 }
 
-func (s *Service) AuthUser(user models.AuthUser) (string, error) {
+func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
 	u := s.userRepository.GetUserByPhoneNumberAndPassword(user.NumberPhone, user.Password)
 
 	if u.ID == 0 {
-		return "", errors.New("error auth")
+		return nil, errors.New("error auth")
 	}
 
 	token := createToken(strconv.FormatInt(user.NumberPhone, 10), user.Password, time.Now())
 	u.Token = token
 	s.userRepository.UpdateUser(u)
 
-	return token, nil
+	return &u, nil
 }
