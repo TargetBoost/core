@@ -14,6 +14,6 @@ func NewAuthService(authRepository *auth.Repository) *Service {
 	}
 }
 
-func (s *Service) IsAuth(token string) bool {
+func (s *Service) IsAuth(token string) (uint, bool) {
 	return s.authRepository.IsAuth(token)
 }

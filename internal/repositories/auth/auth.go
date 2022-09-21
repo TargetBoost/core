@@ -15,13 +15,13 @@ func NewAuthRepository(db *gorm.DB) *Repository {
 	}
 }
 
-func (r *Repository) IsAuth(token string) bool {
-	var u []models.User
+func (r *Repository) IsAuth(token string) (uint, bool) {
+	var u models.User
 	r.db.Table("users").Where("token = ?", token).Find(&u)
 
-	if len(u) == 1 {
-		return true
+	if u.ID != 0 {
+		return u.ID, true
 	}
 
-	return false
+	return 0, false
 }

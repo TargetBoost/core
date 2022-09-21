@@ -106,7 +106,7 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 		return
 	}
 
-	isAuth := h.Service.Auth.IsAuth(sliceToken[1])
+	_, isAuth := h.Service.Auth.IsAuth(sliceToken[1])
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{

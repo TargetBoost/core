@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (h *Handler) AuthMiddleware(ctx iris.Context) {
+func (h *Handler) IsAuth(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 
 	if len(rawToken) == 0 {
@@ -43,7 +43,7 @@ func (h *Handler) AuthMiddleware(ctx iris.Context) {
 		return
 	}
 
-	isAuth := h.Service.Auth.IsAuth(sliceToken[1])
+	id, isAuth := h.Service.Auth.IsAuth(sliceToken[1])
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{
@@ -55,5 +55,14 @@ func (h *Handler) AuthMiddleware(ctx iris.Context) {
 		return
 	}
 
-	ctx.Next()
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{
+			"id": id,
+		},
+	})
+	return
 }
