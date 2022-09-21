@@ -34,7 +34,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 		return
 	}
 
-	token, err := h.Service.User.CreateUser(u)
+	user, err := h.Service.User.CreateUser(u)
 	if err != nil {
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
@@ -51,7 +51,8 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 			"message": nil,
 		},
 		"data": iris.Map{
-			"token": token,
+			"token": user.Token,
+			"id":    user.ID,
 		},
 	})
 }
