@@ -28,3 +28,8 @@ type CreateUser struct {
 	NumberPhone int64  `json:"number_phone"`
 	Execute     bool   `json:"execute"`
 }
+
+type AuthUser struct {
+	NumberPhone int64  `json:"number_phone"`
+	Password    string `json:"password"`
+}

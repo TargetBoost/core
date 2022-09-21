@@ -30,6 +30,13 @@ func (r *Repository) GetUserByID(id int64) models.User {
 	return u
 }
 
+func (r *Repository) GetUserByPhoneNumberAndPassword(ph int64, pass string) models.User {
+	var u models.User
+	r.db.Table("users").Where("number_phone = ? AND password = ? AND deleted_at is null", ph, pass).Find(&u)
+
+	return u
+}
+
 func (r *Repository) GetUserByLogin(login string) bool {
 	var u models.User
 	r.db.Table("users").Where("login = ? AND deleted_at is null", login).Find(&u)
@@ -38,6 +45,10 @@ func (r *Repository) GetUserByLogin(login string) bool {
 		return true
 	}
 	return false
+}
+
+func (r *Repository) UpdateUser(user models.User) {
+	r.db.Table("users").Updates(user)
 }
 
 func (r *Repository) CreateUser(user *models.CreateUser) error {
