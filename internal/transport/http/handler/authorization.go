@@ -12,7 +12,7 @@ func (h *Handler) Authorization(ctx iris.Context) {
 		ctx.StatusCode(400)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": nil,
+				"message": "error data",
 			},
 			"data": nil,
 		})
