@@ -17,7 +17,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 
 	v1 := iris.Party("/v1")
 	system := v1.Party("/system")
-	service := v1.Party("/service", serv.AuthMiddleware)
+	service := v1.Party("/service")
 
 	// System
 	system.Handle("GET", "/health_check", serv.HealthCheck)
