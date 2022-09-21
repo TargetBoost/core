@@ -24,6 +24,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 	system.Handle("GET", "/settings", serv.Settings)
 	system.Handle("POST", "/registration", serv.CreateUser)
 	system.Handle("POST", "/auth", serv.Authorization)
+	system.Handle("GET", "/is_auth", serv.IsAuth)
 
 	// User
 	service.Handle("GET", "/users", serv.GetAllUsers)
