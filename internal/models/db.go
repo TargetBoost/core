@@ -27,14 +27,12 @@ type User struct {
 type Feed struct {
 	gorm.Model
 
-	UID uint `json:"uid"`
-
-	Title string `json:"title"`
-
-	MainImage  string `json:"main_image"`
-	SmallImage string `json:"small_image"`
-
-	Value string `json:"value"`
+	UID    uint   `json:"uid"`
+	Title  string `json:"title"`
+	Link   string `json:"link"`
+	Icon   string `json:"icon"`
+	Status string `json:"status"`
+	Cost   int64  `json:"cost"`
 }
 
 type FileStorage struct {
