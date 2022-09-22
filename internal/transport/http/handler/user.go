@@ -3,7 +3,6 @@ package handler
 import (
 	"core/internal/models"
 	"github.com/kataras/iris/v12"
-	"strings"
 )
 
 // GetAllUsers all users returned
@@ -34,7 +33,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 		return
 	}
 
-	token, err := h.Service.User.CreateUser(u)
+	user, err := h.Service.User.CreateUser(u)
 	if err != nil {
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
@@ -51,7 +50,8 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 			"message": nil,
 		},
 		"data": iris.Map{
-			"token": token,
+			"token": user.Token,
+			"id":    user.ID,
 		},
 	})
 }
@@ -82,31 +82,7 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 		return
 	}
 
-	contain := strings.Contains(rawToken, "Bearer")
-	if !contain {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Insert token is not validate",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	sliceToken := strings.Split(rawToken, " ")
-	if len(sliceToken) == 1 || len(sliceToken) > 2 {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Insert token is not validate",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	_, isAuth := h.Service.Auth.IsAuth(sliceToken[1])
+	_, isAuth := h.Service.Auth.IsAuth(rawToken)
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{
