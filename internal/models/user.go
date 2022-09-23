@@ -19,6 +19,7 @@ type UserService struct {
 	NumberPhone int64 `json:"number_phone"`
 
 	Execute bool `json:"execute"`
+	Admin   bool `json:"admin"`
 }
 
 type CreateUser struct {

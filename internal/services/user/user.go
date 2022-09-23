@@ -57,6 +57,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.SmallImage = v.SmallImage
 	userService.NumberPhone = v.NumberPhone
 	userService.Execute = v.Execute
+	userService.Admin = v.Admin
 
 	return userService
 }
