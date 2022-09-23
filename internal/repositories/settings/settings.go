@@ -23,5 +23,6 @@ func (r *Repository) GetSettings() models.Settings {
 }
 
 func (r *Repository) SetSettings(s *models.Settings) {
-	r.db.Table("settings").UpdateColumns(&s)
+	r.db.Table("settings").Update("snow", &s.Snow)
+	r.db.Table("settings").Update("rain", &s.Rain)
 }
