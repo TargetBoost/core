@@ -85,7 +85,7 @@ func (h *Handler) SetSettings(ctx iris.Context) {
 		return
 	}
 
-	h.Service.Settings.SetSettings(s)
+	h.Service.Settings.SetSettings(&s)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
