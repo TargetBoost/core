@@ -45,4 +45,5 @@ type FileStorage struct {
 
 type Settings struct {
 	Snow bool `json:"snow"`
+	Rain bool `json:"rain"`
 }

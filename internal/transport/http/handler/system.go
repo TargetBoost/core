@@ -29,6 +29,7 @@ func (h *Handler) Settings(ctx iris.Context) {
 		},
 		"data": iris.Map{
 			"snow": settings.Snow,
+			"rain": settings.Rain,
 		},
 	})
 }
