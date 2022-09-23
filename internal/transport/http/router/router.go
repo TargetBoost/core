@@ -30,10 +30,6 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 	service.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/{id:int64}", serv.GetUserByID)
 
-	// feed
-	v1.Handle("GET", "/feeds", serv.GetAllFeeds)
-	v1.Handle("GET", "/feed/{id:int64}", serv.GetFeedByID)
-
 	// storage
 	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
 
