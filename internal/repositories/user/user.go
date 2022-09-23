@@ -54,7 +54,12 @@ func (r *Repository) UpdateUser(user models.User) {
 func (r *Repository) CreateUser(user *models.CreateUser) error {
 	var u models.User
 
-	u.Login = user.Login
+	if len(user.Login) > 20 {
+		u.Login = user.Login[:20]
+	} else {
+		u.Login = user.Login
+
+	}
 	u.Password = user.Password
 	u.Token = user.Token
 	u.NumberPhone = user.NumberPhone
