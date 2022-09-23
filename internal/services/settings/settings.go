@@ -19,6 +19,6 @@ func (s *Service) GetSettings() models.Settings {
 	return s.settingsRepository.GetSettings()
 }
 
-func (s *Service) SetSettings(settings models.Settings) {
+func (s *Service) SetSettings(settings *models.Settings) {
 	s.settingsRepository.SetSettings(settings)
 }

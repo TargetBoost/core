@@ -22,6 +22,6 @@ func (r *Repository) GetSettings() models.Settings {
 	return s
 }
 
-func (r *Repository) SetSettings(s models.Settings) {
+func (r *Repository) SetSettings(s *models.Settings) {
 	r.db.Table("settings").Updates(&s)
 }
