@@ -22,6 +22,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 	// System
 	system.Handle("GET", "/health_check", serv.HealthCheck)
 	system.Handle("GET", "/settings", serv.Settings)
+	system.Handle("POST", "/settings", serv.SetSettings)
 	system.Handle("POST", "/registration", serv.CreateUser)
 	system.Handle("POST", "/auth", serv.Authorization)
 	system.Handle("GET", "/is_auth", serv.IsAuth)

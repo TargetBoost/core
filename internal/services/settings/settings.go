@@ -18,3 +18,7 @@ func NewSettingsService(settingsRepository *settings.Repository) *Service {
 func (s *Service) GetSettings() models.Settings {
 	return s.settingsRepository.GetSettings()
 }
+
+func (s *Service) SetSettings(settings models.Settings) {
+	s.settingsRepository.SetSettings(settings)
+}
