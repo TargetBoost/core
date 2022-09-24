@@ -24,7 +24,7 @@ type Repositories struct {
 func NewRepositories(db *gorm.DB) *Repositories {
 	err := db.AutoMigrate(
 		&models.User{},
-		&models.Feed{},
+		&models.Target{},
 		&models.FileStorage{},
 		&models.Settings{},
 	)
