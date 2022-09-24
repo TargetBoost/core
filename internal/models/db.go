@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -37,22 +39,25 @@ type Target struct {
 	Cost   int64  `json:"cost"`   // цена одного задания
 
 	// гео данные
-	Countries []Country  `json:"country" gorm:"-"` // список стран исполнителей
-	City      []Cities   `json:"city" gorm:"-"`    // список городов исполнителей
-	Old       []OldRange `json:"old" gorm:"-"`     // возраст исполнителя от и до
+	Countries []Country  `json:"country" gorm:"foreignKey:ID"` // список стран исполнителей
+	City      []Cities   `json:"city" gorm:"foreignKey:ID"`    // список городов исполнителей
+	Old       []OldRange `json:"old" gorm:"foreignKey:ID"`     // возраст исполнителя от и до
 }
 
 type Country struct {
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type Cities struct {
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type OldRange struct {
-	From int64 `json:"from"`
-	To   int64 `json:"to"`
+	ID   string `json:"id"`
+	From int64  `json:"from"`
+	To   int64  `json:"to"`
 }
 
 type FileStorage struct {
