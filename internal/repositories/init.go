@@ -3,9 +3,9 @@ package repositories
 import (
 	"core/internal/models"
 	"core/internal/repositories/auth"
-	"core/internal/repositories/feed"
 	"core/internal/repositories/settings"
 	"core/internal/repositories/storage"
+	"core/internal/repositories/target"
 	"core/internal/repositories/user"
 	"github.com/ivahaev/go-logger"
 	"gorm.io/gorm"
@@ -16,7 +16,7 @@ type Repositories struct {
 
 	User     *user.Repository
 	Auth     *auth.Repository
-	Feed     *feed.Repository
+	Feed     *target.Repository
 	Storage  *storage.Repository
 	Settings *settings.Repository
 }
@@ -34,7 +34,7 @@ func NewRepositories(db *gorm.DB) *Repositories {
 
 	userRepository := user.NewUserRepository(db)
 	authRepository := auth.NewAuthRepository(db)
-	feedRepository := feed.NewFeedRepository(db)
+	feedRepository := target.NewTargetRepository(db)
 	storageRepository := storage.NewStorageRepository(db)
 	settingsRepository := settings.NewSettingsRepository(db)
 

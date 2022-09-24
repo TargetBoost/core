@@ -58,43 +58,19 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 
 // GetUserByID only one user returned
 func (h *Handler) GetUserByID(ctx iris.Context) {
-	id, err := ctx.Params().GetInt64("id")
-	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Insert id is not int",
-			},
-			"data": nil,
-		})
-		return
-	}
-
 	rawToken := ctx.GetHeader("Authorization")
-	if len(rawToken) == 0 {
-		ctx.StatusCode(401)
+	user, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": "Not token required",
+				"message": err.Error(),
 			},
 			"data": nil,
 		})
 		return
 	}
 
-	_, isAuth := h.Service.Auth.IsAuth(rawToken)
-	if !isAuth {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Bad token required",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	user := h.Service.User.GetUserByID(id)
 	if user.ID == 0 {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{

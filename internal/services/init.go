@@ -3,9 +3,9 @@ package services
 import (
 	"core/internal/repositories"
 	"core/internal/services/auth"
-	"core/internal/services/feed"
 	"core/internal/services/settings"
 	"core/internal/services/storage"
+	"core/internal/services/target"
 	"core/internal/services/user"
 )
 
@@ -14,7 +14,7 @@ type Services struct {
 
 	User     *user.Service
 	Auth     *auth.Service
-	Feed     *feed.Service
+	Target   *target.Service
 	Storage  *storage.Service
 	Settings *settings.Service
 }
@@ -22,7 +22,7 @@ type Services struct {
 func NewServices(repo *repositories.Repositories) *Services {
 	userService := user.NewUserService(repo.User)
 	authService := auth.NewAuthService(repo.Auth)
-	feedService := feed.NewFeedService(repo.Feed)
+	TargetService := target.NewTargetService(repo.Feed)
 	storageService := storage.NewStorageService(repo.Storage)
 	settingsService := settings.NewSettingsService(repo.Settings)
 
@@ -30,7 +30,7 @@ func NewServices(repo *repositories.Repositories) *Services {
 		repo:     repo,
 		User:     userService,
 		Auth:     authService,
-		Feed:     feedService,
+		Target:   TargetService,
 		Storage:  storageService,
 		Settings: settingsService,
 	}

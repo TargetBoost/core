@@ -1,34 +1,6 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
-type User struct {
-	gorm.Model
-
-	Login string `json:"login"`
-
-	MainImage  string `json:"main_image"`
-	SmallImage string `json:"small_image"`
-
-	FirstName   string `json:"first_name"`
-	MiddleName  string `json:"middle_name"`
-	LastName    string `json:"last_name"`
-	NumberPhone int64  `json:"number_phone"`
-	Password    string `json:"password"`
-
-	Execute          bool `json:"execute"`
-	PostRegistration bool `json:"post_registration"`
-
-	Admin bool `json:"admin"`
-
-	Token string `json:"token"`
-}
-
-type Target struct {
-	gorm.Model
-
+type TargetService struct {
 	// основные данные
 	UID    uint   `json:"uid"`    // кто создал задачу
 	Title  string `json:"title"`  // заголовок
@@ -43,17 +15,4 @@ type Target struct {
 	City    string `json:"city"`     // список городов исполнителей
 	OldFrom int64  `json:"old_from"` // возраст исполнителя от
 	OldTo   int64  `json:"old_to"`   // возраст исполнителя до
-}
-
-type FileStorage struct {
-	gorm.Model
-	Key  string `json:"key" gorm:"index"`
-	Path string `json:"path"`
-	Ext  string `json:"ext"`
-	Type string `json:"type"`
-}
-
-type Settings struct {
-	Snow bool `json:"snow"`
-	Rain bool `json:"rain"`
 }
