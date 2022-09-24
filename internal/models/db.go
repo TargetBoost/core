@@ -39,25 +39,10 @@ type Target struct {
 	Cost   int64  `json:"cost"`   // цена одного задания
 
 	// гео данные
-	Countries []Country  `json:"country" gorm:"foreignKey:ID"` // список стран исполнителей
-	City      []Cities   `json:"city" gorm:"foreignKey:ID"`    // список городов исполнителей
-	Old       []OldRange `json:"old" gorm:"foreignKey:ID"`     // возраст исполнителя от и до
-}
-
-type Country struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type Cities struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type OldRange struct {
-	ID   string `json:"id"`
-	From int64  `json:"from"`
-	To   int64  `json:"to"`
+	Countries string `json:"country"`  // список стран исполнителей
+	City      string `json:"city"`     // список городов исполнителей
+	OldFrom   int64  `json:"old_from"` // возраст исполнителя от
+	OldTo     int64  `json:"old_to"`   // возраст исполнителя до
 }
 
 type FileStorage struct {
