@@ -37,9 +37,9 @@ type Target struct {
 	Cost   int64  `json:"cost"`   // цена одного задания
 
 	// гео данные
-	Countries []Country  `json:"country"` // список стран исполнителей
-	City      []Cities   `json:"city"`    // список городов исполнителей
-	Old       []OldRange `json:"old"`     // возраст исполнителя от и до
+	Countries []Country  `json:"country" gorm:"-"` // список стран исполнителей
+	City      []Cities   `json:"city" gorm:"-"`    // список городов исполнителей
+	Old       []OldRange `json:"old" gorm:"-"`     // возраст исполнителя от и до
 }
 
 type Country struct {
