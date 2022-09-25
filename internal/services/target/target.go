@@ -40,6 +40,22 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	case "vk_add_friends":
 		title = "Добавить в друзья"
 		break
+
+	case "tg_community":
+		title = "Подписаться на канал"
+		break
+	case "yt_chanel":
+		title = "Подписаться на канал"
+		break
+	case "yt_watch":
+		title = "Посмотреть видео"
+		break
+	case "yt_like":
+		title = "Поставить лайк"
+		break
+	case "yt_dislike":
+		title = "Поставить дизлайк"
+		break
 	}
 
 	t := models.Target{
