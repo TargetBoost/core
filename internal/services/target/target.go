@@ -29,6 +29,7 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 }
 
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
+
 	t := models.Target{
 		UID:    UID,
 		Title:  target.Title,
@@ -37,6 +38,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 		Status: "check",
 		Count:  target.Count,
 		Cost:   target.Cost,
+		Type:   target.Type,
 	}
 
 	s.TargetRepository.CreateTarget(&t)
