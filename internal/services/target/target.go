@@ -27,3 +27,17 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 
 	return targets
 }
+
+func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
+	t := models.Target{
+		UID:    UID,
+		Title:  target.Title,
+		Link:   target.Link,
+		Icon:   target.Icon,
+		Status: "check",
+		Count:  target.Count,
+		Cost:   target.Cost,
+	}
+
+	s.TargetRepository.CreateTarget(&t)
+}
