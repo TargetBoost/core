@@ -29,10 +29,22 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 }
 
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
+	var title string
+	switch target.Type {
+	case "vk_community":
+		title = "Вступить в сообщество"
+		break
+	case "vk_like":
+		title = "Поставить лайк на запись"
+		break
+	case "vk_add_friends":
+		title = "Добавить в друзья"
+		break
+	}
 
 	t := models.Target{
 		UID:    UID,
-		Title:  target.Title,
+		Title:  title,
 		Link:   target.Link,
 		Icon:   target.Icon,
 		Status: "check",
