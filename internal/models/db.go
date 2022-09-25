@@ -39,6 +39,7 @@ type Target struct {
 	Count  int64  `json:"count"`  // количетсво заданий
 	Cost   int64  `json:"cost"`   // цена одного задания
 	Type   string `json:"type"`
+	Cause  string `json:"cause"`
 }
 
 type FileStorage struct {
