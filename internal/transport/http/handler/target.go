@@ -32,18 +32,7 @@ func (h *Handler) GetTargets(ctx iris.Context) {
 
 func (h *Handler) CreateTarget(ctx iris.Context) {
 	var t models.TargetService
-
-	err := ctx.ReadJSON(&t)
-	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "bad data insertion",
-			},
-			"data": nil,
-		})
-		return
-	}
+	_ = ctx.ReadJSON(&t)
 
 	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
