@@ -24,5 +24,4 @@ func (r *Repository) GetSettings() models.Settings {
 
 func (r *Repository) SetSettings(s *models.Settings) {
 	r.db.Table("settings").Where("id = 1").Update("snow", &s.Snow)
-	r.db.Table("settings").Where("id = 1").Update("rain", &s.Rain)
 }
