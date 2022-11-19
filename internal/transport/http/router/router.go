@@ -33,6 +33,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 
 	// Target
 	service.Handle("GET", "/target", serv.GetTargets)
+	service.Handle("POST", "/target", serv.CreateTarget)
 
 	// storage
 	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)

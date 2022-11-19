@@ -21,3 +21,7 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 
 	return t
 }
+
+func (r *Repository) CreateTarget(target *models.Target) {
+	r.db.Table("targets").Create(&target)
+}

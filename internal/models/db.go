@@ -23,7 +23,8 @@ type User struct {
 
 	Admin bool `json:"admin"`
 
-	Token string `json:"token"`
+	Token   string  `json:"token"`
+	Balance float64 `json:"balance"`
 }
 
 type Target struct {
@@ -44,6 +45,8 @@ type Target struct {
 	OldFrom int64  `json:"old_from"` // возраст исполнителя от
 	OldTo   int64  `json:"old_to"`   // возраст исполнителя до
 	Gender  string `json:"gender"`   // половой признак
+	Type    string `json:"type"`
+	Cause   string `json:"cause"`
 }
 
 type FileStorage struct {

@@ -27,3 +27,47 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 
 	return targets
 }
+
+func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
+	var title string
+	switch target.Type {
+	case "vk_community":
+		title = "Вступить в сообщество"
+		break
+	case "vk_like":
+		title = "Поставить лайк на запись"
+		break
+	case "vk_add_friends":
+		title = "Добавить в друзья"
+		break
+
+	case "tg_community":
+		title = "Подписаться на канал"
+		break
+	case "yt_chanel":
+		title = "Подписаться на канал"
+		break
+	case "yt_watch":
+		title = "Посмотреть видео"
+		break
+	case "yt_like":
+		title = "Поставить лайк"
+		break
+	case "yt_dislike":
+		title = "Поставить дизлайк"
+		break
+	}
+
+	t := models.Target{
+		UID:    UID,
+		Title:  title,
+		Link:   target.Link,
+		Icon:   target.Icon,
+		Status: "check",
+		Count:  target.Count,
+		Cost:   target.Cost,
+		Type:   target.Type,
+	}
+
+	s.TargetRepository.CreateTarget(&t)
+}

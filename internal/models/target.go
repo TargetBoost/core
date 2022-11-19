@@ -16,4 +16,7 @@ type TargetService struct {
 	OldFrom int64  `json:"old_from"` // возраст исполнителя от
 	OldTo   int64  `json:"old_to"`   // возраст исполнителя до
 	Gender  string `json:"gender"`   // половой признак
+
+	Type  string `json:"type"`
+	Cause string `json:"cause"`
 }
