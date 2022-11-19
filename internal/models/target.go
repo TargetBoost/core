@@ -15,4 +15,5 @@ type TargetService struct {
 	City    string `json:"city"`     // список городов исполнителей
 	OldFrom int64  `json:"old_from"` // возраст исполнителя от
 	OldTo   int64  `json:"old_to"`   // возраст исполнителя до
+	Gender  string `json:"gender"`   // половой признак
 }

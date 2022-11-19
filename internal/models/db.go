@@ -43,6 +43,7 @@ type Target struct {
 	City    string `json:"city"`     // список городов исполнителей
 	OldFrom int64  `json:"old_from"` // возраст исполнителя от
 	OldTo   int64  `json:"old_to"`   // возраст исполнителя до
+	Gender  string `json:"gender"`   // половой признак
 }
 
 type FileStorage struct {
@@ -54,6 +55,7 @@ type FileStorage struct {
 }
 
 type Settings struct {
-	Snow bool `json:"snow"`
-	Rain bool `json:"rain"`
+	ID   int64 `json:"id"`
+	Snow bool  `json:"snow"`
+	Rain bool  `json:"rain"`
 }
