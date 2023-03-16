@@ -22,6 +22,13 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 	return t
 }
 
+func (r *Repository) GetTargetsToAdmin() []models.Target {
+	var t []models.Target
+	r.db.Table("targets").Find(&t)
+
+	return t
+}
+
 func (r *Repository) CreateTarget(target *models.Target) {
 	r.db.Table("targets").Create(&target)
 }

@@ -28,6 +28,19 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 	return targets
 }
 
+func (s *Service) GetTargetsToAdmin() []models.TargetService {
+	targets := func(t []models.Target, f func(t models.Target) models.TargetService) []models.TargetService {
+		result := make([]models.TargetService, 0, len(t))
+		for _, value := range t {
+			result = append(result, f(value))
+		}
+
+		return result
+	}(s.TargetRepository.GetTargetsToAdmin(), models.MapToTarget)
+
+	return targets
+}
+
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	var title string
 	switch target.Type {
