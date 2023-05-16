@@ -1,9 +1,7 @@
 package models
 
 import (
-	"database/sql"
 	"gorm.io/gorm"
-	"time"
 )
 
 type User struct {
@@ -52,12 +50,10 @@ type Target struct {
 }
 
 type TargetToExecutors struct {
-	UID uint `json:"uid" gorm:"primarykey"`
-	TID uint `json:"tid"`
+	gorm.Model
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime `gorm:"index"`
+	UID uint `json:"uid"`
+	TID uint `json:"tid"`
 }
 
 type FileStorage struct {
