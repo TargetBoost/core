@@ -23,8 +23,8 @@ type User struct {
 
 	Admin bool `json:"admin"`
 
-	Token   string  `json:"token"`
-	Balance float64 `json:"balance"`
+	Token   string `json:"token"`
+	Balance int64  `json:"balance"`
 }
 
 type Target struct {
