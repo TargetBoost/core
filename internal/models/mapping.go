@@ -8,6 +8,7 @@ func MapToTarget(t Target) TargetService {
 		Icon:   t.Icon,
 		Status: t.Status,
 		Count:  t.Count,
+		Total:  t.Total,
 		Cost:   t.Cost,
 		Cause:  t.Cause,
 	}

@@ -87,7 +87,8 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 		Link:   target.Link,
 		Icon:   target.Icon,
 		Status: "check",
-		Count:  target.Count,
+		Count:  0,
+		Total:  target.Total,
 		Cost:   target.Cost,
 		Type:   target.Type,
 	}

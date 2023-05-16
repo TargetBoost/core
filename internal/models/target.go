@@ -8,7 +8,8 @@ type TargetService struct {
 	Icon   string `json:"icon"`   // иконка задания
 	Status string `json:"status"` // открыта/закрыта
 	Count  int64  `json:"count"`  // количетсво заданий
-	Cost   int64  `json:"cost"`   // цена одного задания
+	Total  int64  `json:"total"`
+	Cost   int64  `json:"cost"` // цена одного задания
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей
