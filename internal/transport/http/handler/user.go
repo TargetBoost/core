@@ -2,6 +2,7 @@ package handler
 
 import (
 	"core/internal/models"
+	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
 )
 
@@ -81,6 +82,8 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 		})
 		return
 	}
+
+	logger.Info(user)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
