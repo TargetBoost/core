@@ -52,8 +52,8 @@ type Target struct {
 }
 
 type TargetToExecutors struct {
-	TID uint `json:"tid" gorm:"primarykey"`
-	UID uint `json:"uid" `
+	UID uint `json:"uid" gorm:"primarykey"`
+	TID uint `json:"tid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
