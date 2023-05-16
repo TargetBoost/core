@@ -52,13 +52,12 @@ type Target struct {
 }
 
 type TargetToExecutors struct {
+	TID uint `json:"tid" gorm:"primarykey"`
+	UID uint `json:"uid" `
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime `gorm:"index"`
-
-	// основные данные
-	UID uint `json:"uid" gorm:"primarykey"` // кто создал задачу
-	TID uint `json:"tid"`
 }
 
 type FileStorage struct {
