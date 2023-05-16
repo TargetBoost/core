@@ -18,7 +18,7 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 	})
 }
 
-// GetAllUsers all users returned
+// CreateUser create user
 func (h *Handler) CreateUser(ctx iris.Context) {
 	var u models.CreateUser
 	err := ctx.ReadJSON(&u)

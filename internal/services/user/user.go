@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"github.com/ivahaev/go-logger"
 	"strconv"
 	"time"
 )
@@ -47,6 +48,8 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
 	v := s.userRepository.GetUserByID(id)
 
+	logger.Info(v)
+
 	userService.ID = v.ID
 	userService.CreatedAt = v.CreatedAt
 	userService.Login = v.Login
@@ -59,6 +62,8 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.Execute = v.Execute
 	userService.Admin = v.Admin
 	userService.Balance = v.Balance
+
+	logger.Info(userService)
 
 	return userService
 }
