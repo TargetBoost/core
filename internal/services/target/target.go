@@ -5,6 +5,17 @@ import (
 	"core/internal/repositories/target"
 )
 
+const (
+	vkCommunity  = "vk_community"
+	vkLike       = "vk_like"
+	vkAddFriends = "vk_add_friends"
+	tgCommunity  = "tg_community"
+	ytChanel     = "yt_chanel"
+	ytWatch      = "yt_watch"
+	ytLike       = "yt_like"
+	ytDislike    = "yt_dislike"
+)
+
 type Service struct {
 	TargetRepository *target.Repository
 }
@@ -44,29 +55,28 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	var title string
 	switch target.Type {
-	case "vk_community":
+	case vkCommunity:
 		title = "Вступить в сообщество"
 		break
-	case "vk_like":
+	case vkLike:
 		title = "Поставить лайк на запись"
 		break
-	case "vk_add_friends":
+	case vkAddFriends:
 		title = "Добавить в друзья"
 		break
-
-	case "tg_community":
+	case tgCommunity:
 		title = "Подписаться на канал"
 		break
-	case "yt_chanel":
+	case ytChanel:
 		title = "Подписаться на канал"
 		break
-	case "yt_watch":
+	case ytWatch:
 		title = "Посмотреть видео"
 		break
-	case "yt_like":
+	case ytLike:
 		title = "Поставить лайк"
 		break
-	case "yt_dislike":
+	case ytDislike:
 		title = "Поставить дизлайк"
 		break
 	}

@@ -1,7 +1,9 @@
 package models
 
 import (
+	"database/sql"
 	"gorm.io/gorm"
+	"time"
 )
 
 type User struct {
@@ -47,6 +49,16 @@ type Target struct {
 	Gender  string `json:"gender"`   // половой признак
 	Type    string `json:"type"`
 	Cause   string `json:"cause"`
+}
+
+type TargetToExecutors struct {
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime `gorm:"index"`
+
+	// основные данные
+	UID uint `json:"uid" gorm:"primarykey"` // кто создал задачу
+	TID uint `json:"tid"`
 }
 
 type FileStorage struct {

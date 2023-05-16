@@ -29,6 +29,13 @@ func (r *Repository) GetTargetsToAdmin() []models.Target {
 	return t
 }
 
+func (r *Repository) GetTargetsToExecutor() []models.TargetToExecutors {
+	var t []models.TargetToExecutors
+	r.db.Table("targets").Joins("inner join ").Find(&t)
+
+	return t
+}
+
 func (r *Repository) CreateTarget(target *models.Target) {
 	r.db.Table("targets").Create(&target)
 }
