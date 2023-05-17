@@ -37,16 +37,23 @@ func (r *Repository) GetTargetsToExecutor() []models.Target {
 }
 
 func (r *Repository) CreateTarget(target *models.Target) {
-	_ = r.db.Transaction(func(tx *gorm.DB) error {
-		tx.Table("targets").Create(&target)
-		var i int64 = 0
-		for i = 0; i < target.Total; i++ {
-			var queue models.Queue
-			queue.TID = target.ID
-			queue.Status = 1
 
-			tx.Table("queue").Create(&target)
+	tx := r.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
 		}
-		return nil
-	})
+	}()
+
+	tx.Table("targets").Create(&target)
+	var i int64 = 0
+	for i = 0; i < target.Total; i++ {
+		var queue models.Queue
+		queue.TID = target.ID
+		queue.Status = 1
+
+		tx.Table("queue").Create(&target)
+	}
+
+	tx.Commit()
 }
