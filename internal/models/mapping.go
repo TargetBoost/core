@@ -13,3 +13,10 @@ func MapToTarget(t Target) TargetService {
 		Cause:  t.Cause,
 	}
 }
+
+func MapToTargetExecutors(t TargetToExecutors) TargetServiceToExecutors {
+	return TargetServiceToExecutors{
+		UID: t.UID,
+		TID: t.TID,
+	}
+}

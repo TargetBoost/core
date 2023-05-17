@@ -53,8 +53,9 @@ type Target struct {
 type TargetToExecutors struct {
 	gorm.Model
 
-	UID uint `json:"uid"`
-	TID uint `json:"tid"`
+	Status string `json:"status"`
+	UID    uint   `json:"uid"`
+	TID    uint   `json:"tid"`
 }
 
 type FileStorage struct {

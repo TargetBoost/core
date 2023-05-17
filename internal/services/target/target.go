@@ -52,6 +52,19 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	return targets
 }
 
+func (s *Service) GetTargetsToExecutor() []models.TargetServiceToExecutors {
+	targets := func(t []models.TargetToExecutors, f func(t models.TargetToExecutors) models.TargetServiceToExecutors) []models.TargetServiceToExecutors {
+		result := make([]models.TargetServiceToExecutors, 0, len(t))
+		for _, value := range t {
+			result = append(result, f(value))
+		}
+
+		return result
+	}(s.TargetRepository.GetTargetsToExecutor(), models.MapToTargetExecutors)
+
+	return targets
+}
+
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	var title string
 	switch target.Type {
