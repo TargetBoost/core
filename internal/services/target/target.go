@@ -2,6 +2,7 @@ package target
 
 import (
 	"core/internal/models"
+	"core/internal/queue"
 	"core/internal/repositories/target"
 )
 
@@ -18,11 +19,13 @@ const (
 
 type Service struct {
 	TargetRepository *target.Repository
+	lineBroker       chan []queue.Task
 }
 
-func NewTargetService(feedRepository *target.Repository) *Service {
+func NewTargetService(feedRepository *target.Repository, lineBroker chan []queue.Task) *Service {
 	return &Service{
 		TargetRepository: feedRepository,
+		lineBroker:       lineBroker,
 	}
 }
 
@@ -99,12 +102,25 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 		Title:  title,
 		Link:   target.Link,
 		Icon:   target.Icon,
-		Status: "check",
+		Status: 0,
 		Count:  0,
 		Total:  target.Total,
 		Cost:   target.Cost,
 		Type:   target.Type,
 	}
+	var q []queue.Task
+
+	var i int64 = 0
+	for i = 0; i < t.Total; i++ {
+		q = append(q, queue.Task{
+			ID:     t.ID,
+			Cost:   t.Cost,
+			Title:  t.Title,
+			Status: t.Status,
+		})
+	}
+
+	s.lineBroker <- q
 
 	s.TargetRepository.CreateTarget(&t)
 }

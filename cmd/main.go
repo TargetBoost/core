@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"core/internal/queue"
 	"core/internal/repositories"
 	"core/internal/services"
 	"core/internal/transport/http/controller"
@@ -48,7 +49,11 @@ func main() {
 	}
 
 	repo := repositories.NewRepositories(db)
-	serv := services.NewServices(repo)
+
+	q := queue.New(ctx, repo)
+	go q.Broker()
+
+	serv := services.NewServices(repo, q.Line)
 
 	go controller.NewController(ctx, serv)
 

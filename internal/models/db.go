@@ -11,9 +11,10 @@ type UserSettings struct {
 type Queue struct {
 	gorm.Model
 
-	TID    uint  `json:"tid"`
-	EID    int64 `json:"eid"`
-	Status int64 `json:"status"`
+	UID    int64  `json:"uid"`
+	Cost   int64  `json:"cost"`
+	Title  string `json:"title"`
+	Status int64  `json:"status"`
 }
 
 type User struct {
@@ -49,7 +50,7 @@ type Target struct {
 	Title  string `json:"title"`  // заголовок
 	Link   string `json:"link"`   // ссылка на задание
 	Icon   string `json:"icon"`   // иконка задания
-	Status string `json:"status"` // открыта/закрыта
+	Status int64  `json:"status"` // открыта/закрыта
 	Count  int64  `json:"count"`  // количетсво заданий
 	Total  int64  `json:"total"`
 	Cost   int64  `json:"cost"` // цена одного задания
