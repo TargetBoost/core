@@ -41,5 +41,5 @@ func (r *Repository) CreateTarget(target *models.Target) {
 }
 
 func (r *Repository) CreateTask(queue *models.Queue) {
-	r.db.Table("queue").Create(&queue)
+	r.db.Table("queues").Create(&queue)
 }
