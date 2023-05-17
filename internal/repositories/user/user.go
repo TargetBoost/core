@@ -62,6 +62,7 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	}
 	u.Password = user.Password
 	u.Token = user.Token
+	u.Tg = user.Tg
 	u.NumberPhone = user.NumberPhone
 	u.Execute = user.Execute
 
