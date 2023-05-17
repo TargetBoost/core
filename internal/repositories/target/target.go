@@ -31,7 +31,7 @@ func (r *Repository) GetTargetsToAdmin() []models.Target {
 
 func (r *Repository) GetTargetsToExecutor() []models.Target {
 	var t []models.Target
-	r.db.Table("targets").Select("targets.uid, targets.created_at, targets.updated_at, targets.deleted_at, targets.status,  targets.count, targets.cost, targets.total, targets.link").Joins("inner join target_to_executors on targets.id != target_to_executors.t_id").Find(&t)
+	r.db.Table("targets").Select("targets.uid, targets.created_at, targets.updated_at, targets.deleted_at, targets.status,  targets.count, targets.cost, targets.total, targets.link, targets.icon").Joins("inner join target_to_executors on targets.id != target_to_executors.t_id").Find(&t)
 
 	return t
 }
