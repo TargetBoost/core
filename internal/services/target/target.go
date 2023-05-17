@@ -52,15 +52,15 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	return targets
 }
 
-func (s *Service) GetTargetsToExecutor() []models.TargetServiceToExecutors {
-	targets := func(t []models.TargetToExecutors, f func(t models.TargetToExecutors) models.TargetServiceToExecutors) []models.TargetServiceToExecutors {
-		result := make([]models.TargetServiceToExecutors, 0, len(t))
+func (s *Service) GetTargetsToExecutor() []models.TargetService {
+	targets := func(t []models.Target, f func(t models.Target) models.TargetService) []models.TargetService {
+		result := make([]models.TargetService, 0, len(t))
 		for _, value := range t {
 			result = append(result, f(value))
 		}
 
 		return result
-	}(s.TargetRepository.GetTargetsToExecutor(), models.MapToTargetExecutors)
+	}(s.TargetRepository.GetTargetsToExecutor(), models.MapToTarget)
 
 	return targets
 }
