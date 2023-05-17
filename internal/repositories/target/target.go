@@ -37,10 +37,8 @@ func (r *Repository) GetTargetsToExecutor() []models.Target {
 }
 
 func (r *Repository) CreateTarget(target *models.Target) {
-
-	r.db.Table("targets").Create(&target)
-
 	_ = r.db.Transaction(func(tx *gorm.DB) error {
+		tx.Table("targets").Create(&target)
 		var i int64 = 0
 		for i = 0; i < target.Total; i++ {
 			var queue models.Queue
