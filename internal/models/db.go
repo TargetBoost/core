@@ -9,6 +9,8 @@ type User struct {
 
 	Login string `json:"login"`
 
+	Tg string `json:"tg"`
+
 	MainImage  string `json:"main_image"`
 	SmallImage string `json:"small_image"`
 
