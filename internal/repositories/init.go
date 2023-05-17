@@ -28,6 +28,7 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		&models.FileStorage{},
 		&models.Settings{},
 		&models.TargetToExecutors{},
+		&models.Queue{},
 	)
 	if err != nil {
 		logger.Error(err)

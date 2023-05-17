@@ -4,6 +4,18 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserSettings struct {
+	UID string `json:"uid"`
+}
+
+type Queue struct {
+	gorm.Model
+
+	TID    uint  `json:"tid"`
+	EID    int64 `json:"eid"`
+	Status int64 `json:"status"`
+}
+
 type User struct {
 	gorm.Model
 

@@ -37,5 +37,16 @@ func (r *Repository) GetTargetsToExecutor() []models.Target {
 }
 
 func (r *Repository) CreateTarget(target *models.Target) {
+
 	r.db.Table("targets").Create(&target)
+
+	var i int64 = 0
+	for i = 0; i < target.Total; i++ {
+		var queue models.Queue
+		queue.TID = target.ID
+		queue.Status = 1
+		
+		r.db.Table("queue").Create(&target)
+	}
+
 }
