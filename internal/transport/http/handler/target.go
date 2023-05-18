@@ -68,7 +68,7 @@ func (h *Handler) GetTargetsToAdmin(ctx iris.Context) {
 
 func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
-	_, err := h.CheckAuth(rawToken)
+	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -80,7 +80,7 @@ func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
 		return
 	}
 
-	targets := h.Service.Target.GetTargetsToExecutor()
+	targets := h.Service.Target.GetTargetsToExecutor(int64(user.ID))
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{

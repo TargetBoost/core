@@ -29,10 +29,9 @@ func (r *Repository) GetTargetsToAdmin() []models.Target {
 	return t
 }
 
-func (r *Repository) GetTargetsToExecutor() []models.Target {
-	var t []models.Target
-	r.db.Table("targets").Select("targets.uid, targets.created_at, targets.updated_at, targets.deleted_at, targets.status,  targets.count, targets.cost, targets.total, targets.link, targets.icon, targets.title").Joins("inner join target_to_executors on targets.id != target_to_executors.t_id").Find(&t)
-
+func (r *Repository) GetTargetsToExecutor(uid int64) []models.Queue {
+	var t []models.Queue
+	r.db.Table("queues").Where("uid = ?", uid).Find(&t)
 	return t
 }
 
@@ -47,6 +46,6 @@ func (r *Repository) CreateTask(queue *models.Queue) {
 
 func (r *Repository) GetTask() []models.Queue {
 	var q []models.Queue
-	r.db.Table("queues").Find(&q)
+	r.db.Table("queues").Where("uid = 0").Limit(10).Find(&q)
 	return q
 }

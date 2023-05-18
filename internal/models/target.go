@@ -22,7 +22,7 @@ type TargetService struct {
 	Cause string `json:"cause"`
 }
 
-type TargetServiceToExecutors struct {
+type TaskToService struct {
 	UID uint `json:"uid"`
 	TID uint `json:"tid"`
 }

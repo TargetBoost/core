@@ -14,9 +14,12 @@ func MapToTarget(t Target) TargetService {
 	}
 }
 
-func MapToTargetExecutors(t TargetToExecutors) TargetServiceToExecutors {
-	return TargetServiceToExecutors{
-		UID: t.UID,
-		TID: t.TID,
+func MapToQueueExecutors(t Queue) QueueToService {
+	return QueueToService{
+		TID:    t.TID,
+		UID:    t.UID,
+		Cost:   t.Cost,
+		Title:  t.Title,
+		Status: t.Status,
 	}
 }
