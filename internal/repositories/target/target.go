@@ -36,10 +36,17 @@ func (r *Repository) GetTargetsToExecutor() []models.Target {
 	return t
 }
 
-func (r *Repository) CreateTarget(target *models.Target) {
+func (r *Repository) CreateTarget(target *models.Target) *models.Target {
 	r.db.Table("targets").Create(&target)
+	return target
 }
 
 func (r *Repository) CreateTask(queue *models.Queue) {
 	r.db.Table("queues").Create(&queue)
+}
+
+func (r *Repository) GetTask() []models.Queue {
+	var q []models.Queue
+	r.db.Table("queues").Find(&q)
+	return q
 }

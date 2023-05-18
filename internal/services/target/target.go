@@ -4,6 +4,7 @@ import (
 	"core/internal/models"
 	"core/internal/queue"
 	"core/internal/repositories/target"
+	"github.com/ivahaev/go-logger"
 )
 
 const (
@@ -108,12 +109,17 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 		Cost:   target.Cost,
 		Type:   target.Type,
 	}
+
+	tt := s.TargetRepository.CreateTarget(&t)
+
 	var q []queue.Task
+
+	logger.Info(tt)
 
 	var i int64 = 0
 	for i = 0; i < t.Total; i++ {
 		q = append(q, queue.Task{
-			ID:     t.ID,
+			ID:     tt.ID,
 			Cost:   t.Cost,
 			Title:  t.Title,
 			Status: t.Status,
@@ -121,6 +127,4 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	}
 
 	s.lineBroker <- q
-
-	s.TargetRepository.CreateTarget(&t)
 }

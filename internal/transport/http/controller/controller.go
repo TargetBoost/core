@@ -38,7 +38,7 @@ func NewController(ctx context.Context, services *services.Services) {
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowCredentials: true,
-		Debug:            true,
+		Debug:            false,
 	})
 	app.UseRouter(crs)
 

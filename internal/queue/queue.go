@@ -22,6 +22,16 @@ func New(ctx context.Context, r *repositories.Repositories) Queue {
 	return q
 }
 
+func (q Queue) AppointTask(UID uint) {
+	var list []uint
+	que := q.repo.Feed.GetTask()
+
+	for _, v := range que {
+		list = append(list, v.TID)
+	}
+
+}
+
 func (q Queue) Broker() {
 	for {
 		select {
