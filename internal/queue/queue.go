@@ -38,7 +38,7 @@ func (q Queue) Broker() {
 		case t := <-q.Line:
 			for _, v := range t {
 				dq := &models.Queue{
-					TID:    v.ID,
+					TID:    v.TID,
 					UID:    v.UID,
 					Cost:   v.Cost,
 					Title:  v.Title,

@@ -1,7 +1,7 @@
 package queue
 
 type Task struct {
-	ID     uint   `json:"id"`
+	TID    uint   `json:"tid"`
 	UID    int64  `json:"uid"`
 	Cost   int64  `json:"cost"`
 	Title  string `json:"title"`

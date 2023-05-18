@@ -119,7 +119,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	var i int64 = 0
 	for i = 0; i < t.Total; i++ {
 		q = append(q, queue.Task{
-			ID:     tt.ID,
+			TID:    tt.ID,
 			Cost:   t.Cost,
 			Title:  t.Title,
 			Status: t.Status,
