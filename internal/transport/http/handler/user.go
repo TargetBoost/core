@@ -87,24 +87,11 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 
 	logger.Info(user)
 
-	test := struct {
-		Status struct {
-			Message string `json:"message"`
-		} `json:"status"`
-		Data interface{} `json:"data"`
-	}{
-		Status: struct {
-			Message string `json:"message"`
-		}(struct{ Message string }{Message: "nil"}),
-		Data: user,
-	}
-
 	ctx.StatusCode(200)
-	_ = ctx.JSON(test)
-	//_ = ctx.JSON(iris.Map{
-	//	"status": iris.Map{
-	//		"message": nil,
-	//	},
-	//	"data": user,
-	//})
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": user,
+	})
 }

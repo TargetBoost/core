@@ -46,7 +46,7 @@ func (s *Service) GetAllUsers() []models.UserService {
 func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
 	v := s.userRepository.GetUserByID(id)
-	
+
 	userService.ID = v.ID
 	userService.CreatedAt = v.CreatedAt
 	userService.Login = v.Login
@@ -58,7 +58,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.NumberPhone = v.NumberPhone
 	userService.Execute = v.Execute
 	userService.Admin = v.Admin
-	userService.Balance = v.Balance
+	userService.Balance = strconv.Itoa(int(v.Balance))
 
 	return userService
 }
