@@ -37,8 +37,9 @@ func (h *Handler) Authorization(ctx iris.Context) {
 			"message": nil,
 		},
 		"data": iris.Map{
-			"token": user.Token,
-			"id":    user.ID,
+			"token":   user.Token,
+			"id":      user.ID,
+			"execute": user.Execute,
 		},
 	})
 	return
