@@ -28,6 +28,7 @@ type QueueToExecutors struct {
 	Status int64   `json:"status"`
 	Icon   string  `json:"icon"` // иконка задания
 	Total  float64 `json:"total"`
+	Link   string  `json:"link"` // ссылка на задание
 }
 
 type QueueToService struct {
@@ -36,6 +37,9 @@ type QueueToService struct {
 	Cost   float64 `json:"cost"`
 	Title  string  `json:"title"`
 	Status int64   `json:"status"`
+	Icon   string  `json:"icon"` // иконка задания
+	Total  float64 `json:"total"`
+	Link   string  `json:"link"` // ссылка на задание
 }
 
 type User struct {
