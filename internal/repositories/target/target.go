@@ -31,7 +31,7 @@ func (r *Repository) GetTargetByID(uid uint) models.Target {
 
 func (r *Repository) GetTargetsToAdmin() []models.TargetToAdmin {
 	var t []models.TargetToAdmin
-	r.db.Table("targets t").Select("t.id, t.uid, t.title. t.link, t.icon, t.status, t.count, t.total, t.cost, t.total_price, u.login").Joins("inner join users u t.uid = u.id").Find(&t)
+	r.db.Table("targets t").Select("t.id, t.uid, t.title, t.link, t.icon, t.status, t.count, t.total, t.cost, t.total_price, u.login").Joins("inner join users u t.uid = u.id").Find(&t)
 
 	return t
 }
