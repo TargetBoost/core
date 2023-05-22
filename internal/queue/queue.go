@@ -4,12 +4,14 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
+	"time"
 )
 
 type Queue struct {
-	Line chan []Task
-	repo *repositories.Repositories
-	ctx  context.Context
+	Line        chan []Task
+	LineAppoint chan Task
+	repo        *repositories.Repositories
+	ctx         context.Context
 }
 
 func New(ctx context.Context, r *repositories.Repositories) Queue {
@@ -22,12 +24,31 @@ func New(ctx context.Context, r *repositories.Repositories) Queue {
 	return q
 }
 
-func (q Queue) AppointTask(UID uint) {
-	var list []uint
-	que := q.repo.Feed.GetTask()
+func (q Queue) AppointTask() {
+	for {
+		select {
+		case t := <-q.LineAppoint:
+			que := q.repo.Feed.GetTaskDISTINCT()
 
-	for _, v := range que {
-		list = append(list, v.TID)
+			for _, v := range que {
+				v.UID = t.UID
+				v.UpdatedAt = time.Now()
+				q.repo.Feed.UpdateTask(v)
+			}
+		case <-q.ctx.Done():
+			return
+
+		default:
+			que := q.repo.Feed.GetTaskDISTINCTIsWork()
+
+			for _, v := range que {
+				if v.UpdatedAt.After(time.Now()) {
+					v.UID = 0
+					v.UpdatedAt = time.Now()
+					q.repo.Feed.UpdateTask(v)
+				}
+			}
+		}
 	}
 
 }

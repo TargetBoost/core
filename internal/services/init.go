@@ -20,8 +20,8 @@ type Services struct {
 	Settings *settings.Service
 }
 
-func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task) *Services {
-	userService := user.NewUserService(repo.User)
+func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, LineAppoint chan queue.Task) *Services {
+	userService := user.NewUserService(repo.User, LineAppoint)
 	authService := auth.NewAuthService(repo.Auth)
 	TargetService := target.NewTargetService(repo.User, repo.Feed, lineBroker)
 	storageService := storage.NewStorageService(repo.Storage)

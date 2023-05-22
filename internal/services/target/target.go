@@ -69,7 +69,7 @@ func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 		}
 
 		return result
-	}(s.TargetRepository.GetTargetsToExecutor(uid), models.MapToQueueExecutors)
+	}(s.TargetRepository.GetTaskDISTINCTIsWorkForUser(uid), models.MapToQueueExecutors)
 
 	return targets
 }

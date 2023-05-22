@@ -2,6 +2,7 @@ package user
 
 import (
 	"core/internal/models"
+	"core/internal/queue"
 	"core/internal/repositories/user"
 	"crypto/sha256"
 	"encoding/base64"
@@ -14,11 +15,13 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Service struct {
 	userRepository *user.Repository
+	lineAppoint    chan queue.Task
 }
 
-func NewUserService(userRepository *user.Repository) *Service {
+func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task) *Service {
 	return &Service{
 		userRepository: userRepository,
+		lineAppoint:    lineAppoint,
 	}
 }
 
@@ -47,6 +50,9 @@ func (s *Service) GetAllUsers() []models.UserService {
 func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
 	v := s.userRepository.GetUserByID(id)
+
+	task := queue.Task{UID: int64(v.ID)}
+	s.lineAppoint <- task
 
 	userService.ID = v.ID
 	userService.CreatedAt = v.CreatedAt

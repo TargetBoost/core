@@ -52,8 +52,9 @@ func main() {
 
 	q := queue.New(ctx, repo)
 	go q.Broker()
+	go q.AppointTask()
 
-	serv := services.NewServices(repo, q.Line)
+	serv := services.NewServices(repo, q.Line, q.LineAppoint)
 
 	go controller.NewController(ctx, serv)
 
