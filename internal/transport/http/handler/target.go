@@ -2,6 +2,7 @@ package handler
 
 import (
 	"core/internal/models"
+	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
 )
 
@@ -107,6 +108,8 @@ func (h *Handler) CreateTarget(ctx iris.Context) {
 		})
 		return
 	}
+
+	logger.Info(t)
 
 	err = h.Service.Target.CreateTarget(user.ID, &t)
 	if err != nil {
