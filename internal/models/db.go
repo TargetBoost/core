@@ -62,7 +62,7 @@ type Target struct {
 	Icon   string  `json:"icon"`   // иконка задания
 	Status int64   `json:"status"` // открыта/закрыта
 	Count  int64   `json:"count"`  // количетсво заданий
-	Total  int64   `json:"total"`
+	Total  float64 `json:"total"`
 	Cost   float64 `json:"cost"` // цена одного задания
 
 	// гео данные

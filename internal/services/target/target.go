@@ -115,9 +115,9 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		return errors.New("the balance of your insufficiency")
 	}
 
-	tl := int(target.Cost) * int(target.Total)
+	tl := target.Cost * target.Total
 
-	u.Balance = float64(int(u.Balance) - tl)
+	u.Balance = u.Balance - tl
 	s.UserRepository.UpdateUser(u)
 
 	t := models.Target{
@@ -138,7 +138,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 
 	logger.Info(tt)
 
-	var i int64 = 0
+	var i float64 = 0
 	for i = 0; i < t.Total; i++ {
 		q = append(q, queue.Task{
 			TID:    tt.ID,
