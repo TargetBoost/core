@@ -7,6 +7,7 @@ import (
 	"core/internal/repositories/user"
 	"errors"
 	"github.com/ivahaev/go-logger"
+	"strconv"
 )
 
 const (
@@ -122,7 +123,12 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
-	tl := target.Cost * target.Total
+	ft, err := strconv.ParseFloat(target.Total, 64)
+	if err != nil {
+		return errors.New("error total")
+	}
+
+	tl := target.Cost * ft
 
 	u.Balance = u.Balance - tl
 	if u.Balance < 0 {
@@ -138,7 +144,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		Icon:       target.Icon,
 		Status:     0,
 		Count:      0,
-		Total:      target.Total,
+		Total:      ft,
 		Cost:       target.Cost,
 		Type:       target.Type,
 		TotalPrice: tl,
