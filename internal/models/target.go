@@ -1,5 +1,9 @@
 package models
 
+type UpdateTargetService struct {
+	ID uint `json:"id"`
+}
+
 type TargetService struct {
 	// основные данные
 	UID        uint    `json:"uid"`    // кто создал задачу

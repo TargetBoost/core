@@ -73,6 +73,13 @@ func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 	return targets
 }
 
+func (s *Service) UpdateTarget(id uint) {
+	t := s.TargetRepository.GetTargetByID(id)
+	t.Status = 1
+
+	s.TargetRepository.UpdateTarget(id, &t)
+}
+
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	var title string
 	switch target.Type {
