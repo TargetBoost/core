@@ -21,6 +21,7 @@ type UserService struct {
 	Execute bool   `json:"execute"`
 	Admin   bool   `json:"admin"`
 	Balance string `json:"balance"`
+	Block   bool   `json:"block"`
 }
 
 type CreateUser struct {
