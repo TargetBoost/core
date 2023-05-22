@@ -4,6 +4,7 @@ import "strconv"
 
 func MapToTarget(t Target) TargetService {
 	return TargetService{
+		ID:         t.ID,
 		UID:        t.UID,
 		Title:      t.Title,
 		Link:       t.Link,

@@ -6,6 +6,7 @@ type UpdateTargetService struct {
 }
 
 type TargetService struct {
+	ID uint `json:"id"`
 	// основные данные
 	UID        uint    `json:"uid"`    // кто создал задачу
 	Title      string  `json:"title"`  // заголовок
