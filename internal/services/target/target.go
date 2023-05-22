@@ -62,7 +62,7 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 }
 
 func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
-	targets := func(t []models.Queue, f func(t models.Queue) models.QueueToService) []models.QueueToService {
+	targets := func(t []models.QueueToExecutors, f func(t models.QueueToExecutors) models.QueueToService) []models.QueueToService {
 		result := make([]models.QueueToService, 0, len(t))
 		for _, value := range t {
 			result = append(result, f(value))

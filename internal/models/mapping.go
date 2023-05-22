@@ -35,7 +35,7 @@ func MapToTargetAdmin(t TargetToAdmin) TargetService {
 	}
 }
 
-func MapToQueueExecutors(t Queue) QueueToService {
+func MapToQueueExecutors(t QueueToExecutors) QueueToService {
 	return QueueToService{
 		TID:    t.TID,
 		UID:    t.UID,

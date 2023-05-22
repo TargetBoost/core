@@ -18,6 +18,18 @@ type Queue struct {
 	Status int64   `json:"status"`
 }
 
+type QueueToExecutors struct {
+	gorm.Model
+
+	TID    uint    `json:"tid"`
+	UID    int64   `json:"uid"`
+	Cost   float64 `json:"cost"`
+	Title  string  `json:"title"`
+	Status int64   `json:"status"`
+	Icon   string  `json:"icon"` // иконка задания
+	Total  float64 `json:"total"`
+}
+
 type QueueToService struct {
 	TID    uint    `json:"tid"`
 	UID    int64   `json:"uid"`
