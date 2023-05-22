@@ -112,6 +112,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	}
 
 	st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
+	logger.Info(st)
 	ch := s.TargetRepository.GetChatMembersByUserName(st)
 	if ch.CID == 0 {
 		return errors.New("Вы не добавили нашего бота в этот телеграм канал")
