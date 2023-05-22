@@ -37,6 +37,7 @@ func NewRouter(iris *iris.Application, services *services.Services) *iris.Applic
 	service.Handle("GET", "/admin/target", serv.GetTargetsToAdmin)
 	service.Handle("GET", "/executor/target", serv.GetTargetsToExecutors)
 	service.Handle("POST", "/target", serv.CreateTarget)
+	service.Handle("GET", "/test/video/vast", serv.TestVast)
 
 	// storage
 	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
