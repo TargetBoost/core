@@ -1,7 +1,9 @@
 package models
 
 import (
+	"database/sql"
 	"gorm.io/gorm"
+	"time"
 )
 
 type UserSettings struct {
@@ -32,10 +34,11 @@ type QueueToExecutors struct {
 }
 
 type ChatMembersChanel struct {
-	gorm.Model
-
-	CID   int64
-	Title string
+	CID       int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime `gorm:"index"`
+	Title     string
 }
 
 type QueueToService struct {
