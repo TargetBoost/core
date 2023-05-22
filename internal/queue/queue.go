@@ -16,9 +16,10 @@ type Queue struct {
 
 func New(ctx context.Context, r *repositories.Repositories) Queue {
 	q := Queue{
-		Line: make(chan []Task, 50),
-		repo: r,
-		ctx:  ctx,
+		Line:        make(chan []Task, 50),
+		LineAppoint: make(chan Task, 50),
+		repo:        r,
+		ctx:         ctx,
 	}
 
 	return q
