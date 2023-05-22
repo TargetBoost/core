@@ -158,7 +158,7 @@ func (h *Handler) UpdateTarget(ctx iris.Context) {
 		return
 	}
 
-	h.Service.Target.UpdateTarget(t.ID)
+	h.Service.Target.UpdateTarget(t.ID, t.Status)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{

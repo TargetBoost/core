@@ -1,7 +1,8 @@
 package models
 
 type UpdateTargetService struct {
-	ID uint `json:"id"`
+	ID     uint  `json:"id"`
+	Status int64 `json:"status"`
 }
 
 type TargetService struct {
