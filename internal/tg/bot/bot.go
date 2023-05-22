@@ -39,6 +39,7 @@ func (b *Bot) GetUpdates() {
 		select {
 		case update := <-b.API.GetUpdatesChan(b.updateConfig):
 			if update.Message != nil { // If we got a message
+				log.Print(update)
 				log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
