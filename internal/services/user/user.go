@@ -60,6 +60,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.Admin = v.Admin
 	userService.Balance = strconv.Itoa(int(v.Balance))
 	userService.Block = v.Block
+	userService.Cause = v.Cause
 
 	return userService
 }

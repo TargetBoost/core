@@ -50,6 +50,7 @@ type User struct {
 
 	Token   string  `json:"token"`
 	Balance float64 `json:"balance"`
+	Cause   string  `json:"cause"`
 }
 
 type Target struct {
