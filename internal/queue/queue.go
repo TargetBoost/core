@@ -34,6 +34,7 @@ func (q Queue) AppointTask() {
 			for _, v := range que {
 				v.UID = t.UID
 				v.UpdatedAt = time.Now()
+				v.Status = 1
 				q.repo.Feed.UpdateTask(v)
 			}
 		case <-q.ctx.Done():
@@ -46,6 +47,7 @@ func (q Queue) AppointTask() {
 				if v.UpdatedAt.After(time.Now()) {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
+					v.Status = 0
 					q.repo.Feed.UpdateTask(v)
 				}
 			}
