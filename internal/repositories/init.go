@@ -29,6 +29,7 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		&models.Settings{},
 		&models.TargetToExecutors{},
 		&models.Queue{},
+		&models.ChatMembersChanel{},
 	)
 	if err != nil {
 		logger.Error(err)

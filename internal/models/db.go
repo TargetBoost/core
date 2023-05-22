@@ -31,6 +31,13 @@ type QueueToExecutors struct {
 	Link   string  `json:"link"` // ссылка на задание
 }
 
+type ChatMembersChanel struct {
+	gorm.Model
+
+	CID   int64
+	Title string
+}
+
 type QueueToService struct {
 	TID    uint    `json:"tid"`
 	UID    int64   `json:"uid"`

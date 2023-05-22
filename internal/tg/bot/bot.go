@@ -17,7 +17,7 @@ type Bot struct {
 
 func New(ctx context.Context, token string, services *services.Services) (*Bot, error) {
 	api, err := tgbotapi.NewBotAPI(token)
-	api.Debug = true
+	api.Debug = false
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

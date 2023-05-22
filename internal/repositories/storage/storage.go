@@ -26,3 +26,7 @@ func (r *Repository) GetFileByKey(key string) *models.FileStorage {
 
 	return &fileStorage
 }
+
+func (r *Repository) SetChatMembers(cid int64, title string) {
+	//r.db.Table("chat_members_chanels")
+}
