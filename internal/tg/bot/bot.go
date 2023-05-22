@@ -39,8 +39,8 @@ func (b *Bot) GetUpdates() {
 	for {
 		select {
 		case update := <-b.API.GetUpdatesChan(b.updateConfig):
+			logger.Info(update)
 			if update.MyChatMember != nil {
-				logger.Info(update.MyChatMember)
 				log.Print(update.MyChatMember.Chat.ID)
 				b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
 			}
