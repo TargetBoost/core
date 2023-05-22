@@ -45,35 +45,7 @@ func (h *Handler) TestVast(ctx iris.Context) {
 			"code":    500,
 			"message": "Server uploaded a file with an error",
 		},
-		"data": `<VAST version="3.0">
-    <Ad id="123" type="front">
-        <InLine>
-            <AdSystem><![CDATA[DSP]]></AdSystem>
-            <AdTitle><![CDATA[adTitle]]></AdTitle>
-            <Impression id="11111"><![CDATA[http://impressionv1.track.com]]></Impression>
-            <Impression id="11112"><![CDATA[http://impressionv2.track.com]]></Impression>
-            <Creatives>
-                <Creative id="987">
-                    <Linear>
-                        <Duration>00:00:15</Duration>
-                        <TrackingEvents>
-                            <Tracking event="start"><![CDATA[http://track.xxx.com/q/start?xx]]></Tracking>
-                            <Tracking event="firstQuartile"><![CDATA[http://track.xxx.com/q/firstQuartile?xx]]></Tracking>
-                            <Tracking event="midpoint"><![CDATA[http://track.xxx.com/q/midpoint?xx]]></Tracking>
-                            <Tracking event="thirdQuartile"><![CDATA[http://track.xxx.com/q/thirdQuartile?xx]]></Tracking>
-                            <Tracking event="complete"><![CDATA[http://track.xxx.com/q/complete?xx]]></Tracking>
-                        </TrackingEvents>
-                        <MediaFiles>
-                            <MediaFile delivery="progressive" type="video/mp4" width="1024" height="576"><![CDATA[https://samplelib.com/lib/preview/mp4/sample-5s.mp4]]></MediaFile>
-                        </MediaFiles>
-                    </Linear>
-                </Creative>
-            </Creatives>
-            <Description></Description>
-            <Survey></Survey>
-        </InLine>
-    </Ad>
-</VAST>`,
+		"data": ``,
 	})
 	return
 }

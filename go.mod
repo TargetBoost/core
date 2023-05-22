@@ -3,11 +3,10 @@ module core
 go 1.19
 
 require (
-	github.com/AlekSi/pointer v1.2.0
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/iris-contrib/middleware/cors v0.0.0-20220815101939-754509eb4d57
 	github.com/ivahaev/go-logger v0.0.0-20170811130205-2337f7021abc
 	github.com/kataras/iris/v12 v12.2.0-beta4
-	github.com/quangngotan95/go-m3u8 v0.1.0
 	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
 )
