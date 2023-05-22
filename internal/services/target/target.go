@@ -123,12 +123,12 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
-	ft, err := strconv.ParseFloat(target.Total, 64)
+	ft, err := strconv.Atoi(target.Total)
 	if err != nil {
 		return err
 	}
 
-	tl := target.Cost * ft
+	tl := target.Cost * float64(ft)
 
 	u.Balance = u.Balance - tl
 	if u.Balance < 0 {
@@ -144,7 +144,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		Icon:       target.Icon,
 		Status:     0,
 		Count:      0,
-		Total:      ft,
+		Total:      float64(ft),
 		Cost:       target.Cost,
 		Type:       target.Type,
 		TotalPrice: tl,
