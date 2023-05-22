@@ -7,7 +7,7 @@ type TargetService struct {
 	Link       string  `json:"link"`   // ссылка на задание
 	Icon       string  `json:"icon"`   // иконка задания
 	Status     int64   `json:"status"` // открыта/закрыта
-	Count      int64   `json:"count"`  // количетсво заданий
+	Count      string  `json:"count"`  // количетсво заданий
 	Total      float64 `json:"total"`
 	Cost       float64 `json:"cost"` // цена одного задания
 	TotalPrice string  `json:"total_price"`

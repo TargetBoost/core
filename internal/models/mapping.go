@@ -9,7 +9,7 @@ func MapToTarget(t Target) TargetService {
 		Link:       t.Link,
 		Icon:       t.Icon,
 		Status:     t.Status,
-		Count:      t.Count,
+		Count:      strconv.Itoa(int(t.Count)),
 		Total:      t.Total,
 		Cost:       t.Cost,
 		Cause:      t.Cause,
