@@ -49,14 +49,14 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 }
 
 func (s *Service) GetTargetsToAdmin() []models.TargetService {
-	targets := func(t []models.Target, f func(t models.Target) models.TargetService) []models.TargetService {
+	targets := func(t []models.TargetToAdmin, f func(t models.TargetToAdmin) models.TargetService) []models.TargetService {
 		result := make([]models.TargetService, 0, len(t))
 		for _, value := range t {
 			result = append(result, f(value))
 		}
 
 		return result
-	}(s.TargetRepository.GetTargetsToAdmin(), models.MapToTarget)
+	}(s.TargetRepository.GetTargetsToAdmin(), models.MapToTargetAdmin)
 
 	return targets
 }

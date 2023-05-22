@@ -18,6 +18,23 @@ func MapToTarget(t Target) TargetService {
 	}
 }
 
+func MapToTargetAdmin(t TargetToAdmin) TargetService {
+	return TargetService{
+		ID:         t.ID,
+		UID:        t.UID,
+		Title:      t.Title,
+		Link:       t.Link,
+		Icon:       t.Icon,
+		Status:     t.Status,
+		Count:      strconv.Itoa(int(t.Count)),
+		Total:      strconv.Itoa(int(t.Total)),
+		Cost:       t.Cost,
+		Cause:      t.Cause,
+		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
+		Login:      t.Login,
+	}
+}
+
 func MapToQueueExecutors(t Queue) QueueToService {
 	return QueueToService{
 		TID:    t.TID,
