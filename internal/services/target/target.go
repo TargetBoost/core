@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/ivahaev/go-logger"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -108,6 +109,12 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	case ytDislike:
 		title = "Поставить дизлайк"
 		break
+	}
+
+	st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
+	ch := s.TargetRepository.GetChatMembersByUserName(st)
+	if ch.CID == 0 {
+		return errors.New("Вы не добавили нашего бота в этот телеграм канал")
 	}
 
 	u := s.UserRepository.GetUserByID(int64(UID))

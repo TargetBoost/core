@@ -76,3 +76,9 @@ func (r *Repository) GetTaskDISTINCTIsWorkForUser(uid int64) []models.QueueToExe
 	r.db.Table("queues").Select("DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost").Joins("inner join targets t on queues.t_id = t.id").Where("queues.uid = ? and t.status = 1", uid).Order("queues.t_id").Find(&q)
 	return q
 }
+
+func (r *Repository) GetChatMembersByUserName(userName string) models.ChatMembersChanel {
+	var q models.ChatMembersChanel
+	r.db.Table("chat_members_chanels").Where("user_name = ?", userName).Find(&q)
+	return q
+}
