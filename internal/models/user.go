@@ -23,6 +23,7 @@ type UserService struct {
 	Balance string `json:"balance"`
 	Block   bool   `json:"block"`
 	Cause   string `json:"cause"`
+	Tg      string `json:"tg"`
 }
 
 type CreateUser struct {
