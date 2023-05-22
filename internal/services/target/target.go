@@ -112,7 +112,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	}
 
 	if u.Balance < target.Cost {
-		return errors.New("the balance of your insufficiency")
+		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
 	tl := target.Cost * target.Total
