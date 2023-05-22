@@ -18,3 +18,7 @@ func NewStorageService(storageRepository *storage.Repository) *Service {
 func (s *Service) GetFileByKey(key string) *models.FileStorage {
 	return s.storageRepository.GetFileByKey(key)
 }
+
+func (s *Service) SetChatMembers(cid int64, title string) {
+	s.storageRepository.SetChatMembers(cid, title)
+}

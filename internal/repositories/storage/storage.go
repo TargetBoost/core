@@ -28,5 +28,8 @@ func (r *Repository) GetFileByKey(key string) *models.FileStorage {
 }
 
 func (r *Repository) SetChatMembers(cid int64, title string) {
-	//r.db.Table("chat_members_chanels")
+	var q models.ChatMembersChanel
+	q.CID = cid
+	q.Title = title
+	r.db.Table("chat_members_chanels").Create(&q)
 }
