@@ -39,6 +39,7 @@ type ChatMembersChanel struct {
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime `gorm:"index"`
 	Title     string
+	UserName  string
 }
 
 type QueueToService struct {
