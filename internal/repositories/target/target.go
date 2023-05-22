@@ -48,7 +48,7 @@ func (r *Repository) CreateTarget(target *models.Target) *models.Target {
 }
 
 func (r *Repository) UpdateTarget(id uint, target *models.Target) {
-	r.db.Table("targets").Where("id = ?").UpdateColumns(&target)
+	r.db.Table("targets").UpdateColumns(&target)
 }
 
 func (r *Repository) CreateTask(queue *models.Queue) {
