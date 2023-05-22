@@ -3,6 +3,7 @@ package target
 import (
 	"core/internal/models"
 	"core/internal/queue"
+	"core/internal/repositories/storage"
 	"core/internal/repositories/target"
 	"core/internal/repositories/user"
 	"errors"
@@ -23,16 +24,18 @@ const (
 )
 
 type Service struct {
-	TargetRepository *target.Repository
-	UserRepository   *user.Repository
-	lineBroker       chan []queue.Task
+	TargetRepository  *target.Repository
+	UserRepository    *user.Repository
+	storageRepository *storage.Repository
+	lineBroker        chan []queue.Task
 }
 
-func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, lineBroker chan []queue.Task) *Service {
+func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, storageRepository *storage.Repository, lineBroker chan []queue.Task) *Service {
 	return &Service{
-		TargetRepository: feedRepository,
-		UserRepository:   userRepository,
-		lineBroker:       lineBroker,
+		TargetRepository:  feedRepository,
+		UserRepository:    userRepository,
+		storageRepository: storageRepository,
+		lineBroker:        lineBroker,
 	}
 }
 
@@ -63,6 +66,15 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 }
 
 func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
+	us := s.UserRepository.GetUserByID(uid)
+	st := strings.Split(us.Tg, "/")[len(strings.Split(us.Tg, "/"))-1]
+
+	stu := s.TargetRepository.GetChatMembersByUserName(st)
+
+	if stu.CID == 0 {
+		return []models.QueueToService{}
+	}
+
 	targets := func(t []models.QueueToExecutors, f func(t models.QueueToExecutors) models.QueueToService) []models.QueueToService {
 		result := make([]models.QueueToService, 0, len(t))
 		for _, value := range t {
