@@ -109,10 +109,21 @@ func (h *Handler) CreateTarget(ctx iris.Context) {
 	}
 
 	err = h.Service.Target.CreateTarget(user.ID, &t)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
-			"message": err.Error(),
+			"message": nil,
 		},
 		"data": nil,
 	})
