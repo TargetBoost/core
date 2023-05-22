@@ -47,8 +47,8 @@ type User struct {
 
 	Admin bool `json:"admin"`
 
-	Token   string `json:"token"`
-	Balance int64  `json:"balance"`
+	Token   string  `json:"token"`
+	Balance float64 `json:"balance"`
 }
 
 type Target struct {
@@ -94,4 +94,12 @@ type Settings struct {
 	ID   int64 `json:"id"`
 	Snow bool  `json:"snow"`
 	Rain bool  `json:"rain"`
+}
+
+type TaskCash struct {
+	gorm.Model
+	UID           uint
+	TransactionID string
+	Total         int64
+	Status        int64
 }

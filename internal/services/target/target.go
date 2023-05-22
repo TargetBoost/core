@@ -4,6 +4,8 @@ import (
 	"core/internal/models"
 	"core/internal/queue"
 	"core/internal/repositories/target"
+	"core/internal/repositories/user"
+	"errors"
 	"github.com/ivahaev/go-logger"
 )
 
@@ -20,12 +22,14 @@ const (
 
 type Service struct {
 	TargetRepository *target.Repository
+	UserRepository   *user.Repository
 	lineBroker       chan []queue.Task
 }
 
-func NewTargetService(feedRepository *target.Repository, lineBroker chan []queue.Task) *Service {
+func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, lineBroker chan []queue.Task) *Service {
 	return &Service{
 		TargetRepository: feedRepository,
+		UserRepository:   userRepository,
 		lineBroker:       lineBroker,
 	}
 }
@@ -69,7 +73,7 @@ func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 	return targets
 }
 
-func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
+func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	var title string
 	switch target.Type {
 	case vkCommunity:
@@ -97,6 +101,22 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 		title = "Поставить дизлайк"
 		break
 	}
+
+	u := s.UserRepository.GetUserByID(int64(UID))
+	if u.ID == 0 {
+		return errors.New("user not found")
+	}
+
+	if target.Cost < 0 {
+		return errors.New("error create task")
+	}
+
+	if u.Balance < target.Cost {
+		return errors.New("the balance of your insufficiency")
+	}
+
+	u.Balance = u.Balance - target.Cost
+	s.UserRepository.UpdateUser(u)
 
 	t := models.Target{
 		UID:    UID,
@@ -127,4 +147,5 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) {
 	}
 
 	s.lineBroker <- q
+	return nil
 }
