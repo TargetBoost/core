@@ -125,15 +125,16 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	s.UserRepository.UpdateUser(u)
 
 	t := models.Target{
-		UID:    UID,
-		Title:  title,
-		Link:   target.Link,
-		Icon:   target.Icon,
-		Status: 0,
-		Count:  0,
-		Total:  target.Total,
-		Cost:   target.Cost,
-		Type:   target.Type,
+		UID:        UID,
+		Title:      title,
+		Link:       target.Link,
+		Icon:       target.Icon,
+		Status:     0,
+		Count:      0,
+		Total:      target.Total,
+		Cost:       target.Cost,
+		Type:       target.Type,
+		TotalPrice: tl,
 	}
 
 	tt := s.TargetRepository.CreateTarget(&t)
