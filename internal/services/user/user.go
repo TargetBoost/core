@@ -27,7 +27,7 @@ func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task
 
 func (s *Service) UpdateUserBalance(id int64, cost float64) {
 	u := s.userRepository.GetUserByID(id)
-	u.Balance = u.Balance + cost
+	u.Balance = u.Balance + cost - 0.50
 
 	s.userRepository.UpdateUser(u)
 }
