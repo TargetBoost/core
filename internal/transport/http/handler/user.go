@@ -107,6 +107,55 @@ func (h *Handler) CreateTaskCashes(ctx iris.Context) {
 	})
 }
 
+// UpdateTaskCashes create
+func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
+	rawToken := ctx.GetHeader("Authorization")
+	var task models.TaskCashToService
+	err := ctx.ReadJSON(&task)
+	if err != nil {
+		ctx.StatusCode(400)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "bad data insertion",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	u, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	if !u.Admin {
+		ctx.StatusCode(401)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "your dont have permission",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	h.Service.User.UpdateTaskCashes(task)
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{},
+	})
+}
+
 func (h *Handler) GetTaskCashes(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	u, err := h.CheckAuth(rawToken)

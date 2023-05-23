@@ -176,3 +176,12 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	return nil
 }
+
+func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
+	var q models.TaskCash
+
+	q.ID = task.ID
+	q.Status = task.Status
+
+	s.userRepository.UpdateTaskCache(q)
+}
