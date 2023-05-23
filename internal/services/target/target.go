@@ -70,6 +70,14 @@ func (s *Service) GetTarget(tid uint) models.TargetService {
 	}
 }
 
+func (s *Service) GetTaskByID(id uint) models.QueueToService {
+	t := s.TargetRepository.GetTaskByID(int64(id))
+
+	return models.QueueToService{
+		Status: t.Status,
+	}
+}
+
 func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	targets := func(t []models.TargetToAdmin, f func(t models.TargetToAdmin) models.TargetService) []models.TargetService {
 		result := make([]models.TargetService, 0, len(t))

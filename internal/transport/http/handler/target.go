@@ -204,8 +204,20 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
+	task := h.Service.Target.GetTaskByID(t.ID)
+	if task.Status != 1 {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Вы уже выполнили это задание",
+			},
+			"data": nil,
+		})
+		return
+	}
 	h.Service.Target.UpdateTaskStatus(t.ID)
+	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
+
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{

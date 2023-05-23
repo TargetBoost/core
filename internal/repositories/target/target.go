@@ -42,6 +42,12 @@ func (r *Repository) GetTargetsToExecutor(uid int64) []models.Queue {
 	return t
 }
 
+func (r *Repository) GetTaskByID(id int64) models.Queue {
+	var t models.Queue
+	r.db.Table("queues").Where("id = ?", id).Find(&t)
+	return t
+}
+
 func (r *Repository) CreateTarget(target *models.Target) *models.Target {
 	r.db.Table("targets").Create(&target)
 	return target
