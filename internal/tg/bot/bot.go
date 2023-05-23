@@ -41,6 +41,11 @@ func (b *Bot) GetUpdates() {
 			logger.Info(update.Message.Chat)
 			if update.Message != nil {
 				b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+Добро пожаловать!
+Вы добавлены в систему.
+				`)
+				b.API.Send(msg)
 			}
 		case <-b.ctx.Done():
 			return
