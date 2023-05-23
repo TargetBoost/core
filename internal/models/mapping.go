@@ -50,6 +50,7 @@ func MapToQueueExecutors(t QueueToExecutors) QueueToService {
 
 func MapToTasksUser(user TaskCash) TaskCashToService {
 	return TaskCashToService{
+		ID:            user.ID,
 		UID:           user.UID,
 		TransactionID: user.TransactionID,
 		Status:        user.Status,

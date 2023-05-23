@@ -43,6 +43,7 @@ type AuthUser struct {
 }
 
 type TaskCashToService struct {
+	ID            uint    `json:"id"`
 	UID           uint    `json:"uid"`
 	TransactionID string  `json:"transaction_id"`
 	Number        string  `json:"number"`
