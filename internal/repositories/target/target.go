@@ -56,7 +56,7 @@ func (r *Repository) CreateTask(queue *models.Queue) {
 }
 
 func (r *Repository) UpdateTaskStatus(q models.Queue) {
-	r.db.Table("queues").UpdateColumns(&q).Where("uid = 0")
+	r.db.Table("queues").UpdateColumns(&q)
 }
 
 func (r *Repository) UpdateTask(q models.Queue) {
