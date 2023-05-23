@@ -187,7 +187,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	chatID, cost := h.Service.Target.GetChatID(suint(t.TID))
+	chatID, cost := h.Service.Target.GetChatID(uint(t.TID))
 	userChatID := h.Service.Target.GetUserID(user.ID)
 
 	logger.Info(chatID, userChatID)
