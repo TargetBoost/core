@@ -205,7 +205,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 	}
 
 	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
-	h.Service.Target.UpdateTaskStatus(uint(t.TID))
+	h.Service.Target.UpdateTaskStatus(t.ID)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
