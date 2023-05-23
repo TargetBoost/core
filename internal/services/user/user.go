@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"github.com/ivahaev/go-logger"
 	"strconv"
 	"time"
 )
@@ -27,7 +28,9 @@ func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task
 
 func (s *Service) UpdateUserBalance(id int64, cost float64) {
 	u := s.userRepository.GetUserByID(id)
+	logger.Info(u.Balance)
 	u.Balance = u.Balance + cost - 0.50
+	logger.Info(u.Balance, cost)
 
 	s.userRepository.UpdateUser(u)
 }
