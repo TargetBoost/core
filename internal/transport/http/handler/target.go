@@ -187,7 +187,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	chatID := h.Service.Target.GetChatID(t.ID)
+	chatID, cost := h.Service.Target.GetChatID(t.ID)
 	userChatID := h.Service.Target.GetUserID(user.ID)
 
 	logger.Info(chatID, userChatID)
@@ -204,6 +204,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
+	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
 	h.Service.Target.UpdateTaskStatus(uint(t.TID))
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{

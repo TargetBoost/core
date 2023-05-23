@@ -119,12 +119,12 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 	s.TargetRepository.UpdateTarget(id, &t)
 }
 
-func (s *Service) GetChatID(id uint) int64 {
+func (s *Service) GetChatID(id uint) (int64, float64) {
 	tu := s.GetTarget(id)
 	st := strings.Split(tu.Link, "/")[len(strings.Split(tu.Link, "/"))-1]
 
 	ch := s.TargetRepository.GetChatMembersByUserName(st)
-	return ch.CID
+	return ch.CID, tu.Cost
 }
 
 func (s *Service) GetUserID(id uint) int64 {
