@@ -75,6 +75,12 @@ func (r *Repository) GetTaskDISTINCTIsWork() []models.Queue {
 	return q
 }
 
+func (r *Repository) GetTaskForUserUID(uid uint, tid uint) []models.Queue {
+	var q []models.Queue
+	r.db.Table("queues").Where("uid = ? and t_id = ?", uid, tid).Order("t_id").Find(&q)
+	return q
+}
+
 func (r *Repository) GetTaskDISTINCTIsWorkForUser(uid int64) []models.QueueToExecutors {
 	var q []models.QueueToExecutors
 	r.db.Table("queues").Select("DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost").Joins("inner join targets t on queues.t_id = t.id").Where("queues.uid = ? and t.status = 1", uid).Order("queues.t_id").Find(&q)
