@@ -61,5 +61,7 @@ func (b *Bot) CheckMembers(cid, uid int64) (bool, error) {
 		return false, err
 	}
 
+	logger.Info(member)
+
 	return member.IsMember, nil
 }
