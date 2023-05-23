@@ -2,6 +2,7 @@ package handler
 
 import (
 	"core/internal/models"
+	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
 )
 
@@ -188,6 +189,8 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 
 	chatID := h.Service.Target.GetChatID(t.ID)
 	userChatID := h.Service.Target.GetUserID(user.ID)
+
+	logger.Info(chatID, userChatID)
 
 	members, err := h.Bot.CheckMembers(chatID, userChatID)
 	if err != nil {
