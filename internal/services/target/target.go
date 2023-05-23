@@ -129,7 +129,7 @@ func (s *Service) GetChatID(id uint) (int64, float64) {
 
 func (s *Service) GetUserID(id uint) int64 {
 	tu := s.UserRepository.GetUserByID(int64(id))
-	st := strings.Split(tu.Tg, "/")[len(strings.Split(tu.Tg, "/"))-1]
+	st := strings.Split(tu.Tg, "@")[len(strings.Split(tu.Tg, "@"))-1]
 
 	ch := s.TargetRepository.GetChatMembersByUserName(st)
 	return ch.CID
