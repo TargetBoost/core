@@ -187,7 +187,7 @@ func (h *Handler) UpdateTargetAdvertiser(ctx iris.Context) {
 		return
 	}
 
-	if t.Status != 1 && t.Status != 3 {
+	if t.Status != 3 {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
