@@ -23,7 +23,7 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 
 	api.Debug = false
 
-	u := tgbotapi.NewUpdate(0)
+	u := tgbotapi.NewUpdate(1)
 	u.Timeout = 1
 
 	return &Bot{
@@ -52,6 +52,7 @@ func (b *Bot) GetUpdates() {
 				`)
 				b.API.Send(msg)
 			}
+
 		case <-b.ctx.Done():
 			return
 		}
