@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"github.com/google/uuid"
 	"github.com/ivahaev/go-logger"
 	"strconv"
 	"time"
@@ -151,6 +152,8 @@ func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
 func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error {
 	u := s.userRepository.GetUserByID(uid)
 
+	id := uuid.New()
+
 	if u.Balance < 5 {
 		return errors.New("Ваш баланс меньше минимального вывода")
 	}
@@ -168,6 +171,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 	t.UID = u.ID
 	t.Number = task.Number
 	t.Total = task.Total
+	t.TransactionID = id.String()
 	s.userRepository.CreateTaskCache(t)
 
 	return nil
