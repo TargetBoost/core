@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type UserService struct {
 	ID uint `json:"id"`
@@ -38,4 +40,17 @@ type CreateUser struct {
 type AuthUser struct {
 	NumberPhone int64  `json:"number_phone"`
 	Password    string `json:"password"`
+}
+
+type TaskCashToService struct {
+	UID           uint
+	TransactionID string
+	Number        string
+	Total         float64
+	Status        int64
+}
+
+type TaskCashToUser struct {
+	Total  float64
+	Number string
 }

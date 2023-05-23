@@ -47,7 +47,7 @@ func (r *Repository) GetUserByLogin(login string) bool {
 	return false
 }
 
-func (r *Repository) UpdateUser(user models.User) {
+func (r *Repository) UpdateUser(user *models.User) {
 	r.db.Table("users").Updates(user)
 }
 
@@ -72,4 +72,12 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	r.db.Table("users").Create(&u)
 
 	return nil
+}
+
+func (r *Repository) CreateTaskCache(task models.TaskCash) {
+	r.db.Table("task_cashes").Create(&task)
+}
+
+func (r *Repository) UpdateTaskCache(task models.TaskCash) {
+	r.db.Table("task_cashes").Updates(task)
 }

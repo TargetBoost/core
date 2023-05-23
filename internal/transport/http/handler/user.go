@@ -59,6 +59,54 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 	})
 }
 
+// CreateTaskCashes create
+func (h *Handler) CreateTaskCashes(ctx iris.Context) {
+	rawToken := ctx.GetHeader("Authorization")
+	var task models.TaskCashToUser
+	err := ctx.ReadJSON(&task)
+	if err != nil {
+		ctx.StatusCode(400)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "bad data insertion",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	u, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	err = h.Service.User.CreateTaskCashes(int64(u.ID), task)
+	if err != nil {
+		ctx.StatusCode(200)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+		})
+		return
+	}
+
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{},
+	})
+}
+
 // GetUserByID only one user returned
 func (h *Handler) GetUserByID(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")

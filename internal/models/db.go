@@ -156,6 +156,7 @@ type TaskCash struct {
 	gorm.Model
 	UID           uint
 	TransactionID string
-	Total         int64
+	Total         float64
+	Number        string
 	Status        int64
 }
