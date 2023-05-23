@@ -23,8 +23,8 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 
 	api.Debug = false
 
-	u := tgbotapi.NewUpdate(1)
-	u.Timeout = 1
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
 
 	return &Bot{
 		API:          api,
@@ -35,28 +35,45 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 }
 
 func (b *Bot) GetUpdates() {
-	for {
-		select {
-		case update := <-b.API.GetUpdatesChan(b.updateConfig):
-			//logger.Info(update.Message.Chat)
-			if update.MyChatMember != nil {
-				logger.Info(update.MyChatMember)
-				b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
-			}
-			if update.Message != nil {
-				logger.Info(update.Message.Chat)
-				b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+	updates := b.API.GetUpdatesChan(b.updateConfig)
+	for update := range updates {
+		//logger.Info(update.Message.Chat)
+		if update.MyChatMember != nil {
+			logger.Info(update.MyChatMember)
+			b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
+		}
+		if update.Message != nil {
+			logger.Info(update.Message.Chat)
+			b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.
 				`)
-				b.API.Send(msg)
-			}
-
-		case <-b.ctx.Done():
-			return
+			b.API.Send(msg)
 		}
 	}
+	//	for {
+	//		select {
+	//		case update := <-b.API.GetUpdatesChan(b.updateConfig):
+	//			//logger.Info(update.Message.Chat)
+	//			if update.MyChatMember != nil {
+	//				logger.Info(update.MyChatMember)
+	//				b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
+	//			}
+	//			if update.Message != nil {
+	//				logger.Info(update.Message.Chat)
+	//				b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
+	//				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+	//Добро пожаловать!
+	//Вы добавлены в систему.
+	//				`)
+	//				b.API.Send(msg)
+	//			}
+	//
+	//		case <-b.ctx.Done():
+	//			return
+	//		}
+	//	}
 }
 
 func (b *Bot) CheckMembers(cid, uid int64) error {
