@@ -19,7 +19,19 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 	var t []models.Target
 	r.db.Table("targets").Where("uid = ?", uid).Find(&t)
 
-	return t
+	var targetResult []models.Target
+
+	for _, v := range t {
+		var sc models.SubCount
+
+		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID)
+
+		v.Count = sc.Count
+
+		targetResult = append(targetResult, v)
+	}
+
+	return targetResult
 }
 
 func (r *Repository) GetTargetByID(uid uint) models.Target {
@@ -33,7 +45,19 @@ func (r *Repository) GetTargetsToAdmin() []models.TargetToAdmin {
 	var t []models.TargetToAdmin
 	r.db.Table("targets").Select("targets.id, targets.uid, targets.title, targets.link, targets.icon, targets.status, targets.count, targets.total, targets.cost, targets.total_price, u.login").Joins("inner join users u on targets.uid = u.id").Find(&t)
 
-	return t
+	var targetResult []models.TargetToAdmin
+
+	for _, v := range t {
+		var sc models.SubCount
+
+		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID)
+
+		v.Count = sc.Count
+
+		targetResult = append(targetResult, v)
+	}
+
+	return targetResult
 }
 
 func (r *Repository) GetTargetsToExecutor(uid int64) []models.Queue {

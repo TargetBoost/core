@@ -35,3 +35,7 @@ type TaskToService struct {
 	UID uint `json:"uid"`
 	TID uint `json:"tid"`
 }
+
+type SubCount struct {
+	Count int64
+}
