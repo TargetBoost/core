@@ -43,6 +43,7 @@ type ChatMembersChanel struct {
 }
 
 type QueueToService struct {
+	ID     uint    `json:"id"`
 	TID    uint    `json:"tid"`
 	UID    int64   `json:"uid"`
 	Cost   float64 `json:"cost"`
