@@ -192,7 +192,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 
 	logger.Info(chatID, userChatID)
 
-	members, err := h.Bot.CheckMembers(chatID, userChatID)
+	err = h.Bot.CheckMembers(chatID, 13123)
 	if err != nil {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -210,7 +210,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		"status": iris.Map{
 			"message": nil,
 		},
-		"data": members,
+		"data": true,
 	})
 	return
 }

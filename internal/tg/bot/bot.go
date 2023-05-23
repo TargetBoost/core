@@ -50,18 +50,15 @@ func (b *Bot) GetUpdates() {
 	}
 }
 
-func (b *Bot) CheckMembers(cid, uid int64) (bool, error) {
-	member, err := b.API.GetChatMember(tgbotapi.GetChatMemberConfig{
+func (b *Bot) CheckMembers(cid, uid int64) error {
+	_, err := b.API.GetChatMember(tgbotapi.GetChatMemberConfig{
 		ChatConfigWithUser: tgbotapi.ChatConfigWithUser{
 			ChatID: cid,
 			UserID: uid,
 		},
 	})
 	if err != nil {
-		return false, err
+		return err
 	}
-
-	logger.Info(member)
-
-	return member.IsMember, nil
+	return nil
 }
