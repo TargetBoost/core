@@ -141,6 +141,51 @@ func (h *Handler) GetTaskCashes(ctx iris.Context) {
 	})
 }
 
+func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
+	rawToken := ctx.GetHeader("Authorization")
+	u, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	if !u.Admin {
+		ctx.StatusCode(401)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "your dont have permission",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	tasks := h.Service.User.GetTasksCashesAdmin()
+	if err != nil {
+		ctx.StatusCode(200)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+		})
+		return
+	}
+
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": tasks,
+	})
+}
+
 // GetUserByID only one user returned
 func (h *Handler) GetUserByID(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
