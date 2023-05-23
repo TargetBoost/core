@@ -4,7 +4,6 @@ import (
 	"context"
 	"core/internal/services"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/ivahaev/go-logger"
 )
 
 type Bot struct {
@@ -17,14 +16,14 @@ type Bot struct {
 
 func New(ctx context.Context, token string, services *services.Services) (*Bot, error) {
 	api, err := tgbotapi.NewBotAPI(token)
-	api.Debug = false
-
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 10
-
 	if err != nil {
 		return nil, err
 	}
+
+	api.Debug = false
+
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
 
 	return &Bot{
 		API:          api,
@@ -38,7 +37,7 @@ func (b *Bot) GetUpdates() {
 	for {
 		select {
 		case update := <-b.API.GetUpdatesChan(b.updateConfig):
-			logger.Info(update.Message.Chat)
+			//logger.Info(update.Message.Chat)
 			if update.Message != nil {
 				b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
