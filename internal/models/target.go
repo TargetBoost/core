@@ -2,6 +2,7 @@ package models
 
 type UpdateTargetService struct {
 	ID     uint  `json:"id"`
+	TID    int64 `json:"tid"`
 	Status int64 `json:"status"`
 }
 

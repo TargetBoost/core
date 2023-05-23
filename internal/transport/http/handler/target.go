@@ -204,7 +204,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	//h.Service.Target.Check(t.ID, t.Status)
+	h.Service.Target.UpdateTaskStatus(uint(t.TID))
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{

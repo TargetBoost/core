@@ -105,6 +105,13 @@ func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 	return targets
 }
 
+func (s *Service) UpdateTaskStatus(id uint) {
+	var q models.Queue
+	q.ID = id
+	q.Status = 4
+	s.TargetRepository.UpdateTaskStatus(q)
+}
+
 func (s *Service) UpdateTarget(id uint, status int64) {
 	t := s.TargetRepository.GetTargetByID(id)
 	t.Status = status
