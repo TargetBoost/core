@@ -108,7 +108,7 @@ func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 func (s *Service) UpdateTaskStatus(id uint) {
 	var q models.Queue
 	q.ID = id
-	q.Status = 4
+	q.Status = 3
 	s.TargetRepository.UpdateTaskStatus(q)
 }
 
