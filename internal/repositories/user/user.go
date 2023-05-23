@@ -81,3 +81,15 @@ func (r *Repository) CreateTaskCache(task models.TaskCash) {
 func (r *Repository) UpdateTaskCache(task models.TaskCash) {
 	r.db.Table("task_cashes").Updates(task)
 }
+
+func (r *Repository) GetTaskCacheByUID(uid uint) []models.TaskCash {
+	var q []models.TaskCash
+	r.db.Table("task_cashes").Where("uid = ?", uid).Find(&q)
+	return q
+}
+
+func (r *Repository) GetTaskCacheToAdmin() []models.TaskCash {
+	var q []models.TaskCash
+	r.db.Table("task_cashes").Find(&q)
+	return q
+}

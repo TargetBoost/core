@@ -47,3 +47,13 @@ func MapToQueueExecutors(t QueueToExecutors) QueueToService {
 		Link:   t.Link,
 	}
 }
+
+func MapToTasksUser(user TaskCash) TaskCashToService {
+	return TaskCashToService{
+		UID:           user.UID,
+		TransactionID: user.TransactionID,
+		Status:        user.Status,
+		Number:        user.Number,
+		Total:         user.Total,
+	}
+}

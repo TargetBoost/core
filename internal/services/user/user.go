@@ -57,6 +57,19 @@ func (s *Service) GetAllUsers() []models.UserService {
 	return usersService
 }
 
+func (s *Service) GetTasksCashesUser(uid uint) []models.TaskCashToService {
+	tasks := func(t []models.TaskCash, f func(t models.TaskCash) models.TaskCashToService) []models.TaskCashToService {
+		result := make([]models.TaskCashToService, 0, len(t))
+		for _, value := range t {
+			result = append(result, f(value))
+		}
+
+		return result
+	}(s.userRepository.GetTaskCacheByUID(uid), models.MapToTasksUser)
+
+	return tasks
+}
+
 func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
 	v := s.userRepository.GetUserByID(id)
