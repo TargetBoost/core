@@ -5,7 +5,6 @@ import (
 	"core/internal/services"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/ivahaev/go-logger"
-	"log"
 )
 
 type Bot struct {
@@ -39,11 +38,11 @@ func (b *Bot) GetUpdates() {
 	for {
 		select {
 		case update := <-b.API.GetUpdatesChan(b.updateConfig):
-			logger.Info(update)
-			if update.Message.NewChatMembers != nil {
-				log.Print(update.Message.NewChatMembers)
-				//b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
-			}
+			logger.Info(update.Message)
+			//if update.Message.NewChatMembers != nil {
+			//	log.Print(update.Message.NewChatMembers)
+			//	//b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
+			//}
 		case <-b.ctx.Done():
 			return
 		}
