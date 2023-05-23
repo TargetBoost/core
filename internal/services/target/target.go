@@ -52,6 +52,24 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 	return targets
 }
 
+func (s *Service) GetTarget(tid uint) models.TargetService {
+	t := s.TargetRepository.GetTargetByID(tid)
+
+	return models.TargetService{
+		ID:         t.ID,
+		UID:        t.UID,
+		Title:      t.Title,
+		Link:       t.Link,
+		Icon:       t.Icon,
+		Status:     t.Status,
+		Count:      strconv.Itoa(int(t.Count)),
+		Total:      strconv.Itoa(int(t.Total)),
+		Cost:       t.Cost,
+		Cause:      t.Cause,
+		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
+	}
+}
+
 func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	targets := func(t []models.TargetToAdmin, f func(t models.TargetToAdmin) models.TargetService) []models.TargetService {
 		result := make([]models.TargetService, 0, len(t))
@@ -92,6 +110,22 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 	t.Status = status
 
 	s.TargetRepository.UpdateTarget(id, &t)
+}
+
+func (s *Service) GetChatID(id uint) int64 {
+	tu := s.GetTarget(id)
+	st := strings.Split(tu.Link, "/")[len(strings.Split(tu.Link, "/"))-1]
+
+	ch := s.TargetRepository.GetChatMembersByUserName(st)
+	return ch.CID
+}
+
+func (s *Service) GetUserID(id uint) int64 {
+	tu := s.UserRepository.GetUserByID(int64(id))
+	st := strings.Split(tu.Tg, "/")[len(strings.Split(tu.Tg, "/"))-1]
+
+	ch := s.TargetRepository.GetChatMembersByUserName(st)
+	return ch.CID
 }
 
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {

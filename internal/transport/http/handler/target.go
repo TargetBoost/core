@@ -168,3 +168,46 @@ func (h *Handler) UpdateTarget(ctx iris.Context) {
 	})
 	return
 }
+
+func (h *Handler) CheckTarget(ctx iris.Context) {
+	var t models.UpdateTargetService
+	_ = ctx.ReadJSON(&t)
+
+	rawToken := ctx.GetHeader("Authorization")
+	user, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	chatID := h.Service.Target.GetChatID(t.ID)
+	userChatID := h.Service.Target.GetUserID(user.ID)
+
+	members, err := h.Bot.CheckMembers(chatID, userChatID)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	//h.Service.Target.Check(t.ID, t.Status)
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": members,
+	})
+	return
+}

@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"core/internal/services"
+	"core/internal/tg/bot"
 	"core/internal/transport/http/router"
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/ivahaev/go-logger"
@@ -15,7 +16,7 @@ import (
 //	Services *services.Services
 //}
 
-func NewController(ctx context.Context, services *services.Services) {
+func NewController(ctx context.Context, services *services.Services, bot *bot.Bot) {
 	ac := makeAccessLog()
 	defer func(ac *accesslog.AccessLog) {
 		err := ac.Close()
@@ -42,7 +43,7 @@ func NewController(ctx context.Context, services *services.Services) {
 	})
 	app.UseRouter(crs)
 
-	irisRouter := router.NewRouter(app, services)
+	irisRouter := router.NewRouter(app, services, bot)
 
 	err := irisRouter.Listen(":8080", iris.WithoutInterruptHandler, iris.WithoutServerError(iris.ErrServerClosed))
 	if err != nil {

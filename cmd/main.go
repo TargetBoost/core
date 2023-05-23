@@ -57,14 +57,13 @@ func main() {
 
 	serv := services.NewServices(repo, q.Line, q.LineAppoint)
 
-	go controller.NewController(ctx, serv)
-
 	b, err := bot.New(ctx, "5911800604:AAFN65f8vQrsgjIxR8vQgUr_SBCj8SQ1RoM", serv)
 	if err != nil {
 		panic(err)
 	}
 
 	go b.GetUpdates()
+	go controller.NewController(ctx, serv, b)
 
 	<-GracefulShutdown()
 	_, forceCancel := context.WithTimeout(ctx, shutDownDuration)
