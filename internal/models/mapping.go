@@ -40,7 +40,7 @@ func MapToQueueExecutors(t QueueToExecutors) QueueToService {
 		ID:     t.ID,
 		TID:    t.TID,
 		UID:    t.UID,
-		Cost:   t.Cost,
+		Cost:   t.Cost - 0.50,
 		Title:  t.Title,
 		Status: t.Status,
 		Icon:   t.Icon,
