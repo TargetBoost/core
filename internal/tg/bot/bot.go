@@ -20,7 +20,7 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 	api.Debug = false
 
 	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	u.Timeout = 10
 
 	if err != nil {
 		return nil, err
