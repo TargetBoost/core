@@ -170,6 +170,45 @@ func (h *Handler) UpdateTarget(ctx iris.Context) {
 	return
 }
 
+func (h *Handler) UpdateTargetAdvertiser(ctx iris.Context) {
+	var t models.UpdateTargetService
+	_ = ctx.ReadJSON(&t)
+
+	rawToken := ctx.GetHeader("Authorization")
+	_, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	if t.Status != 1 && t.Status != 3 {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": `У Вас нет прав перевести кампанию в такой статус`,
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	h.Service.Target.UpdateTarget(t.ID, t.Status)
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": nil,
+	})
+	return
+}
+
 func (h *Handler) CheckTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
