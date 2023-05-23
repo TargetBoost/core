@@ -85,7 +85,7 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 
 func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
 	us := s.UserRepository.GetUserByID(uid)
-	st := strings.Split(us.Tg, "/")[len(strings.Split(us.Tg, "/"))-1]
+	st := strings.Split(us.Tg, "@")[len(strings.Split(us.Tg, "@"))-1]
 
 	stu := s.TargetRepository.GetChatMembersByUserName(st)
 
