@@ -24,7 +24,7 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 	for _, v := range t {
 		var sc models.SubCount
 
-		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID)
+		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
 
 		v.Count = sc.Count
 
@@ -50,7 +50,7 @@ func (r *Repository) GetTargetsToAdmin() []models.TargetToAdmin {
 	for _, v := range t {
 		var sc models.SubCount
 
-		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID)
+		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
 
 		v.Count = sc.Count
 
