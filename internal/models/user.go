@@ -43,14 +43,14 @@ type AuthUser struct {
 }
 
 type TaskCashToService struct {
-	UID           uint
-	TransactionID string
-	Number        string
-	Total         float64
-	Status        int64
+	UID           uint    `json:"uid"`
+	TransactionID string  `json:"transaction_id"`
+	Number        string  `json:"number"`
+	Total         float64 `json:"total"`
+	Status        int64   `json:"status"`
 }
 
 type TaskCashToUser struct {
-	Total  float64
-	Number string
+	Total  float64 `json:"total"`
+	Number string  `json:"number"`
 }
