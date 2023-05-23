@@ -32,7 +32,7 @@ func (q Queue) AppointTask() {
 			que := q.repo.Feed.GetTaskDISTINCT()
 
 			for _, v := range que {
-				tasksUser := q.repo.Feed.GetTaskForUserUID(uint(v.UID), v.TID)
+				tasksUser := q.repo.Feed.GetTaskForUserUID(uint(t.UID), v.TID)
 				if len(tasksUser) > 0 {
 					continue
 				}
