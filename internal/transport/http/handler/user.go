@@ -352,13 +352,18 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 	logger.Debug(t)
 
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": user,
-	})
+	if t.Status.Value != "WAITING" {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Ошибка шлюза",
+			},
+			"data": "",
+		})
+
+	}
+
+	ctx.Redirect(fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/service/s/pay", id.String(), pay.Value), iris.StatusPermanentRedirect)
 }
 
 // GetUserByID only one user returned
