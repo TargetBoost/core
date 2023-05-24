@@ -59,7 +59,7 @@ type User struct {
 
 	Login string `json:"login"`
 
-	Tg string `json:"tg"`
+	Tg string `json:"tg" gorm:"primarykey"`
 
 	MainImage  string `json:"main_image"`
 	SmallImage string `json:"small_image"`
