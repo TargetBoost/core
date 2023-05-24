@@ -349,7 +349,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 		return
 	}
 
-	logger.Debug(t)
+	logger.Debug(t, jsonBody)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
