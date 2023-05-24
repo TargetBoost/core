@@ -48,7 +48,11 @@ func (r *Repository) GetUserByLogin(login string) bool {
 }
 
 func (r *Repository) UpdateUser(user models.User) {
-	r.db.Debug().Table("users").Where("id = ?", user.ID).Updates(user)
+	r.db.Table("users").Where("id = ?", user.ID).Updates(user)
+}
+
+func (r *Repository) UpdateUserBalanceToTask(uid uint, balance float64) {
+	r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.User{Balance: balance})
 }
 
 func (r *Repository) CreateUser(user *models.CreateUser) error {
