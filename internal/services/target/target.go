@@ -199,12 +199,12 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 
 	tl := target.Cost * float64(ft)
 
-	newBalance := target.Cost * float64(ft)
+	u.Balance = u.Balance - tl
 	if u.Balance < 0 {
 		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
-	s.UserRepository.UpdateUserBalanceToTask(u.ID, newBalance)
+	s.UserRepository.UpdateUser(u)
 
 	t := models.Target{
 		UID:        UID,
