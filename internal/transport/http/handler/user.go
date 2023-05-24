@@ -10,6 +10,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"io"
 	"net/http"
+	"time"
 )
 
 // GetAllUsers all users returned
@@ -319,15 +320,24 @@ func (h *Handler) Pay(ctx iris.Context) {
 		}
 	}(res.Body)
 
-	type data struct {
-		Value string `json:"value"`
+	type Result struct {
+		SiteID string `json:"siteId"`
+		BillID string `json:"billId"`
+		Amount struct {
+			Currency string `json:"currency"`
+			Value    string `json:"value"`
+		} `json:"amount"`
+		Status struct {
+			Value           string    `json:"value"`
+			ChangedDateTime time.Time `json:"changedDateTime"`
+		} `json:"status"`
+		CreationDateTime     time.Time `json:"creationDateTime"`
+		ExpirationDateTime   time.Time `json:"expirationDateTime"`
+		PayURL               string    `json:"payUrl"`
+		RecipientPhoneNumber string    `json:"recipientPhoneNumber"`
 	}
 
-	type result struct {
-		Status data `json:"status"`
-	}
-
-	var t result
+	var t Result
 
 	//t.Status.Value = "PAID"
 
