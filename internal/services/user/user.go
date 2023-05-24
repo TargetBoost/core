@@ -102,7 +102,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.NumberPhone = v.NumberPhone
 	userService.Execute = v.Execute
 	userService.Admin = v.Admin
-	userService.Balance = strconv.FormatFloat(v.Balance, 'g', 1, 64)
+	userService.Balance = strconv.FormatFloat(v.Balance, 'g', -1, 64)
 	userService.Block = v.Block
 	userService.Cause = v.Cause
 	userService.Tg = v.Tg
