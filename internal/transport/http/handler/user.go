@@ -340,7 +340,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 		RecipientPhoneNumber string    `json:"recipientPhoneNumber"`
 	}
 
-	var t interface{}
+	var t Result
 
 	//t.Status.Value = "PAID"
 
@@ -350,7 +350,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 		return
 	}
 
-	logger.Debug(t, jsonBody)
+	logger.Debug(t)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
