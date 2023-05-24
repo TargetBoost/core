@@ -241,7 +241,7 @@ func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
 	})
 }
 
-// Pay
+// Pay -
 func (h *Handler) Pay(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	var pay models.Pay
