@@ -189,3 +189,24 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 
 	s.userRepository.UpdateTaskCache(q)
 }
+
+func (s *Service) CreateTransaction(t *models.TransactionToService) {
+	s.userRepository.CreateTransaction(t)
+}
+
+func (s *Service) UpdateTransaction(t *models.TransactionToService) {
+	s.userRepository.UpdateTransaction(t)
+}
+
+func (s *Service) GetTransaction(build string) *models.TransactionToService {
+	var trans models.TransactionToService
+
+	t := s.userRepository.GetTransaction(build)
+
+	trans.Amount = strconv.FormatFloat(t.Amount, 'g', -1, 64)
+	trans.UID = t.UID
+	trans.Status = t.Status
+	trans.BuildID = t.BuildID
+
+	return &trans
+}

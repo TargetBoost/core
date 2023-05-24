@@ -46,6 +46,13 @@ type Pay struct {
 	Value string `json:"value"`
 }
 
+type TransactionToService struct {
+	BuildID string
+	UID     uint
+	Amount  string
+	Status  string
+}
+
 type TaskCashToService struct {
 	ID            uint    `json:"id"`
 	UID           uint    `json:"uid"`

@@ -54,6 +54,15 @@ type QueueToService struct {
 	Link   string  `json:"link"` // ссылка на задание
 }
 
+type Transaction struct {
+	gorm.Model
+
+	BuildID string
+	UID     uint
+	Amount  float64
+	Status  string
+}
+
 type User struct {
 	gorm.Model
 

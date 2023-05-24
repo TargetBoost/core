@@ -362,15 +362,112 @@ func (h *Handler) Pay(ctx iris.Context) {
 		})
 	}
 
+	var trans models.TransactionToService
+	trans.BuildID = id.String()
+	trans.UID = user.ID
+	trans.Status = t.Status.Value
+	trans.Amount = pay.Value
+
+	h.Service.User.CreateTransaction(&trans)
+
 	ctx.StatusCode(404)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
 			"message": "Ошибка шлюза",
 		},
 		"data": iris.Map{
-			"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/service/s/pay", id.String(), pay.Value),
+			"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/service/s/pay/%s", id.String(), pay.Value, id.String()),
 		},
 	})
+}
+
+func (h *Handler) ConfirmPay(ctx iris.Context) {
+	rawToken := ctx.GetHeader("Authorization")
+	key := ctx.Params().GetString("id")
+	_, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	trans := h.Service.User.GetTransaction(key)
+
+	if trans.Status != "WAIT" {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Transaction is PAID before",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	httpClient := http.Client{}
+
+	reqURL := fmt.Sprintf("https://api.qiwi.com/partner/bill/v1/bills/%s", trans.BuildID)
+	req, err := http.NewRequest(http.MethodGet, reqURL, nil)
+	if err != nil {
+		logger.Errorf("could not create HTTP request: %v", err)
+		ctx.StatusCode(iris.StatusInternalServerError)
+		return
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, "eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6IjBldDJrMy0wMCIsInVzZXJfaWQiOiI3OTE1MzQwMDE2NSIsInNlY3JldCI6Ijc0NjQ4ZDBiZDA4YzNhYWVlZTk0NzMzMmJiZjYzODM1NmYyZWM1MmMwYjMwMGIyOTU1NDVkZjgxOTZkZTUyOWMifX0="))
+	req.Header.Set("accept", "application/json")
+	req.Header.Set("Content-Type", "application/json;charset=UTF-8")
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		logger.Errorf("could not send HTTP request: %v", err)
+		ctx.StatusCode(iris.StatusInternalServerError)
+		return
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			logger.Error(err)
+			return
+		}
+	}(res.Body)
+
+	type Result struct {
+		SiteID string `json:"siteId"`
+		BillID string `json:"billId"`
+		Amount struct {
+			Currency string `json:"currency"`
+			Value    string `json:"value"`
+		} `json:"amount"`
+		Status struct {
+			Value           string    `json:"value"`
+			ChangedDateTime time.Time `json:"changedDateTime"`
+		} `json:"status"`
+		CreationDateTime     time.Time `json:"creationDateTime"`
+		ExpirationDateTime   time.Time `json:"expirationDateTime"`
+		PayURL               string    `json:"payUrl"`
+		RecipientPhoneNumber string    `json:"recipientPhoneNumber"`
+	}
+
+	var t interface{}
+
+	//t.Status.Value = "PAID"
+
+	if err := json.NewDecoder(res.Body).Decode(&t); err != nil {
+		logger.Errorf("could not parse JSON response: %v", err)
+		ctx.StatusCode(iris.StatusInternalServerError)
+		return
+	}
+
+	logger.Debug(t)
+
 }
 
 // GetUserByID only one user returned
