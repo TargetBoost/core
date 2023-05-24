@@ -289,12 +289,11 @@ func (h *Handler) Pay(ctx iris.Context) {
 	}
 
 	jsonBody, _ := json.Marshal(body)
-	bodyReader := bytes.NewReader(jsonBody)
 
 	httpClient := http.Client{}
 
 	reqURL := fmt.Sprintf("https://api.qiwi.com/partner/bill/v1/bills/%s", id.String())
-	req, err := http.NewRequest(http.MethodGet, reqURL, bodyReader)
+	req, err := http.NewRequest(http.MethodPut, reqURL, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		logger.Errorf("could not create HTTP request: %v", err)
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -337,7 +336,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 		RecipientPhoneNumber string    `json:"recipientPhoneNumber"`
 	}
 
-	var t interface{}
+	var t Result
 
 	//t.Status.Value = "PAID"
 
