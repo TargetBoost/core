@@ -34,9 +34,12 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 	}, nil
 }
 
-//func (b *Bot) SenderUpdates(){
-//	b.services.Storage
-//}
+func (b *Bot) SenderUpdates(cid int64, count float64) {
+	msg := tgbotapi.NewMessage(cid, `
+Деньги по Вашей заявке успешго отправлены ()
+				`)
+	b.API.Send(msg)
+}
 
 func (b *Bot) GetUpdates() {
 	updates := b.API.GetUpdatesChan(b.updateConfig)
