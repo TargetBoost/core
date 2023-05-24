@@ -396,6 +396,8 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
+	logger.Debug(key)
+
 	trans := h.Service.User.GetTransaction(key)
 
 	if trans.Status != "WAIT" {
