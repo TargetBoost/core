@@ -10,6 +10,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -384,7 +385,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 func (h *Handler) ConfirmPay(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	key := ctx.Params().GetString("id")
-	_, err := h.CheckAuth(rawToken)
+	u, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -480,19 +481,57 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	logger.Debug(t)
 
+	if t.Status.Value != "PAID" {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Transaction is WAIT status",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	f, err := strconv.ParseFloat(trans.Amount, 64)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	fu, err := strconv.ParseFloat(u.Balance, 64)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	h.Service.User.UpdateUserBalance(int64(u.ID), fu+f)
+
 	trans.Status = "PAID"
 
 	h.Service.User.UpdateTransaction(trans)
 
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"url": "https://targetboost.ru/s/pay",
-		},
-	})
+	ctx.Redirect("https://targetboost.ru/s/pay", 301)
+	//ctx.StatusCode(200)
+	//_ = ctx.JSON(iris.Map{
+	//	"status": iris.Map{
+	//		"message": nil,
+	//	},
+	//	"data": iris.Map{
+	//		"url": "https://targetboost.ru/s/pay",
+	//	},
+	//})
 }
 
 // GetUserByID only one user returned
