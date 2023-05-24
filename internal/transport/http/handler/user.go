@@ -370,10 +370,10 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 	h.Service.User.CreateTransaction(&trans)
 
-	ctx.StatusCode(404)
+	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
-			"message": "Ошибка шлюза",
+			"message": nil,
 		},
 		"data": iris.Map{
 			"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/service/s/pay/%s", id.String(), pay.Value, id.String()),
@@ -468,7 +468,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		RecipientPhoneNumber string    `json:"recipientPhoneNumber"`
 	}
 
-	var t interface{}
+	var t Result
 
 	//t.Status.Value = "PAID"
 
@@ -480,6 +480,19 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	logger.Debug(t)
 
+	trans.Status = "PAID"
+
+	h.Service.User.UpdateTransaction(trans)
+
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{
+			"url": "https://targetboost.ru/s/pay",
+		},
+	})
 }
 
 // GetUserByID only one user returned
