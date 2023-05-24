@@ -173,11 +173,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 		return errors.New("Сумма вывода больше баланса")
 	}
 
-	if u.Balance-task.Total == 0 {
-		u.Balance = 0.0
-	} else {
-		u.Balance = u.Balance - task.Total
-	}
+	u.Balance = u.Balance - task.Total
 
 	s.userRepository.UpdateUser(u)
 

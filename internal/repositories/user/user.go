@@ -48,7 +48,7 @@ func (r *Repository) GetUserByLogin(login string) bool {
 }
 
 func (r *Repository) UpdateUser(user models.User) {
-	r.db.Table("users").Where("id = ?", user.ID).Updates(user)
+	r.db.Table("users").Where("id = ?", user.ID).Updates(user).Debug()
 }
 
 func (r *Repository) CreateUser(user *models.CreateUser) error {
