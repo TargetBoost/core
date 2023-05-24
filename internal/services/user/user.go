@@ -154,6 +154,10 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	id := uuid.New()
 
+	if task.Total == 0 {
+		return errors.New("Сумма вывода не может ровняться 0")
+	}
+
 	if u.Balance < 5 {
 		return errors.New("Ваш баланс меньше минимального вывода")
 	}
