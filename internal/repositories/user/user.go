@@ -105,6 +105,6 @@ func (r *Repository) UpdateTransaction(t *models.TransactionToService) {
 
 func (r *Repository) GetTransaction(build string) models.Transaction {
 	var q models.Transaction
-	r.db.Table("transactions").Where("build = ?", build).Find(&q)
+	r.db.Table("transactions").Where("build_id = ?", build).Find(&q)
 	return q
 }
