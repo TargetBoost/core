@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"core/internal/models"
 	"encoding/json"
 	"fmt"
@@ -287,12 +288,15 @@ func (h *Handler) Pay(ctx iris.Context) {
 		Value:    pay.Value,
 	}
 
-	//jsonBody, _ := json.Marshal(body)
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		logger.Error(err)
+	}
 
 	httpClient := http.Client{}
 
 	reqURL := fmt.Sprintf("https://api.qiwi.com/partner/bill/v1/bills/%s", id.String())
-	req, err := http.NewRequest(http.MethodPut, reqURL, nil)
+	req, err := http.NewRequest(http.MethodPut, reqURL, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		logger.Errorf("could not create HTTP request: %v", err)
 		ctx.StatusCode(iris.StatusInternalServerError)
