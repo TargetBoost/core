@@ -34,6 +34,10 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 	}, nil
 }
 
+//func (b *Bot) SenderUpdates(){
+//	b.services.Storage
+//}
+
 func (b *Bot) GetUpdates() {
 	updates := b.API.GetUpdatesChan(b.updateConfig)
 	for update := range updates {
