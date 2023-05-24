@@ -353,7 +353,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 	logger.Debug(t)
 
-	if t.Status.Value != "WAIT" {
+	if t.Status.Value != "WAITING" {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
@@ -412,7 +412,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	if trans.Status != "WAIT" {
+	if trans.Status != "WAITING" {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
