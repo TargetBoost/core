@@ -47,7 +47,7 @@ func (r *Repository) GetUserByLogin(login string) bool {
 	return false
 }
 
-func (r *Repository) UpdateUser(user *models.User) {
+func (r *Repository) UpdateUser(user models.User) {
 	r.db.Table("users").Updates(user)
 }
 

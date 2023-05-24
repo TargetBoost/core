@@ -33,14 +33,14 @@ func (s *Service) UpdateUserBalance(id int64, cost float64) {
 	u.Balance = u.Balance + cost - 1
 	logger.Info(u.Balance, cost)
 
-	s.userRepository.UpdateUser(&u)
+	s.userRepository.UpdateUser(u)
 }
 
 func (s *Service) UpdateUser(uid uint, b float64) {
 	var u models.User
 	u.Balance = b
 	u.ID = uid
-	s.userRepository.UpdateUser(&u)
+	s.userRepository.UpdateUser(u)
 }
 
 func (s *Service) GetAllUsers() []models.UserService {
@@ -151,7 +151,7 @@ func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
 
 	token := createToken(strconv.FormatInt(user.NumberPhone, 10), user.Password, time.Now())
 	u.Token = token
-	s.userRepository.UpdateUser(&u)
+	s.userRepository.UpdateUser(u)
 
 	return &u, nil
 }
@@ -177,7 +177,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	u.Balance = u.Balance - task.Total
 
-	s.userRepository.UpdateUser(&u)
+	s.userRepository.UpdateUser(u)
 
 	var t models.TaskCash
 	t.Status = 0
