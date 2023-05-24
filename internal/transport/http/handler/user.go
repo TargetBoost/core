@@ -304,7 +304,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, "eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6IjBldDJrMy0wMCIsInVzZXJfaWQiOiI3OTE1MzQwMDE2NSIsInNlY3JldCI6Ijc0NjQ4ZDBiZDA4YzNhYWVlZTk0NzMzMmJiZjYzODM1NmYyZWM1MmMwYjMwMGIyOTU1NDVkZjgxOTZkZTUyOWMifX0="))
-	req.Header.Set("accept", "application/json")
+	req.Header.Set("accept", "application/json;charset=UTF-8")
 
 	res, err := httpClient.Do(req)
 	if err != nil {
