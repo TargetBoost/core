@@ -204,7 +204,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
-	s.UserRepository.UpdateUser(&u)
+	s.UserRepository.UpdateUser(u)
 
 	t := models.Target{
 		UID:        UID,
