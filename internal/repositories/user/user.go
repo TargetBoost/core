@@ -52,7 +52,11 @@ func (r *Repository) UpdateUser(user models.User) {
 }
 
 func (r *Repository) UpdateUserBalanceToTask(uid uint, balance float64) {
-	r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.User{Balance: balance})
+	var q models.User
+	r.db.Table("users").Where("id = ?", uid).Find(&q)
+	//r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.User{Balance: balance})
+	q.Balance = balance
+	r.db.Debug().Save(q)
 }
 
 func (r *Repository) CreateUser(user *models.CreateUser) error {
