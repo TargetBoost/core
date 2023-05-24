@@ -399,6 +399,16 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	logger.Debug(key)
 
 	trans := h.Service.User.GetTransaction(key)
+	if trans.Status == "" {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Transaction is not validate",
+			},
+			"data": nil,
+		})
+		return
+	}
 
 	if trans.Status != "WAIT" {
 		ctx.StatusCode(404)
