@@ -42,6 +42,10 @@ type AuthUser struct {
 	Password    string `json:"password"`
 }
 
+type Pay struct {
+	Value string `json:"value"`
+}
+
 type TaskCashToService struct {
 	ID            uint    `json:"id"`
 	UID           uint    `json:"uid"`

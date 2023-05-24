@@ -32,6 +32,7 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	// User
 	service.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/{id:int64}", serv.GetUserByID)
+	service.Handle("GET", "/pay", serv.Pay)
 
 	service.Handle("GET", "/admin/task_cashes", serv.GetTaskCashesAdmin)
 	service.Handle("PUT", "/admin/task_cashes", serv.UpdateTaskCashes)
