@@ -384,19 +384,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 }
 
 func (h *Handler) ConfirmPay(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
 	key := ctx.Params().GetString("id")
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
 
 	logger.Debug(key)
 
@@ -504,6 +492,8 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		})
 		return
 	}
+
+	u := h.Service.User.GetUserByID(int64(trans.UID))
 
 	fu, err := strconv.ParseFloat(u.Balance, 64)
 	if err != nil {
