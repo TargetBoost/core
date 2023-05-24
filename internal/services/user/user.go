@@ -161,7 +161,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	id := uuid.New()
 
-	if task.Total < 1.00 {
+	if task.Total < 1 {
 		return errors.New("Сумма вывода не может быть меньше 1.00")
 	}
 
