@@ -175,7 +175,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	u.Balance = u.Balance - task.Total
 
-	s.userRepository.UpdateUserBalanceToTask(u.ID, u.Balance)
+	s.userRepository.UpdateUserBalanceToZero(u.ID, u.Balance)
 
 	var t models.TaskCash
 	t.Status = 0

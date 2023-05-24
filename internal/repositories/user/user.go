@@ -51,7 +51,7 @@ func (r *Repository) UpdateUser(user models.User) {
 	r.db.Table("users").Where("id = ?", user.ID).Updates(user)
 }
 
-func (r *Repository) UpdateUserBalanceToTask(uid uint, balance float64) {
+func (r *Repository) UpdateUserBalanceToZero(uid uint, balance float64) {
 	var q models.User
 	r.db.Table("users").Where("id = ?", uid).Find(&q)
 	//r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.User{Balance: balance})
