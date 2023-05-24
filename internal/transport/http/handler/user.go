@@ -507,7 +507,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	h.Service.User.UpdateUserBalance(int64(u.ID), fu+f)
+	h.Service.User.UpdateUser(u.ID, fu+f)
 
 	trans.Status = "PAID"
 

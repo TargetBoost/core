@@ -36,6 +36,13 @@ func (s *Service) UpdateUserBalance(id int64, cost float64) {
 	s.userRepository.UpdateUser(&u)
 }
 
+func (s *Service) UpdateUser(uid uint, b float64) {
+	var u models.User
+	u.Balance = b
+	u.ID = uid
+	s.userRepository.UpdateUser(&u)
+}
+
 func (s *Service) GetAllUsers() []models.UserService {
 	var usersService []models.UserService
 

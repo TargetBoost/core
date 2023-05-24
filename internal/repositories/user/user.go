@@ -100,7 +100,7 @@ func (r *Repository) CreateTransaction(t *models.TransactionToService) {
 }
 
 func (r *Repository) UpdateTransaction(t *models.TransactionToService) {
-	r.db.Table("transactions").Updates(&t)
+	r.db.Table("transactions").Where("build_id = ?", t.BuildID).Updates(&t)
 }
 
 func (r *Repository) GetTransaction(build string) models.Transaction {
