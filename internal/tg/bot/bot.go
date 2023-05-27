@@ -57,7 +57,7 @@ func (b *Bot) SenderUpdates() {
 					logger.Error(err)
 				}
 			case 100:
-				msg := tgbotapi.NewMessage(m.CID, `Для Вас появились новые задания (это тестовое событие, не реагируте на него!)`)
+				msg := tgbotapi.NewMessage(m.CID, `Для Вас появились новые задания!`)
 				_, err := b.API.Send(msg)
 				if err != nil {
 					logger.Error(err)
