@@ -4,6 +4,7 @@ import (
 	"core/internal/models"
 	"core/internal/queue"
 	"core/internal/repositories/user"
+	"core/internal/tg/bot"
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
@@ -18,12 +19,14 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 type Service struct {
 	userRepository *user.Repository
 	lineAppoint    chan queue.Task
+	trackMessages  chan bot.Message
 }
 
-func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task) *Service {
+func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		userRepository: userRepository,
 		lineAppoint:    lineAppoint,
+		trackMessages:  trackMessages,
 	}
 }
 
@@ -185,6 +188,14 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 	t.TransactionID = id.String()
 	s.userRepository.CreateTaskCache(t)
 
+	m := bot.Message{
+		UID:   int64(t.UID),
+		Count: t.Total,
+		Type:  2,
+	}
+
+	s.trackMessages <- m
+
 	return nil
 }
 
@@ -195,6 +206,15 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 	q.Status = task.Status
 
 	s.userRepository.UpdateTaskCache(q)
+
+	t := s.userRepository.GetTaskCacheByID(task.ID)
+
+	m := bot.Message{
+		UID:   int64(t.UID),
+		Count: t.Total,
+	}
+
+	s.trackMessages <- m
 }
 
 func (s *Service) CreateTransaction(t *models.TransactionToService) {

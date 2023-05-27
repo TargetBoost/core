@@ -96,6 +96,12 @@ func (r *Repository) GetTaskCacheByUID(uid uint) []models.TaskCash {
 	return q
 }
 
+func (r *Repository) GetTaskCacheByID(id uint) models.TaskCash {
+	var q models.TaskCash
+	r.db.Table("task_cashes").Where("id = ?", id).Find(&q)
+	return q
+}
+
 func (r *Repository) GetTaskCacheToAdmin() []models.TaskCash {
 	var q []models.TaskCash
 	r.db.Table("task_cashes").Order("created_at").Find(&q)

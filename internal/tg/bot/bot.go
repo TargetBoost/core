@@ -2,7 +2,8 @@ package bot
 
 import (
 	"context"
-	"core/internal/services"
+	"core/internal/repositories"
+	"fmt"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/ivahaev/go-logger"
 	"strings"
@@ -11,12 +12,14 @@ import (
 type Bot struct {
 	API *tgbotapi.BotAPI
 
-	services     *services.Services
+	repos        *repositories.Repositories
 	updateConfig tgbotapi.UpdateConfig
 	ctx          context.Context
+
+	TrackMessages chan Message
 }
 
-func New(ctx context.Context, token string, services *services.Services) (*Bot, error) {
+func New(ctx context.Context, token string, repos *repositories.Repositories) (*Bot, error) {
 	api, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
@@ -28,18 +31,34 @@ func New(ctx context.Context, token string, services *services.Services) (*Bot, 
 	u.Timeout = 60
 
 	return &Bot{
-		API:          api,
-		updateConfig: u,
-		ctx:          ctx,
-		services:     services,
+		API:           api,
+		updateConfig:  u,
+		ctx:           ctx,
+		repos:         repos,
+		TrackMessages: make(chan Message, 10),
 	}, nil
 }
 
-func (b *Bot) SenderUpdates(cid int64, count float64) {
-	msg := tgbotapi.NewMessage(cid, `
-Деньги по Вашей заявке успешго отправлены ()
-				`)
-	b.API.Send(msg)
+func (b *Bot) SenderUpdates() {
+	for {
+		select {
+		case m := <-b.TrackMessages:
+			switch m.Type {
+			case 1:
+				continue
+			case 2:
+				msg := tgbotapi.NewMessage(m.UID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
+				b.API.Send(msg)
+			default:
+				msg := tgbotapi.NewMessage(m.UID, fmt.Sprintf(`Деньги по Вашей заявке успешго отправлены (%vруб.)`, m.Count))
+				b.API.Send(msg)
+			}
+
+		case <-b.ctx.Done():
+			break
+		}
+	}
+
 }
 
 func (b *Bot) GetUpdates() {
@@ -48,11 +67,11 @@ func (b *Bot) GetUpdates() {
 		//logger.Info(update.Message.Chat)
 		if update.MyChatMember != nil {
 			logger.Info(update.MyChatMember)
-			b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName))
+			b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName))
 		}
 		if update.Message != nil {
 			logger.Info(update.Message.Chat)
-			b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName))
+			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName))
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.
@@ -60,28 +79,6 @@ func (b *Bot) GetUpdates() {
 			b.API.Send(msg)
 		}
 	}
-	//	for {
-	//		select {
-	//		case update := <-b.API.GetUpdatesChan(b.updateConfig):
-	//			//logger.Info(update.Message.Chat)
-	//			if update.MyChatMember != nil {
-	//				logger.Info(update.MyChatMember)
-	//				b.services.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, update.MyChatMember.Chat.UserName)
-	//			}
-	//			if update.Message != nil {
-	//				logger.Info(update.Message.Chat)
-	//				b.services.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, update.Message.Chat.UserName)
-	//				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
-	//Добро пожаловать!
-	//Вы добавлены в систему.
-	//				`)
-	//				b.API.Send(msg)
-	//			}
-	//
-	//		case <-b.ctx.Done():
-	//			return
-	//		}
-	//	}
 }
 
 func (b *Bot) CheckMembers(cid, uid int64) (bool, error) {

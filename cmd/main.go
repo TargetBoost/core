@@ -55,14 +55,15 @@ func main() {
 	go q.Broker()
 	go q.AppointTask()
 
-	serv := services.NewServices(repo, q.Line, q.LineAppoint)
-
-	b, err := bot.New(ctx, "5911800604:AAFN65f8vQrsgjIxR8vQgUr_SBCj8SQ1RoM", serv)
+	b, err := bot.New(ctx, "5911800604:AAFN65f8vQrsgjIxR8vQgUr_SBCj8SQ1RoM", repo)
 	if err != nil {
 		panic(err)
 	}
 
 	go b.GetUpdates()
+	go b.SenderUpdates()
+
+	serv := services.NewServices(repo, q.Line, q.LineAppoint, b.TrackMessages)
 	go controller.NewController(ctx, serv, b)
 
 	<-GracefulShutdown()

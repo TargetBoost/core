@@ -8,6 +8,7 @@ import (
 	"core/internal/services/storage"
 	"core/internal/services/target"
 	"core/internal/services/user"
+	"core/internal/tg/bot"
 )
 
 type Services struct {
@@ -20,8 +21,8 @@ type Services struct {
 	Settings *settings.Service
 }
 
-func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, LineAppoint chan queue.Task) *Services {
-	userService := user.NewUserService(repo.User, LineAppoint)
+func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Services {
+	userService := user.NewUserService(repo.User, lineAppoint, trackMessages)
 	authService := auth.NewAuthService(repo.Auth)
 	TargetService := target.NewTargetService(repo.User, repo.Feed, repo.Storage, lineBroker)
 	storageService := storage.NewStorageService(repo.Storage)
