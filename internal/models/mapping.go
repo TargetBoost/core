@@ -55,6 +55,6 @@ func MapToTasksUser(user TaskCash) TaskCashToService {
 		TransactionID: user.TransactionID,
 		Status:        user.Status,
 		Number:        user.Number,
-		Total:         user.Total,
+		Total:         strconv.Itoa(int(user.Total)),
 	}
 }
