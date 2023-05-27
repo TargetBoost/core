@@ -138,7 +138,9 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 			CID:  cm.CID,
 		}
 
-		s.trackMessages <- m
+		if v.Execute {
+			s.trackMessages <- m
+		}
 	}
 }
 
