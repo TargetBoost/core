@@ -129,17 +129,19 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 
 	s.TargetRepository.UpdateTarget(id, &t)
 
-	u := s.UserRepository.GetAllUsers()
-	for _, v := range u {
-		st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
-		cm := s.TargetRepository.GetChatMembersByUserName(st)
-		m := bot.Message{
-			Type: 100,
-			CID:  cm.CID,
-		}
+	if status == 1 {
+		u := s.UserRepository.GetAllUsers()
+		for _, v := range u {
+			st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
+			cm := s.TargetRepository.GetChatMembersByUserName(st)
+			m := bot.Message{
+				Type: 100,
+				CID:  cm.CID,
+			}
 
-		if v.Execute {
-			s.trackMessages <- m
+			if v.Execute {
+				s.trackMessages <- m
+			}
 		}
 	}
 }
