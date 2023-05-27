@@ -14,42 +14,30 @@ import (
 	"time"
 )
 
-// GetAllUsers all users returned
-func (h *Handler) GetAllUsers(ctx iris.Context) {
-	users := h.Service.User.GetAllUsers()
-
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": users,
-	})
-}
-
-// CreateUser create user
+// CreateUser - registration user
 func (h *Handler) CreateUser(ctx iris.Context) {
-	var u models.CreateUser
-	err := ctx.ReadJSON(&u)
+	// userData - data new user
+	var userData models.CreateUser
+	err := ctx.ReadJSON(&userData)
 	if err != nil {
 		ctx.StatusCode(400)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": "bad data insertion",
+				"message": errorDataInsertion,
 			},
 			"data": nil,
 		})
 		return
 	}
 
-	logger.Debug(u)
-
-	user, err := h.Service.User.CreateUser(u)
+	// CreateUser - service returned data for new user
+	user, err := h.Service.User.CreateUser(userData)
 	if err != nil {
+		logger.Error(err)
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": err.Error(),
+				"message": fmt.Sprintf(errorService, "регистрации"),
 			},
 		})
 		return
@@ -64,6 +52,20 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 			"token": user.Token,
 			"id":    user.ID,
 		},
+	})
+}
+
+// GetAllUsers all users returned
+// TODO: проверить, используется ли метод
+func (h *Handler) GetAllUsers(ctx iris.Context) {
+	users := h.Service.User.GetAllUsers()
+
+	ctx.StatusCode(200)
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": users,
 	})
 }
 
