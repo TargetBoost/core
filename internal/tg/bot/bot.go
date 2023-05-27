@@ -51,13 +51,14 @@ func (b *Bot) SenderUpdates() {
 					logger.Error(err)
 				}
 			case 2:
-				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
+				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Деньги по Вашей заявке успешго отправлены (%vруб.)`, m.Count))
+
 				_, err := b.API.Send(msg)
 				if err != nil {
 					logger.Error(err)
 				}
 			default:
-				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Деньги по Вашей заявке успешго отправлены (%vруб.)`, m.Count))
+				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
 				_, err := b.API.Send(msg)
 				if err != nil {
 					logger.Error(err)
