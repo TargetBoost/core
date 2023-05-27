@@ -35,7 +35,7 @@ func New(ctx context.Context, token string, repos *repositories.Repositories) (*
 		updateConfig:  u,
 		ctx:           ctx,
 		repos:         repos,
-		TrackMessages: make(chan Message, 10),
+		TrackMessages: make(chan Message, 100),
 	}, nil
 }
 
@@ -52,7 +52,12 @@ func (b *Bot) SenderUpdates() {
 				}
 			case 2:
 				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Деньги по Вашей заявке успешго отправлены (%vруб.)`, m.Count))
-
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
+			case 100:
+				msg := tgbotapi.NewMessage(m.CID, `Для Вас появились новые задания`)
 				_, err := b.API.Send(msg)
 				if err != nil {
 					logger.Error(err)

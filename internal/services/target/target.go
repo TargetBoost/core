@@ -6,6 +6,7 @@ import (
 	"core/internal/repositories/storage"
 	"core/internal/repositories/target"
 	"core/internal/repositories/user"
+	"core/internal/tg/bot"
 	"errors"
 	"github.com/ivahaev/go-logger"
 	"strconv"
@@ -28,14 +29,16 @@ type Service struct {
 	UserRepository    *user.Repository
 	storageRepository *storage.Repository
 	lineBroker        chan []queue.Task
+	trackMessages     chan bot.Message
 }
 
-func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, storageRepository *storage.Repository, lineBroker chan []queue.Task) *Service {
+func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, storageRepository *storage.Repository, lineBroker chan []queue.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		TargetRepository:  feedRepository,
 		UserRepository:    userRepository,
 		storageRepository: storageRepository,
 		lineBroker:        lineBroker,
+		trackMessages:     trackMessages,
 	}
 }
 
@@ -125,6 +128,18 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 	t.Status = status
 
 	s.TargetRepository.UpdateTarget(id, &t)
+
+	u := s.UserRepository.GetAllUsers()
+	for _, v := range u {
+		st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
+		cm := s.TargetRepository.GetChatMembersByUserName(st)
+		m := bot.Message{
+			Type: 100,
+			CID:  cm.CID,
+		}
+
+		s.trackMessages <- m
+	}
 }
 
 func (s *Service) GetChatID(id uint) (int64, float64) {
