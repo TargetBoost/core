@@ -48,10 +48,16 @@ func (b *Bot) SenderUpdates() {
 				continue
 			case 2:
 				msg := tgbotapi.NewMessage(m.UID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
-				b.API.Send(msg)
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
 			default:
 				msg := tgbotapi.NewMessage(m.UID, fmt.Sprintf(`Деньги по Вашей заявке успешго отправлены (%vруб.)`, m.Count))
-				b.API.Send(msg)
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
 			}
 
 		case <-b.ctx.Done():
