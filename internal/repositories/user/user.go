@@ -18,7 +18,7 @@ func NewUserRepository(db *gorm.DB) *Repository {
 
 func (r *Repository) GetAllUsers() []models.User {
 	var u []models.User
-	r.db.Table("users").Where("deleted_at is null").Find(&u)
+	r.db.Table("users").Where("deleted_at is null").Order("id DESC").Find(&u)
 
 	return u
 }
