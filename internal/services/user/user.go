@@ -3,6 +3,7 @@ package user
 import (
 	"core/internal/models"
 	"core/internal/queue"
+	"core/internal/repositories/target"
 	"core/internal/repositories/user"
 	"core/internal/tg/bot"
 	"crypto/sha256"
@@ -11,22 +12,26 @@ import (
 	"github.com/google/uuid"
 	"github.com/ivahaev/go-logger"
 	"strconv"
+	"strings"
 	"time"
 )
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Service struct {
-	userRepository *user.Repository
-	lineAppoint    chan queue.Task
-	trackMessages  chan bot.Message
+	userRepository   *user.Repository
+	targetRepository *target.Repository
+
+	lineAppoint   chan queue.Task
+	trackMessages chan bot.Message
 }
 
-func NewUserService(userRepository *user.Repository, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Service {
+func NewUserService(userRepository *user.Repository, targetRepository *target.Repository, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
-		userRepository: userRepository,
-		lineAppoint:    lineAppoint,
-		trackMessages:  trackMessages,
+		userRepository:   userRepository,
+		targetRepository: targetRepository,
+		lineAppoint:      lineAppoint,
+		trackMessages:    trackMessages,
 	}
 }
 
@@ -188,8 +193,12 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 	t.TransactionID = id.String()
 	s.userRepository.CreateTaskCache(t)
 
+	st := strings.ToLower(strings.Split(u.Tg, "@")[len(strings.Split(u.Tg, "@"))-1])
+
+	cm := s.targetRepository.GetChatMembersByUserName(st)
+
 	m := bot.Message{
-		UID:   int64(t.UID),
+		CID:   cm.CID,
 		Count: t.Total,
 		Type:  2,
 	}
@@ -210,7 +219,7 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 	t := s.userRepository.GetTaskCacheByID(task.ID)
 
 	m := bot.Message{
-		UID:   int64(t.UID),
+		CID:   int64(t.UID),
 		Count: t.Total,
 	}
 

@@ -22,7 +22,7 @@ type Services struct {
 }
 
 func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Services {
-	userService := user.NewUserService(repo.User, lineAppoint, trackMessages)
+	userService := user.NewUserService(repo.User, repo.Feed, lineAppoint, trackMessages)
 	authService := auth.NewAuthService(repo.Auth)
 	TargetService := target.NewTargetService(repo.User, repo.Feed, repo.Storage, lineBroker)
 	storageService := storage.NewStorageService(repo.Storage)
