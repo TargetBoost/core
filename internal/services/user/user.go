@@ -223,6 +223,7 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 	m := bot.Message{
 		CID:   cm.CID,
 		Count: t.Total,
+		Type:  int32(task.Status),
 	}
 
 	s.trackMessages <- m
