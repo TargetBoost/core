@@ -44,8 +44,12 @@ func (b *Bot) SenderUpdates() {
 		select {
 		case m := <-b.TrackMessages:
 			switch m.Type {
-			case 1:
-				continue
+			case 4:
+				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Ваша заявка на вывод средств отклонена (%vруб.)`, m.Count))
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
 			case 2:
 				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
 				_, err := b.API.Send(msg)
