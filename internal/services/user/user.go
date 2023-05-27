@@ -215,11 +215,13 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 	q.Status = task.Status
 
 	s.userRepository.UpdateTaskCache(q)
-
 	t := s.userRepository.GetTaskCacheByID(task.ID)
+	u := s.userRepository.GetUserByID(int64(t.UID))
+	st := strings.ToLower(strings.Split(u.Tg, "@")[len(strings.Split(u.Tg, "@"))-1])
+	cm := s.targetRepository.GetChatMembersByUserName(st)
 
 	m := bot.Message{
-		CID:   int64(t.UID),
+		CID:   cm.CID,
 		Count: t.Total,
 	}
 
