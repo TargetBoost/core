@@ -127,7 +127,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 }
 
 func (s *Service) CreateUser(user models.CreateUser) (*models.User, error) {
-	token := createToken(user.Login, user.Password, time.Now())
+	token := createToken(strings.ToLower(user.Tg), user.Password, time.Now())
 
 	user.Token = token
 
@@ -140,7 +140,7 @@ func (s *Service) CreateUser(user models.CreateUser) (*models.User, error) {
 		return nil, err
 	}
 
-	u := s.userRepository.GetUserByPhoneNumberAndPassword(user.Tg, user.Password)
+	u := s.userRepository.GetUserByPhoneNumberAndPassword(strings.ToLower(user.Tg), user.Password)
 
 	return &u, nil
 }

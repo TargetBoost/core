@@ -37,9 +37,9 @@ func (r *Repository) GetUserByPhoneNumberAndPassword(tg, pass string) models.Use
 	return u
 }
 
-func (r *Repository) GetUserByLogin(login string) bool {
+func (r *Repository) GetUserByLogin(tg string) bool {
 	var u models.User
-	r.db.Table("users").Where("login = ? AND deleted_at is null", login).Find(&u)
+	r.db.Table("users").Where("tg = ? AND deleted_at is null", tg).Find(&u)
 
 	if u.ID != 0 {
 		return true
@@ -74,7 +74,7 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	//u.NumberPhone = user.NumberPhone
 	u.Execute = user.Execute
 
-	if r.GetUserByLogin(u.Login) {
+	if r.GetUserByLogin(u.Tg) {
 		return errors.New("user exists")
 	}
 	r.db.Table("users").Create(&u)
