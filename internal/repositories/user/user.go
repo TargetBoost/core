@@ -30,9 +30,9 @@ func (r *Repository) GetUserByID(id int64) models.User {
 	return u
 }
 
-func (r *Repository) GetUserByPhoneNumberAndPassword(ph int64, pass string) models.User {
+func (r *Repository) GetUserByPhoneNumberAndPassword(tg, pass string) models.User {
 	var u models.User
-	r.db.Table("users").Where("number_phone = ? AND password = ? AND deleted_at is null", ph, pass).Find(&u)
+	r.db.Table("users").Where("tg = ? AND password = ? AND deleted_at is null", tg, pass).Find(&u)
 
 	return u
 }
@@ -63,15 +63,15 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	var u models.User
 
 	if len(user.Login) > 20 {
-		u.Login = user.Login[:20]
+		u.Tg = user.Tg[:20]
 	} else {
-		u.Login = user.Login
+		u.Tg = user.Tg
 
 	}
 	u.Password = user.Password
 	u.Token = user.Token
 	u.Tg = user.Tg
-	u.NumberPhone = user.NumberPhone
+	//u.NumberPhone = user.NumberPhone
 	u.Execute = user.Execute
 
 	if r.GetUserByLogin(u.Login) {

@@ -130,14 +130,16 @@ func (s *Service) CreateUser(user models.CreateUser) (*models.User, error) {
 
 	user.Token = token
 
-	if user.NumberPhone == 0 || len(user.Login) == 0 {
+	user.Tg = strings.ToLower(user.Tg)
+
+	if user.Tg == "" {
 		return nil, errors.New("bad request")
 	}
 	if err := s.userRepository.CreateUser(&user); err != nil {
 		return nil, err
 	}
 
-	u := s.userRepository.GetUserByPhoneNumberAndPassword(user.NumberPhone, user.Password)
+	u := s.userRepository.GetUserByPhoneNumberAndPassword(user.Tg, user.Password)
 
 	return &u, nil
 }
@@ -151,13 +153,13 @@ func createToken(login, password string, time time.Time) string {
 }
 
 func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
-	u := s.userRepository.GetUserByPhoneNumberAndPassword(user.NumberPhone, user.Password)
+	u := s.userRepository.GetUserByPhoneNumberAndPassword(strings.ToLower(user.Tg), user.Password)
 
 	if u.ID == 0 {
 		return nil, errors.New("error auth")
 	}
 
-	token := createToken(strconv.FormatInt(user.NumberPhone, 10), user.Password, time.Now())
+	token := createToken(user.Tg, user.Password, time.Now())
 	u.Token = token
 	s.userRepository.UpdateUser(u)
 

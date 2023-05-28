@@ -38,8 +38,8 @@ type CreateUser struct {
 }
 
 type AuthUser struct {
-	NumberPhone int64  `json:"number_phone"`
-	Password    string `json:"password"`
+	Tg       string `json:"tg"`
+	Password string `json:"password"`
 }
 
 type Pay struct {
