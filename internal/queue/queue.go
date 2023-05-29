@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const timeChange time.Duration = 1 * time.Hour
+
 type Queue struct {
 	Line        chan []Task
 	LineAppoint chan Task
@@ -49,7 +51,7 @@ func (q Queue) AppointTask() {
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 
 			for _, v := range que {
-				if v.UpdatedAt.After(time.Now()) {
+				if time.Now().Sub(v.UpdatedAt) > timeChange {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
@@ -59,6 +61,17 @@ func (q Queue) AppointTask() {
 		}
 	}
 
+}
+
+func (q Queue) DefenderBlocking() {
+	//	select cmc.c_id, u.tg, u.id, t.link, cc.c_id from users u inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '') where q.status = 3 order by u.id
+
+	for {
+		select {
+		case <-time.Tick(12 * time.Hour):
+			//q.repo.Storage.
+		}
+	}
 }
 
 func (q Queue) Broker() {

@@ -34,3 +34,17 @@ func (r *Repository) SetChatMembers(cid int64, title, userName string) {
 	q.UserName = userName
 	r.db.Table("chat_members_chanels").Create(&q)
 }
+
+func (r *Repository) GetStatisticTargetsOnExecutesIsTrue() {
+	//	select cmc.c_id, u.tg, u.id, t.link, cc.c_id from users u inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '') where q.status = 3 order by u.id
+
+	r.db.Table(
+		"users u",
+	).Select(
+		"cmc.c_id as cid_users, u.tg, u.id, t.link, cc.c_id as cid_channels",
+	).Joins(
+		"inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '')",
+	).Where(
+		"q.status = 3",
+	).Order("u.id")
+}

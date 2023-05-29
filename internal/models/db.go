@@ -169,3 +169,11 @@ type TaskCash struct {
 	Number        string
 	Status        int64
 }
+
+type UsersAndChannelsData struct {
+	CIDUsers    int64
+	Tg          string
+	UID         uint
+	Link        string
+	CIDChannels int64
+}
