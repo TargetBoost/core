@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeChange = 20
+const timeChange = 600
 
 type Queue struct {
 	Line        chan []Task
@@ -52,11 +52,7 @@ func (q Queue) AppointTask() {
 			logger.Info("Check GetTaskDISTINCTIsWork()")
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 			for _, v := range que {
-				if v.UID == 0 {
-					continue
-				}
-
-				logger.Info(v.ID, time.Now().Unix()-v.UpdatedAt.Unix(), timeChange)
+				logger.Info(v.ID, "changed")
 
 				if time.Now().Unix()-v.UpdatedAt.Unix()*-1 > timeChange {
 					logger.Info("change")
