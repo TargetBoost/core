@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeChange = 20.0
+const timeChange = 20
 
 type Queue struct {
 	Line        chan []Task
@@ -55,7 +55,7 @@ func (q Queue) AppointTask() {
 					continue
 				}
 
-				if time.Now().Sub(v.UpdatedAt).Seconds() > timeChange {
+				if int(time.Now().Sub(v.UpdatedAt).Seconds()) > timeChange {
 					logger.Info(time.Now().Sub(v.UpdatedAt).Seconds(), timeChange)
 					v.UID = 0
 					v.UpdatedAt = time.Now()
