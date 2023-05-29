@@ -50,8 +50,8 @@ func (q Queue) AppointTask() {
 
 		default:
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
-
 			for _, v := range que {
+				logger.Debug(v)
 				if v.UID == 0 {
 					continue
 				}
