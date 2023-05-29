@@ -48,7 +48,7 @@ func (q Queue) AppointTask() {
 		case <-q.ctx.Done():
 			return
 
-		default:
+		case <-time.Tick(time.Second * 10):
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 			for _, v := range que {
 				if v.UID == 0 {
