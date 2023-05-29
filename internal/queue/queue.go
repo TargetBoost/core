@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeChange = 5 * time.Second
+const timeChange = 20 * time.Second
 
 type Queue struct {
 	Line        chan []Task
@@ -51,11 +51,10 @@ func (q Queue) AppointTask() {
 		default:
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 			for _, v := range que {
-				logger.Debug(v)
 				if v.UID == 0 {
 					continue
 				}
-				logger.Info(time.Now().Sub(v.UpdatedAt) > timeChange, "check")
+				//logger.Info(time.Now().Sub(v.UpdatedAt) > timeChange, "check")
 				if time.Now().Sub(v.UpdatedAt) > timeChange {
 					logger.Info("swap status")
 					v.UID = 0
