@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const timeChange = 1 * time.Hour
+const timeChange = 5 * time.Second
 
 type Queue struct {
 	Line        chan []Task
