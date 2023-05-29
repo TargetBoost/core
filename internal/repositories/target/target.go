@@ -90,7 +90,7 @@ func (r *Repository) UpdateTaskStatus(q models.Queue) {
 }
 
 func (r *Repository) UpdateTask(q models.Queue) {
-	r.db.Table("queues").UpdateColumns(&q).Where("id = ?", q.ID)
+	r.db.Debug().Table("queues").UpdateColumns(&q).Where("id = ?", q.ID)
 }
 
 func (r *Repository) GetTaskDISTINCT() []models.Queue {
