@@ -4,7 +4,6 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
-	"github.com/ivahaev/go-logger"
 	"time"
 )
 
@@ -55,7 +54,7 @@ func (q Queue) AppointTask() {
 					continue
 				}
 
-				logger.Info(v.CreatedAt.UnixNano(), time.Now().UnixNano())
+				logger.Info(v.UpdatedAt.Unix(), time.Now().Unix)
 
 				//if time.Now().Unix() - v.UpdatedAt.Unix() > timeChange {
 				//	logger.Info(time.Now().Unix()-v.UpdatedAt.Unix(), timeChange)
