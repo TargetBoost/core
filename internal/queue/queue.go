@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeChange = 20
+const timeChange = 20.0
 
 type Queue struct {
 	Line        chan []Task
