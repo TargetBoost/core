@@ -107,7 +107,7 @@ func (r *Repository) GetTaskDISTINCT() []models.Queue {
 
 func (r *Repository) GetTaskDISTINCTIsWork() []models.Queue {
 	var q []models.Queue
-	r.db.Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Find(&q)
+	r.db.Debug().Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Find(&q)
 	return q
 }
 
