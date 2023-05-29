@@ -4,10 +4,11 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
+	"github.com/ivahaev/go-logger"
 	"time"
 )
 
-const timeChange time.Duration = 1 * time.Hour
+const timeChange = 1 * time.Hour
 
 type Queue struct {
 	Line        chan []Task
@@ -51,6 +52,7 @@ func (q Queue) AppointTask() {
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 
 			for _, v := range que {
+				logger.Debug(time.Now().Sub(v.UpdatedAt), timeChange, time.Now().Sub(v.UpdatedAt) > timeChange)
 				if time.Now().Sub(v.UpdatedAt) > timeChange {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
