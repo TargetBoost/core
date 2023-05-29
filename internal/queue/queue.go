@@ -55,7 +55,7 @@ func (q Queue) AppointTask() {
 					continue
 				}
 
-				//logger.Info(v.UpdatedAt.Unix(), time.Now().Unix())
+				logger.Info(v.ID, time.Now().Unix()-v.UpdatedAt.Unix(), timeChange)
 
 				if time.Now().Unix()-v.UpdatedAt.Unix() > timeChange {
 					logger.Info("change")
