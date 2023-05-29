@@ -4,7 +4,6 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
-	"github.com/ivahaev/go-logger"
 	"time"
 )
 
@@ -52,7 +51,9 @@ func (q Queue) AppointTask() {
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 
 			for _, v := range que {
-				logger.Debug(time.Now().Sub(v.UpdatedAt), timeChange, time.Now().Sub(v.UpdatedAt) > timeChange)
+				if v.UID == 0 {
+					continue
+				}
 				if time.Now().Sub(v.UpdatedAt) > timeChange {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
