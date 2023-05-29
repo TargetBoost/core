@@ -54,9 +54,9 @@ func (q Queue) AppointTask() {
 				if v.UID == 0 {
 					continue
 				}
-				//logger.Info(time.Now().Sub(v.UpdatedAt) > timeChange, "check")
+
 				if time.Now().Sub(v.UpdatedAt).Seconds() > timeChange {
-					logger.Info("swap status")
+					logger.Info(time.Now().Sub(v.UpdatedAt).Seconds(), timeChange)
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
