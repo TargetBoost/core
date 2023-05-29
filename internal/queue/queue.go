@@ -55,14 +55,16 @@ func (q Queue) AppointTask() {
 					continue
 				}
 
-				if (time.Now().Unix() - v.UpdatedAt.Unix()) > timeChange {
-					logger.Info(time.Now().Unix()-v.UpdatedAt.Unix(), timeChange)
+				logger.Info(v.UpdatedAt.Unix(), time.Now().Unix())
 
-					v.UID = 0
-					v.UpdatedAt = time.Now()
-					v.Status = 0
-					q.repo.Feed.UpdateTask(v)
-				}
+				//if time.Now().Unix() - v.UpdatedAt.Unix() > timeChange {
+				//	logger.Info(time.Now().Unix()-v.UpdatedAt.Unix(), timeChange)
+				//
+				//	v.UID = 0
+				//	v.UpdatedAt = time.Now()
+				//	v.Status = 0
+				//	q.repo.Feed.UpdateTask(v)
+				//}
 			}
 		}
 	}
