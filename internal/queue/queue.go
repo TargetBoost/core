@@ -56,7 +56,7 @@ func (q Queue) AppointTask() {
 				}
 
 				if int(time.Now().Sub(v.UpdatedAt).Seconds()) > timeChange {
-					logger.Info(int(time.Now().Sub(v.UpdatedAt).Seconds()) > timeChange)
+					logger.Info(int(time.Now().Sub(v.UpdatedAt).Seconds()), timeChange)
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
