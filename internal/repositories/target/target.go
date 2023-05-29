@@ -90,7 +90,13 @@ func (r *Repository) UpdateTaskStatus(q models.Queue) {
 }
 
 func (r *Repository) UpdateTask(q models.Queue) {
-	r.db.Debug().Table("queues").UpdateColumns(&q).Where("id = ?", q.ID)
+	var qq models.Queue
+	r.db.Table("queues").Where("id = ?", q.ID).Find(&qq)
+	qq.UpdatedAt = q.UpdatedAt
+	qq.Status = q.Status
+	qq.UID = q.UID
+
+	r.db.Debug().Save(qq)
 }
 
 func (r *Repository) GetTaskDISTINCT() []models.Queue {
@@ -101,7 +107,7 @@ func (r *Repository) GetTaskDISTINCT() []models.Queue {
 
 func (r *Repository) GetTaskDISTINCTIsWork() []models.Queue {
 	var q []models.Queue
-	r.db.Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Order("t_id").Find(&q)
+	r.db.Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Find(&q)
 	return q
 }
 
