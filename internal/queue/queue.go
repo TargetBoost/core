@@ -4,6 +4,7 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
+	"github.com/ivahaev/go-logger"
 	"time"
 )
 
@@ -54,7 +55,9 @@ func (q Queue) AppointTask() {
 				if v.UID == 0 {
 					continue
 				}
+				logger.Info(time.Now().Sub(v.UpdatedAt) > timeChange, "check")
 				if time.Now().Sub(v.UpdatedAt) > timeChange {
+					logger.Info("swap status")
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
