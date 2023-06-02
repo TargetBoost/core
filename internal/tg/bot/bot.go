@@ -108,7 +108,7 @@ func (b *Bot) CheckMembers(cid, uid int64) (bool, error) {
 		return false, err
 	}
 
-	logger.Info(member)
+	//logger.Info(member)
 
 	if member.Status == "member" {
 		return true, nil
