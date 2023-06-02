@@ -88,11 +88,13 @@ func (q Queue) DefenderBlocking() {
 					if err != nil {
 						logger.Error(err)
 					}
-					logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
+
 					if !members {
+
 						us := q.repo.User.GetUserByID(v.ID)
 
 						if !us.Block {
+							logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
 							var u models.User
 							u.ID = uint(v.ID)
 							u.Block = true
