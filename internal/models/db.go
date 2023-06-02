@@ -179,8 +179,8 @@ type UsersAndChannelsData struct {
 }
 
 type StatisticTargetsOnExecutesIsTrue struct {
-	CIDUsers    uint      `json:"cid_users" gorm:"column:cid_users"`
-	CIDChannels uint      `json:"cid_channels" gorm:"column:cid_channels"`
+	CIDUsers    int64     `json:"cid_users" gorm:"column:cid_users"`
+	CIDChannels int64     `json:"cid_channels" gorm:"column:cid_channels"`
 	Tg          string    `json:"tg"`
 	ID          int64     `json:"id"`
 	Link        string    `json:"link"`

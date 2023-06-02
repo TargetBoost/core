@@ -81,7 +81,7 @@ func (q Queue) DefenderBlocking() {
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				//logger.Info(v)
-				members, err := q.bot.CheckMembers(int64(v.CIDChannels), int64(v.CIDUsers))
+				members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
 				if err != nil {
 					logger.Error(err)
 				}
