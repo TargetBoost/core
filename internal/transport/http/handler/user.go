@@ -58,8 +58,31 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 // GetAllUsers all users returned
 // TODO: проверить, используется ли метод
 func (h *Handler) GetAllUsers(ctx iris.Context) {
-	users := h.Service.User.GetAllUsers()
+	rawToken := ctx.GetHeader("Authorization")
+	u, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
 
+	if !u.Admin {
+		ctx.StatusCode(401)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "your dont have permission",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	users := h.Service.User.GetAllUsers()
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
