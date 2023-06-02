@@ -81,13 +81,13 @@ func (q Queue) DefenderBlocking() {
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				//logger.Info(v)
-				members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
-				if err != nil {
-					logger.Error(err)
-				}
 
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
-				if v.UpdatedAt.After(time.Now().Add((24 * 14) * time.Hour)) {
+				if v.UpdatedAt.Before(time.Now().Add((24 * 14) * time.Hour)) {
+					members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
+					if err != nil {
+						logger.Error(err)
+					}
 					logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
 					if !members {
 						us := q.repo.User.GetUserByID(v.ID)
