@@ -81,14 +81,14 @@ func (q Queue) AntiFraud() {
 			for _, v := range d {
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
 				if v.UpdatedAt.Before(time.Now().Add((24 * 14) * time.Hour)) {
-					time.Sleep(6 * time.Second)
-					members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
-					if err != nil {
-						logger.Error(err)
-					}
-					if !members {
-						us := q.repo.User.GetUserByID(v.ID)
-						if !us.Block {
+					us := q.repo.User.GetUserByID(v.ID)
+					if !us.Block {
+						time.Sleep(6 * time.Second)
+						members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
+						if err != nil {
+							logger.Error(err)
+						}
+						if !members {
 							logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
 							var u models.User
 							u.ID = uint(v.ID)
@@ -102,6 +102,7 @@ func (q Queue) AntiFraud() {
 							q.bot.TrackMessages <- mm
 
 							q.repo.User.UpdateUser(u)
+
 						}
 					}
 				}
