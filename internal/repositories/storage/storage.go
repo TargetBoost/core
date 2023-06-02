@@ -41,9 +41,9 @@ func (r *Repository) GetStatisticTargetsOnExecutesIsTrue() []models.StatisticTar
 	r.db.Table(
 		"users",
 	).Select(
-		"chat_members_chanels.c_id as cid_users, users.tg, users.id, targets.link, chat_members_chanels.c_id as cid_channels, chat_members_chanels.updated_at",
+		"chat_members_chanels.c_id as cid_users, users.tg, users.id, targets.link, cl.c_id as cid_channels, chat_members_chanels.updated_at",
 	).Joins(
-		"inner join chat_members_chanels on REPLACE(users.tg, '@', '') = chat_members_chanels.user_name inner join queues on users.id = queues.uid inner join targets on queues.t_id = targets.id right join chat_members_chanels on chat_members_chanels.user_name = replace(targets.link, 'https://t.me/', '')",
+		"inner join chat_members_chanels on REPLACE(users.tg, '@', '') = LOWER(chat_members_chanels.user_name) inner join queues on users.id = queues.uid inner join targets on queues.t_id = targets.id right join chat_members_chanels cl on cl.user_name = replace(targets.link, 'https://t.me/', '')",
 	).Where(
 		"queues.status = 3",
 	).Order("users.id").Find(&q)
