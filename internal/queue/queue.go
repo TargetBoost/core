@@ -53,8 +53,8 @@ func (q Queue) AppointTask() {
 			return
 
 		case <-time.Tick(time.Second * 10):
-			logger.Info("Check GetTaskDISTINCTIsWork()")
-			que := q.repo.Feed.GetTaskDISTINCTIsWork()
+			logger.Info("Check GetTaskDISTINCTInWork()")
+			que := q.repo.Feed.GetTaskDISTINCTInWork()
 			for _, v := range que {
 				if v.UpdatedAt.After(time.Now().Add(6 * time.Minute)) {
 					logger.Info(v.ID, "changed")
