@@ -62,6 +62,12 @@ func (b *Bot) SenderUpdates() {
 				if err != nil {
 					logger.Error(err)
 				}
+			case 120:
+				msg := tgbotapi.NewMessage(m.CID, `Ваш профиль был заблокирован за отписку от каналов раньше 2 недель.`)
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
 			default:
 				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
 				_, err := b.API.Send(msg)

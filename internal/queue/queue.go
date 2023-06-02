@@ -72,11 +72,11 @@ func (q Queue) AppointTask() {
 
 }
 
-// DefenderBlocking - check users if unsubscribe channels BANNED
-func (q Queue) DefenderBlocking() {
+// AntiFraud - check users if unsubscribe channels BANNED
+func (q Queue) AntiFraud() {
 	for {
 		select {
-		case <-time.Tick(5 * time.Hour):
+		case <-time.Tick(5 * time.Second):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
@@ -93,6 +93,12 @@ func (q Queue) DefenderBlocking() {
 							u.ID = uint(v.ID)
 							u.Block = true
 							u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
+
+							var mm bot.Message
+							mm.CID = v.CIDUsers
+							mm.Type = 120
+
+							q.bot.TrackMessages <- mm
 
 							q.repo.User.UpdateUser(u)
 						}

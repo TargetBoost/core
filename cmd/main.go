@@ -59,7 +59,7 @@ func main() {
 	q := queue.New(ctx, repo, b)
 	go q.Broker()
 	go q.AppointTask()
-	go q.DefenderBlocking()
+	go q.AntiFraud()
 
 	go b.GetUpdates()
 	go b.SenderUpdates()
