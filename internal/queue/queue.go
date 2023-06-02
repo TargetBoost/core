@@ -72,16 +72,13 @@ func (q Queue) AppointTask() {
 
 }
 
+// DefenderBlocking - check users if unsubscribe channels BANNED
 func (q Queue) DefenderBlocking() {
-	//	select cmc.c_id, u.tg, u.id, t.link, cc.c_id from users u inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '') where q.status = 3 order by u.id
-
 	for {
 		select {
 		case <-time.Tick(5 * time.Hour):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
-				//logger.Info(v)
-
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
 				if v.UpdatedAt.Before(time.Now().Add((24 * 14) * time.Hour)) {
 					members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
