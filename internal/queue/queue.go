@@ -58,7 +58,7 @@ func (q Queue) AppointTask() {
 			for _, v := range que {
 				logger.Info(v.ID, "changed")
 
-				if time.Now().Unix()-v.UpdatedAt.Unix()*-1 > timeChange {
+				if v.UpdatedAt.After(time.Now().Add(6 * time.Minute)) {
 					logger.Info("change")
 
 					v.UID = 0
