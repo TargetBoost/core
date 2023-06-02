@@ -89,18 +89,18 @@ func (q Queue) DefenderBlocking() {
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
 				if v.UpdatedAt.After(time.Now().Add((24 * 14) * time.Hour)) {
 					logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
-					if !members {
-						us := q.repo.User.GetUserByID(v.ID)
-
-						if !us.Block {
-							var u models.User
-							u.ID = uint(v.ID)
-							u.Block = true
-							u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
-
-							q.repo.User.UpdateUser(u)
-						}
-					}
+					//if !members {
+					//	us := q.repo.User.GetUserByID(v.ID)
+					//
+					//	if !us.Block {
+					//		var u models.User
+					//		u.ID = uint(v.ID)
+					//		u.Block = true
+					//		u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
+					//
+					//		q.repo.User.UpdateUser(u)
+					//	}
+					//}
 				}
 			}
 
