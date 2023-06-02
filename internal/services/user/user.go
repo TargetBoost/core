@@ -68,6 +68,7 @@ func (s *Service) GetAllUsers() []models.UserService {
 		userService.Balance = strconv.Itoa(int(v.Balance))
 		userService.Tg = v.Tg
 		userService.Block = v.Block
+		userService.Execute = v.Execute
 
 		usersService = append(usersService, userService)
 	}
