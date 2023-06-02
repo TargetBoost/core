@@ -4,6 +4,7 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
+	"core/internal/tg/bot"
 	"github.com/ivahaev/go-logger"
 	"time"
 )
@@ -13,14 +14,16 @@ const timeChange = 600
 type Queue struct {
 	Line        chan []Task
 	LineAppoint chan Task
+	bot         *bot.Bot
 	repo        *repositories.Repositories
 	ctx         context.Context
 }
 
-func New(ctx context.Context, r *repositories.Repositories) Queue {
+func New(ctx context.Context, r *repositories.Repositories, bot *bot.Bot) Queue {
 	q := Queue{
 		Line:        make(chan []Task, 50),
 		LineAppoint: make(chan Task, 50),
+		bot:         bot,
 		repo:        r,
 		ctx:         ctx,
 	}
@@ -73,8 +76,24 @@ func (q Queue) DefenderBlocking() {
 
 	for {
 		select {
-		case <-time.Tick(12 * time.Hour):
-			//q.repo.Storage.
+		case <-time.Tick(1 * time.Second):
+			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
+			for _, v := range d {
+				members, err := q.bot.CheckMembers(v.CIDChannels, int64(v.CIDUsers))
+				if err != nil {
+					logger.Error(err)
+				}
+
+				if !members {
+					var u models.User
+					u.ID = v.CIDUsers
+					u.Block = true
+					u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
+
+					q.repo.User.UpdateUser(u)
+				}
+			}
+
 		}
 	}
 }

@@ -177,3 +177,11 @@ type UsersAndChannelsData struct {
 	Link        string
 	CIDChannels int64
 }
+
+type StatisticTargetsOnExecutesIsTrue struct {
+	CIDUsers    uint
+	Tg          string
+	ID          int64
+	Link        string
+	CIDChannels int64
+}

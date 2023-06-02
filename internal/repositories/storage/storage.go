@@ -35,16 +35,18 @@ func (r *Repository) SetChatMembers(cid int64, title, userName string) {
 	r.db.Table("chat_members_chanels").Create(&q)
 }
 
-func (r *Repository) GetStatisticTargetsOnExecutesIsTrue() {
+func (r *Repository) GetStatisticTargetsOnExecutesIsTrue() []models.StatisticTargetsOnExecutesIsTrue {
 	//	select cmc.c_id, u.tg, u.id, t.link, cc.c_id from users u inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '') where q.status = 3 order by u.id
-
+	var q []models.StatisticTargetsOnExecutesIsTrue
 	r.db.Table(
-		"users u",
+		"users",
 	).Select(
-		"cmc.c_id as cid_users, u.tg, u.id, t.link, cc.c_id as cid_channels",
+		"chat_members_chanels.c_id as cid_users, users.tg, users.id, targets.link, chat_members_chanels.c_id as cid_channels",
 	).Joins(
-		"inner join chat_members_chanels cmc on REPLACE(u.tg, '@', '') = cmc.user_name inner join queues q on u.id = q.uid inner join targets t on q.t_id = t.id right join chat_members_chanels cc on cc.user_name = replace(t.link, 'https://t.me/', '')",
+		"inner join chat_members_chanels on REPLACE(users.tg, '@', '') = chat_members_chanels.user_name inner join queues on users.id = queues.uid inner join targets on queues.t_id = targets.id right join chat_members_chanels on chat_members_chanels.user_name = replace(targets.link, 'https://t.me/', '')",
 	).Where(
-		"q.status = 3",
-	).Order("u.id")
+		"queues.status = 3",
+	).Order("users.id").Find(&q)
+
+	return q
 }

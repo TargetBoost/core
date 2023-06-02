@@ -51,14 +51,14 @@ func main() {
 
 	repo := repositories.NewRepositories(db)
 
-	q := queue.New(ctx, repo)
-	go q.Broker()
-	go q.AppointTask()
-
 	b, err := bot.New(ctx, "5911800604:AAFN65f8vQrsgjIxR8vQgUr_SBCj8SQ1RoM", repo)
 	if err != nil {
 		panic(err)
 	}
+
+	q := queue.New(ctx, repo, b)
+	go q.Broker()
+	go q.AppointTask()
 
 	go b.GetUpdates()
 	go b.SenderUpdates()
