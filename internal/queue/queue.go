@@ -76,7 +76,7 @@ func (q Queue) AppointTask() {
 func (q Queue) AntiFraud() {
 	for {
 		select {
-		case <-time.Tick(10 * time.Hour):
+		case <-time.Tick(5 * time.Hour):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))

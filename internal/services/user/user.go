@@ -67,6 +67,7 @@ func (s *Service) GetAllUsers() []models.UserService {
 		userService.SmallImage = v.SmallImage
 		userService.Balance = strconv.Itoa(int(v.Balance))
 		userService.Tg = v.Tg
+		userService.Block = v.Block
 
 		usersService = append(usersService, userService)
 	}
