@@ -76,11 +76,12 @@ func (q Queue) AppointTask() {
 func (q Queue) AntiFraud() {
 	for {
 		select {
-		case <-time.Tick(5 * time.Second):
+		case <-time.Tick(20 * time.Second):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
 				if v.UpdatedAt.Before(time.Now().Add((24 * 14) * time.Hour)) {
+					time.Sleep(6 * time.Second)
 					members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
 					if err != nil {
 						logger.Error(err)
