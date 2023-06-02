@@ -5,11 +5,12 @@ import (
 	"core/internal/models"
 	"core/internal/repositories"
 	"core/internal/tg/bot"
+	"fmt"
 	"github.com/ivahaev/go-logger"
 	"time"
 )
 
-const timeChange = 600
+const timeChange = 6000
 
 type Queue struct {
 	Line        chan []Task
@@ -84,13 +85,17 @@ func (q Queue) DefenderBlocking() {
 					logger.Error(err)
 				}
 
-				if !members {
-					var u models.User
-					u.ID = v.CIDUsers
-					u.Block = true
-					u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
+				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
+				if v.UpdatedAt.After(time.Now().Add((24 * 14) * time.Hour)) {
+					logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
+					if !members {
+						var u models.User
+						u.ID = uint(v.ID)
+						u.Block = true
+						u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
 
-					q.repo.User.UpdateUser(u)
+						q.repo.User.UpdateUser(u)
+					}
 				}
 			}
 

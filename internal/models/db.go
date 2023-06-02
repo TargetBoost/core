@@ -184,4 +184,5 @@ type StatisticTargetsOnExecutesIsTrue struct {
 	ID          int64
 	Link        string
 	CIDChannels int64
+	UpdatedAt   time.Time
 }
