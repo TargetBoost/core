@@ -77,7 +77,7 @@ func (q Queue) DefenderBlocking() {
 
 	for {
 		select {
-		case <-time.Tick(1 * time.Second):
+		case <-time.Tick(5 * time.Second):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				logger.Info(v.CIDChannels, int64(v.CIDUsers)
