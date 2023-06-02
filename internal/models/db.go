@@ -179,10 +179,10 @@ type UsersAndChannelsData struct {
 }
 
 type StatisticTargetsOnExecutesIsTrue struct {
-	CIDUsers    uint
-	Tg          string
-	ID          int64
-	Link        string
-	CIDChannels int64
-	UpdatedAt   time.Time
+	CIDUsers    uint      `json:"cid_users"`
+	Tg          string    `json:"tg"`
+	ID          int64     `json:"id"`
+	Link        string    `json:"link"`
+	CIDChannels int64     `json:"cid_channels"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

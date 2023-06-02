@@ -80,6 +80,7 @@ func (q Queue) DefenderBlocking() {
 		case <-time.Tick(1 * time.Second):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
+				logger.Info(v.CIDChannels, int64(v.CIDUsers)
 				members, err := q.bot.CheckMembers(v.CIDChannels, int64(v.CIDUsers))
 				if err != nil {
 					logger.Error(err)
