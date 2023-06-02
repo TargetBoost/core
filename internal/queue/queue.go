@@ -77,7 +77,7 @@ func (q Queue) DefenderBlocking() {
 
 	for {
 		select {
-		case <-time.Tick(5 * time.Second):
+		case <-time.Tick(5 * time.Hour):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
 				//logger.Info(v)
@@ -88,11 +88,8 @@ func (q Queue) DefenderBlocking() {
 					if err != nil {
 						logger.Error(err)
 					}
-
 					if !members {
-
 						us := q.repo.User.GetUserByID(v.ID)
-
 						if !us.Block {
 							logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
 							var u models.User
