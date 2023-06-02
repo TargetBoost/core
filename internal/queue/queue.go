@@ -56,10 +56,8 @@ func (q Queue) AppointTask() {
 			logger.Info("Check GetTaskDISTINCTIsWork()")
 			que := q.repo.Feed.GetTaskDISTINCTIsWork()
 			for _, v := range que {
-				logger.Info(v.ID, "changed")
-
 				if v.UpdatedAt.After(time.Now().Add(6 * time.Minute)) {
-					logger.Info("change")
+					logger.Info(v.ID, "changed")
 
 					v.UID = 0
 					v.UpdatedAt = time.Now()
@@ -95,14 +93,13 @@ func (q Queue) AntiFraud() {
 							u.Block = true
 							u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
 
-							var mm bot.Message
-							mm.CID = v.CIDUsers
-							mm.Type = 120
-
-							q.bot.TrackMessages <- mm
+							// Send task Message to bot sender
+							q.bot.TrackMessages <- bot.Message{
+								CID:  v.CIDUsers,
+								Type: 120,
+							}
 
 							q.repo.User.UpdateUser(u)
-
 						}
 					}
 				}
