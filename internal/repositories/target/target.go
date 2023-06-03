@@ -2,6 +2,7 @@ package target
 
 import (
 	"core/internal/models"
+	"github.com/ivahaev/go-logger"
 	"gorm.io/gorm"
 	"strings"
 )
@@ -32,6 +33,7 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 		var cmc models.ChatMembersChanel
 		chName := strings.Split("/", v.Link)[len(strings.Split("/", v.Link))-1]
 
+		logger.Info(strings.Split("/", v.Link))
 		r.db.Debug().Table("chat_members_chanels").Where("user_name = ?", strings.ToLower(chName)).Find(&cmc)
 
 		v.CMFileID = cmc.PhotoLink
