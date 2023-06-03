@@ -3,6 +3,7 @@ package target
 import (
 	"core/internal/models"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type Repository struct {
@@ -28,7 +29,15 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 
 		v.Count = sc.Count
 
+		var cmc models.ChatMembersChanel
+		chName := strings.Split("/", v.Link)[len(strings.Split("/", v.Link))-1]
+
+		r.db.Table("chat_members_chanels").Where("user_name = ?", chName).Find(&cmc)
+
+		v.CMFileID = cmc.PhotoLink
+
 		targetResult = append(targetResult, v)
+
 	}
 
 	return targetResult

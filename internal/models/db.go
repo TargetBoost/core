@@ -104,6 +104,7 @@ type Target struct {
 	Total      float64 `json:"total"`
 	Cost       float64 `json:"cost"` // цена одного задания
 	TotalPrice float64 `json:"total_price"`
+	CMFileID   string  `json:"cm_file_id"`
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей
