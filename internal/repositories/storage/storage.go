@@ -33,7 +33,10 @@ func (r *Repository) SetChatMembers(cid int64, title, userName, photoLink string
 	q.Title = title
 	q.UserName = userName
 	q.PhotoLink = photoLink
-	r.db.Table("chat_members_chanels").Create(&q)
+
+	if err := r.db.Table("chat_members_chanels").Where("cid = ?", cid).Update("photo_link", photoLink).Error; err != nil {
+		r.db.Table("chat_members_chanels").Create(&q) // create new record from newUser
+	}
 }
 
 func (r *Repository) GetStatisticTargetsOnExecutesIsTrue() []models.StatisticTargetsOnExecutesIsTrue {
