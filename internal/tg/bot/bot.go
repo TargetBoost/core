@@ -6,12 +6,21 @@ import (
 	"fmt"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/ivahaev/go-logger"
+	"io"
+	"net/http"
+	"os"
 	"strings"
+)
+
+const (
+	filesPath   = `./uploads/tg_chats_photos/%s"`
+	tgFilesPath = `https://api.telegram.org/file/bot%s/%s"`
 )
 
 type Bot struct {
 	API *tgbotapi.BotAPI
 
+	token        string
 	repos        *repositories.Repositories
 	updateConfig tgbotapi.UpdateConfig
 	ctx          context.Context
@@ -32,6 +41,7 @@ func New(ctx context.Context, token string, repos *repositories.Repositories) (*
 
 	return &Bot{
 		API:           api,
+		token:         token,
 		updateConfig:  u,
 		ctx:           ctx,
 		repos:         repos,
@@ -95,7 +105,6 @@ func (b *Bot) GetUpdates() {
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
 			} else {
-
 				fileID := chat.Photo.BigFileID
 				file, err := b.API.GetFile(tgbotapi.FileConfig{
 					FileID: fileID,
@@ -104,7 +113,12 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FilePath)
+				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				if err != nil {
+					logger.Error(err)
+				}
+
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID)
 			}
 		}
 		if update.Message != nil {
@@ -118,6 +132,36 @@ func (b *Bot) GetUpdates() {
 			b.API.Send(msg)
 		}
 	}
+}
+
+func downloadFile(filepath string, url string) (err error) {
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Check server response
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("bad status: %s", resp.Status)
+	}
+
+	// Writer the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (b *Bot) CheckMembers(cid, uid int64) (bool, error) {
