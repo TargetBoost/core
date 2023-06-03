@@ -8,8 +8,6 @@ import (
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/middleware/accesslog"
-	"os"
 )
 
 //type Controller struct {
@@ -17,16 +15,8 @@ import (
 //}
 
 func NewController(ctx context.Context, services *services.Services, bot *bot.Bot) {
-	ac := makeAccessLog()
-	defer func(ac *accesslog.AccessLog) {
-		err := ac.Close()
-		if err != nil {
-			logger.Error(err)
-		}
-	}(ac)
-
 	app := iris.New()
-	app.UseRouter(ac.Handler)
+	app.UseGlobal(globalMiddleware)
 
 	iris.RegisterOnInterrupt(func() {
 		err := app.Shutdown(ctx)
@@ -51,28 +41,6 @@ func NewController(ctx context.Context, services *services.Services, bot *bot.Bo
 	}
 }
 
-func makeAccessLog() *accesslog.AccessLog {
-	ac := accesslog.File("./access.log")
-	ac.AddOutput(os.Stdout)
-
-	ac.Delim = '|'
-	ac.TimeFormat = "2006-01-02 15:04:05"
-	ac.Async = false
-	ac.IP = true
-	ac.BytesReceivedBody = true
-	ac.BytesSentBody = true
-	ac.BytesReceived = false
-	ac.BytesSent = false
-	ac.BodyMinify = true
-	ac.RequestBody = true
-	ac.ResponseBody = true
-	ac.KeepMultiLineError = true
-	ac.PanicLog = accesslog.LogHandler
-
-	ac.SetFormatter(&accesslog.JSON{
-		Indent:    "  ",
-		HumanTime: true,
-	})
-
-	return ac
+func globalMiddleware(ctx iris.Context) {
+	logger.Info(ctx.Request())
 }
