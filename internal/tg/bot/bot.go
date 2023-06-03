@@ -90,34 +90,25 @@ func (b *Bot) GetUpdates() {
 		if update.MyChatMember != nil {
 			logger.Info(update.MyChatMember)
 
-			if update.MyChatMember.Chat.Photo == nil {
+			if photos, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.MyChatMember.Chat.ID}); err != nil || len(photos.Photos) == 0 {
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
-			}
-			fileID := update.MyChatMember.Chat.Photo.BigFileID
-			file, err := b.API.GetFile(tgbotapi.FileConfig{
-				FileID: fileID,
-			})
-			if err != nil {
-				logger.Error(err)
-			}
+			} else {
+				fileID := photos.Photos[0][0].FileID
+				file, err := b.API.GetFile(tgbotapi.FileConfig{
+					FileID: fileID,
+				})
+				if err != nil {
+					logger.Error(err)
+				}
 
-			b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FilePath)
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FilePath)
+			}
 		}
 		if update.Message != nil {
 			logger.Info(update.Message.Chat)
-			if update.MyChatMember.Chat.Photo == nil {
-				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
-				continue
-			}
-			fileID := update.MyChatMember.Chat.Photo.BigFileID
-			file, err := b.API.GetFile(tgbotapi.FileConfig{
-				FileID: fileID,
-			})
-			if err != nil {
-				logger.Error(err)
-			}
-			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FilePath)
+
+			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), "")
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.
