@@ -18,7 +18,7 @@ import (
 const (
 	directoryPath = `./uploads/tg_chats_photos`
 	filesPath     = `./uploads/tg_chats_photos/%s`
-	tgFilesPath   = `https://api.telegram.org/file/bot%s/%s"`
+	tgFilesPath   = `https://api.telegram.org/file/bot%s/%s`
 )
 
 type Bot struct {
