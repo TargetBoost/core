@@ -20,7 +20,7 @@ func (h *Handler) GetPhotoFile(ctx iris.Context) {
 	}
 
 	ctx.StatusCode(200)
-	ctx.ContentType("application/octet-stream")
+	ctx.ContentType("image/jpeg")
 	ctx.Write(fileBytes)
 }
 
