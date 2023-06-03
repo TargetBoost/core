@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	filesPath   = `./uploads/tg_chats_photos/%s"`
-	tgFilesPath = `https://api.telegram.org/file/bot%s/%s"`
+	directoryPath = `./uploads/tg_chats_photos`
+	filesPath     = `./uploads/tg_chats_photos/%s`
+	tgFilesPath   = `https://api.telegram.org/file/bot%s/%s"`
 )
 
 type Bot struct {
@@ -135,6 +136,11 @@ func (b *Bot) GetUpdates() {
 }
 
 func downloadFile(filepath string, url string) (err error) {
+
+	if _, err := os.Stat(directoryPath); os.IsNotExist(err) {
+		err := os.Mkdir(directoryPath, 0777)
+		return err
+	}
 
 	// Create the file
 	out, err := os.Create(filepath)
