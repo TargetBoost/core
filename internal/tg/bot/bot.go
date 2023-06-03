@@ -117,6 +117,7 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
+				logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
 				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
 				if err != nil {
 					logger.Error(err)
