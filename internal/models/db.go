@@ -42,6 +42,7 @@ type ChatMembersChanel struct {
 	UserName  string
 	PhotoLink string
 	Bio       string
+	CountSub  int64
 }
 
 type QueueToService struct {
@@ -107,6 +108,7 @@ type Target struct {
 	TotalPrice float64 `json:"total_price"`
 	CMFileID   string  `json:"cm_file_id"`
 	Bio        string  `json:"bio"`
+	CountSub   int64   `json:"count_sub"`
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей

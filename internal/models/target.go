@@ -21,6 +21,7 @@ type TargetService struct {
 	Login      string  `json:"login"`
 	CMFileID   string  `json:"cm_file_id"`
 	Bio        string  `json:"bio"`
+	CountSub   int64   `json:"count_sub"`
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей

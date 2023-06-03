@@ -17,6 +17,7 @@ func MapToTarget(t Target) TargetService {
 		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
 		CMFileID:   t.CMFileID,
 		Bio:        t.Bio,
+		CountSub:   t.CountSub,
 	}
 }
 

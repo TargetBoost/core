@@ -36,6 +36,7 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 
 		v.CMFileID = cmc.PhotoLink
 		v.Bio = cmc.Bio
+		v.CountSub = cmc.CountSub
 
 		targetResult = append(targetResult, v)
 	}
