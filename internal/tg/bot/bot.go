@@ -91,6 +91,7 @@ func (b *Bot) GetUpdates() {
 			logger.Info(update.MyChatMember)
 
 			if photos, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.MyChatMember.Chat.ID}); err != nil || len(photos.Photos) == 0 {
+				logger.Error(err)
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
 			} else {
