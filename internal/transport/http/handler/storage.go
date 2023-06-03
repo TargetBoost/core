@@ -4,7 +4,25 @@ import (
 	"fmt"
 	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
+	"os"
 )
+
+const (
+	directoryPath = `./uploads/tg_chats_photos/%s`
+)
+
+func (h *Handler) GetPhotoFile(ctx iris.Context) {
+	key := ctx.Params().GetString("key")
+	fileBytes, err := os.ReadFile(fmt.Sprintf(directoryPath, key))
+	if err != nil {
+		ctx.StatusCode(404)
+		return
+	}
+
+	ctx.StatusCode(200)
+	ctx.ContentType("application/octet-stream")
+	ctx.Write(fileBytes)
+}
 
 func (h *Handler) GetFileByKey(ctx iris.Context) {
 	key := ctx.Params().GetString("key")

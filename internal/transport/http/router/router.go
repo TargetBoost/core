@@ -54,6 +54,7 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 
 	// storage
 	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
+	v1.Handle("GET", "/file_ch/{key:string}", serv.GetPhotoFile)
 
 	return iris
 }
