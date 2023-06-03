@@ -20,6 +20,7 @@ type TargetService struct {
 	TotalPrice string  `json:"total_price"`
 	Login      string  `json:"login"`
 	CMFileID   string  `json:"cm_file_id"`
+	Bio        string  `json:"bio"`
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей

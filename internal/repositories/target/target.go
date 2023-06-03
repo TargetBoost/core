@@ -35,9 +35,9 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 		r.db.Debug().Table("chat_members_chanels").Where("user_name = ?", strings.ToLower(chName)).Find(&cmc)
 
 		v.CMFileID = cmc.PhotoLink
+		v.Bio = cmc.Bio
 
 		targetResult = append(targetResult, v)
-
 	}
 
 	return targetResult
