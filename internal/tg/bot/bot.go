@@ -116,12 +116,12 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
+				chatCh, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
 				if err != nil {
 					logger.Error(err)
 				}
 
-				logger.Debug(chat)
+				logger.Debug(chatCh)
 
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", infoCh)
 				continue
@@ -150,12 +150,12 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
+				chatCh, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
 				if err != nil {
 					logger.Error(err)
 				}
 
-				logger.Debug(chat)
+				logger.Debug(chatCh)
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, infoCh)
 			}
 		}
