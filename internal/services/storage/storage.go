@@ -19,6 +19,6 @@ func (s *Service) GetFileByKey(key string) *models.FileStorage {
 	return s.storageRepository.GetFileByKey(key)
 }
 
-func (s *Service) SetChatMembers(cid int64, title, userName string) {
-	s.storageRepository.SetChatMembers(cid, title, userName)
+func (s *Service) SetChatMembers(cid int64, title, userName, photoLink string) {
+	s.storageRepository.SetChatMembers(cid, title, userName, photoLink)
 }
