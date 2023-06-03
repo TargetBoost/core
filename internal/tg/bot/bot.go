@@ -83,19 +83,20 @@ func (b *Bot) SenderUpdates() {
 
 }
 
+// GetUpdates - get updates bot messages
 func (b *Bot) GetUpdates() {
 	updates := b.API.GetUpdatesChan(b.updateConfig)
 	for update := range updates {
-		//logger.Info(update.Message.Chat)
 		if update.MyChatMember != nil {
-			logger.Info(update.MyChatMember)
+			logger.Info(fmt.Sprintf("New Chat ID: %v", update.MyChatMember.Chat.ID))
 
-			if photos, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.MyChatMember.Chat.ID}); err != nil || len(photos.Photos) == 0 {
+			if chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}}); err != nil || chat.Photo == nil {
 				logger.Error(err)
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
 			} else {
-				fileID := photos.Photos[0][0].FileID
+
+				fileID := chat.Photo.BigFileID
 				file, err := b.API.GetFile(tgbotapi.FileConfig{
 					FileID: fileID,
 				})
