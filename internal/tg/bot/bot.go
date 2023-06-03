@@ -105,7 +105,10 @@ func (b *Bot) GetUpdates() {
 			logger.Info(fmt.Sprintf("New Chat ID: %v", update.MyChatMember.Chat.ID))
 
 			if chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}}); err != nil || chat.Photo == nil {
-				logger.Error(err)
+				if err != nil {
+					logger.Error(err)
+					continue
+				}
 				infoCh := update.MyChatMember.Chat.Description
 				count, err := b.API.GetChatMembersCount(tgbotapi.ChatMemberCountConfig{
 					ChatConfig: tgbotapi.ChatConfig{
@@ -116,12 +119,7 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				chatCh, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
-				if err != nil {
-					logger.Error(err)
-				}
-
-				logger.Debug(chatCh)
+				logger.Debug(chat)
 
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", infoCh)
 				continue
@@ -150,12 +148,7 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				chatCh, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}})
-				if err != nil {
-					logger.Error(err)
-				}
-
-				logger.Debug(chatCh)
+				logger.Debug(chat)
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, infoCh)
 			}
 		}
