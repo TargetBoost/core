@@ -106,7 +106,7 @@ func (b *Bot) GetUpdates() {
 
 			if chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}}); err != nil || chat.Photo == nil {
 				logger.Error(err)
-				infoCh := update.MyChatMember.Chat.Bio
+				infoCh := update.MyChatMember.Chat.Description
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", infoCh)
 				continue
 			} else {
@@ -124,7 +124,7 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				infoCh := update.MyChatMember.Chat.Bio
+				infoCh := update.MyChatMember.Chat.Description
 
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, infoCh)
 			}
