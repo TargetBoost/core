@@ -19,6 +19,7 @@ type TargetService struct {
 	Cost       float64 `json:"cost"` // цена одного задания
 	TotalPrice string  `json:"total_price"`
 	Login      string  `json:"login"`
+	CMFileID   string  `json:"cm_file_id"`
 
 	// гео данные
 	Country string `json:"country"`  // список стран исполнителей
