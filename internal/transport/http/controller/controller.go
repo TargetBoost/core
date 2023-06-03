@@ -5,6 +5,7 @@ import (
 	"core/internal/services"
 	"core/internal/tg/bot"
 	"core/internal/transport/http/router"
+	"fmt"
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
@@ -43,10 +44,10 @@ func NewController(ctx context.Context, services *services.Services, bot *bot.Bo
 
 func globalMiddleware(ctx iris.Context) {
 	logger.Info(
-		ctx.Request().URL,
-		ctx.Request().Header,
-		ctx.Request().Method,
-		ctx.Request().Host,
+		fmt.Sprintf("URL: %s", ctx.Request().URL),
+		fmt.Sprintf("Header: %s", ctx.Request().Header),
+		fmt.Sprintf("Method: %s", ctx.Request().Method),
+		fmt.Sprintf("Host: %s", ctx.Request().Host),
 	)
 	ctx.Next()
 }
