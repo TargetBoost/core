@@ -89,11 +89,26 @@ func (b *Bot) GetUpdates() {
 		//logger.Info(update.Message.Chat)
 		if update.MyChatMember != nil {
 			logger.Info(update.MyChatMember)
-			b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName))
+			fileID := update.MyChatMember.Chat.Photo.BigFileID
+			file, err := b.API.GetFile(tgbotapi.FileConfig{
+				FileID: fileID,
+			})
+			if err != nil {
+				logger.Error(err)
+			}
+
+			b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FilePath)
 		}
 		if update.Message != nil {
 			logger.Info(update.Message.Chat)
-			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName))
+			fileID := update.MyChatMember.Chat.Photo.BigFileID
+			file, err := b.API.GetFile(tgbotapi.FileConfig{
+				FileID: fileID,
+			})
+			if err != nil {
+				logger.Error(err)
+			}
+			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FilePath)
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.

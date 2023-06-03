@@ -51,7 +51,6 @@ func (q Queue) AppointTask() {
 			}
 		case <-q.ctx.Done():
 			return
-
 		case <-time.Tick(time.Second * 10):
 			logger.Info("Check GetTaskDISTINCTInWork()")
 			que := q.repo.Feed.GetTaskDISTINCTInWork()
