@@ -109,7 +109,7 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 					continue
 				}
-				infoCh := update.MyChatMember.Chat.Description
+
 				count, err := b.API.GetChatMembersCount(tgbotapi.ChatMemberCountConfig{
 					ChatConfig: tgbotapi.ChatConfig{
 						ChatID: update.MyChatMember.Chat.ID,
@@ -121,7 +121,7 @@ func (b *Bot) GetUpdates() {
 
 				logger.Debug(chat)
 
-				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", infoCh)
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", chat.Description)
 				continue
 			} else {
 				fileID := chat.Photo.BigFileID
@@ -138,7 +138,6 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				infoCh := update.MyChatMember.Chat.Description
 				count, err := b.API.GetChatMembersCount(tgbotapi.ChatMemberCountConfig{
 					ChatConfig: tgbotapi.ChatConfig{
 						ChatID: update.MyChatMember.Chat.ID,
@@ -149,7 +148,7 @@ func (b *Bot) GetUpdates() {
 				}
 
 				logger.Debug(chat)
-				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, infoCh)
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, chat.Description)
 			}
 		}
 		if update.Message != nil {
