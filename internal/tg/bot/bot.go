@@ -103,7 +103,7 @@ func (b *Bot) GetUpdates() {
 	for update := range updates {
 		if update.MyChatMember != nil {
 			logger.Info(fmt.Sprintf("New Chat ID: %v", update.MyChatMember.Chat.ID))
-
+			logger.Debug(update.MyChatMember.Chat)
 			if chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.MyChatMember.Chat.ID}}); err != nil || chat.Photo == nil {
 				logger.Error(err)
 				infoCh := update.MyChatMember.Chat.Description
