@@ -3,7 +3,9 @@ module core
 go 1.19
 
 require (
+	github.com/disintegration/imageorient v0.0.0-20180920195336-8147d86e83ec
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
+	github.com/google/uuid v1.3.0
 	github.com/iris-contrib/middleware/cors v0.0.0-20220815101939-754509eb4d57
 	github.com/ivahaev/go-logger v0.0.0-20170811130205-2337f7021abc
 	github.com/kataras/iris/v12 v12.2.0-beta4
@@ -19,11 +21,11 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/disintegration/gift v1.1.2 // indirect
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect

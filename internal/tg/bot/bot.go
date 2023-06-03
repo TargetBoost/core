@@ -3,13 +3,16 @@ package bot
 import (
 	"context"
 	"core/internal/repositories"
+	"errors"
 	"fmt"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/ivahaev/go-logger"
-	"io"
+	"image/jpeg"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/disintegration/imageorient"
 )
 
 const (
@@ -135,8 +138,7 @@ func (b *Bot) GetUpdates() {
 	}
 }
 
-func downloadFile(filepath string, url string) (err error) {
-
+func downloadFile(filepath string, url string) error {
 	if _, err := os.Stat(directoryPath); os.IsNotExist(err) {
 		err := os.Mkdir(directoryPath, 0777)
 		return err
@@ -161,11 +163,21 @@ func downloadFile(filepath string, url string) (err error) {
 		return fmt.Errorf("bad status: %s", resp.Status)
 	}
 
-	// Writer the body to file
-	_, err = io.Copy(out, resp.Body)
+	img, _, err := imageorient.Decode(resp.Body)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("imageorient.Decode failed: %v", err))
 	}
+
+	err = jpeg.Encode(out, img, nil)
+	if err != nil {
+		return errors.New(fmt.Sprintf("jpeg.Encode failed: %v", err))
+	}
+
+	//// Writer the body to file
+	//_, err = io.Copy(out, resp.Body)
+	//if err != nil {
+	//	return err
+	//}
 
 	return nil
 }
