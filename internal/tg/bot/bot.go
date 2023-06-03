@@ -89,11 +89,12 @@ func (b *Bot) GetUpdates() {
 		//logger.Info(update.Message.Chat)
 		if update.MyChatMember != nil {
 			logger.Info(update.MyChatMember)
-			fileID := update.MyChatMember.Chat.Photo.BigFileID
-			if fileID == "" {
+
+			if update.MyChatMember.Chat.Photo == nil {
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
 			}
+			fileID := update.MyChatMember.Chat.Photo.BigFileID
 			file, err := b.API.GetFile(tgbotapi.FileConfig{
 				FileID: fileID,
 			})
@@ -105,11 +106,11 @@ func (b *Bot) GetUpdates() {
 		}
 		if update.Message != nil {
 			logger.Info(update.Message.Chat)
-			fileID := update.MyChatMember.Chat.Photo.BigFileID
-			if fileID == "" {
+			if update.MyChatMember.Chat.Photo == nil {
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
 				continue
 			}
+			fileID := update.MyChatMember.Chat.Photo.BigFileID
 			file, err := b.API.GetFile(tgbotapi.FileConfig{
 				FileID: fileID,
 			})
