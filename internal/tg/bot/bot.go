@@ -90,6 +90,10 @@ func (b *Bot) GetUpdates() {
 		if update.MyChatMember != nil {
 			logger.Info(update.MyChatMember)
 			fileID := update.MyChatMember.Chat.Photo.BigFileID
+			if fileID == "" {
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
+				continue
+			}
 			file, err := b.API.GetFile(tgbotapi.FileConfig{
 				FileID: fileID,
 			})
@@ -102,6 +106,10 @@ func (b *Bot) GetUpdates() {
 		if update.Message != nil {
 			logger.Info(update.Message.Chat)
 			fileID := update.MyChatMember.Chat.Photo.BigFileID
+			if fileID == "" {
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "")
+				continue
+			}
 			file, err := b.API.GetFile(tgbotapi.FileConfig{
 				FileID: fileID,
 			})
