@@ -42,6 +42,11 @@ func NewController(ctx context.Context, services *services.Services, bot *bot.Bo
 }
 
 func globalMiddleware(ctx iris.Context) {
-	logger.Info(ctx.Request())
+	logger.Info(
+		ctx.Request().URL,
+		ctx.Request().Header,
+		ctx.Request().Method,
+		ctx.Request().Host,
+	)
 	ctx.Next()
 }
