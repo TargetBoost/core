@@ -26,6 +26,7 @@ type UserService struct {
 	Block   bool   `json:"block"`
 	Cause   string `json:"cause"`
 	Tg      string `json:"tg"`
+	Token   string `json:"token"`
 }
 
 type CreateUser struct {

@@ -25,7 +25,7 @@ func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, 
 	userService := user.NewUserService(repo.User, repo.Feed, lineAppoint, trackMessages)
 	authService := auth.NewAuthService(repo.Auth)
 	TargetService := target.NewTargetService(repo.User, repo.Feed, repo.Storage, lineBroker, trackMessages)
-	storageService := storage.NewStorageService(repo.Storage)
+	storageService := storage.NewStorageService(repo.Storage, repo.User)
 	settingsService := settings.NewSettingsService(repo.Settings)
 
 	return &Services{

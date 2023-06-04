@@ -124,6 +124,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.Block = v.Block
 	userService.Cause = v.Cause
 	userService.Tg = v.Tg
+	userService.Token = v.Token
 
 	return userService
 }

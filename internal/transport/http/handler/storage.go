@@ -11,6 +11,37 @@ const (
 	directoryPath = `./uploads/tg_chats_photos/%s`
 )
 
+func (h *Handler) CallBackVK(ctx iris.Context) {
+	code := ctx.Params().GetString("code")
+
+	rawToken := ctx.GetHeader("Authorization")
+	user, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	if user == nil {
+		ctx.StatusCode(405)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	h.Service.Storage.CallBackVK(code, user.Token)
+
+}
+
 func (h *Handler) GetPhotoFile(ctx iris.Context) {
 	key := ctx.Params().GetString("key")
 	fileBytes, err := os.ReadFile(fmt.Sprintf(directoryPath, key))

@@ -91,6 +91,8 @@ type User struct {
 	Token   string  `json:"token"`
 	Balance float64 `json:"balance"`
 	Cause   string  `json:"cause"`
+
+	VKAccessToken string `json:"vk_access_token"`
 }
 
 type Target struct {
