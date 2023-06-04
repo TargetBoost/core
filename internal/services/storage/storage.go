@@ -34,7 +34,7 @@ func (s *Service) SetChatMembers(cid, count int64, title, userName, photoLink, b
 func (s *Service) CallBackVK(code, token string) error {
 	httpClient := http.Client{}
 
-	requestURL := fmt.Sprintf("https://oauth.vk.com/access_token?client_id=51666148&client_secret=vvCXlyIJ0yEIkOyAHrAV&redirect_uri=https://targetboost.ru/tasks&code=%s", code)
+	requestURL := fmt.Sprintf("https://oauth.vk.com/access_token?client_id=51666148&client_secret=vvCXlyIJ0yEIkOyAHrAV&redirect_uri=https://targetboost.ru/core/v1/callback_vk&code=%s", code)
 
 	req, err := http.NewRequest(http.MethodGet, requestURL, nil)
 	if err != nil {
