@@ -92,7 +92,10 @@ type User struct {
 	Balance float64 `json:"balance"`
 	Cause   string  `json:"cause"`
 
-	VKAccessToken string `json:"vk_access_token"`
+	VKAccessToken   string `json:"vk_access_token"`
+	VKUserID        int    `json:"vk_user_id"`
+	VKUserFirstName string `json:"vk_user_first_name"`
+	VKUserLastName  string `json:"vk_user_last_name"`
 }
 
 type Target struct {

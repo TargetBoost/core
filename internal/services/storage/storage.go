@@ -82,14 +82,20 @@ func (s *Service) CallBackVK(code, token string) error {
 	u.VKAccessToken = t.AccessToken
 	u.ID = us.ID
 
-	s.userRepository.UpdateUser(u)
-
 	vk := api.New(t.AccessToken)
 	vkUser, err := vk.UsersGet(nil)
 	if err != nil {
 		logger.Error(err)
 		return err
 	}
+
+	if vkUser != nil {
+		u.VKUserID = vkUser[0].ID
+		u.VKUserFirstName = vkUser[0].FirstName
+		u.VKUserLastName = vkUser[0].LastName
+	}
+
+	s.userRepository.UpdateUser(u)
 
 	logger.Debug(vkUser)
 
