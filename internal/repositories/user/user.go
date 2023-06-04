@@ -48,7 +48,7 @@ func (r *Repository) GetUserByLogin(tg string) bool {
 }
 
 func (r *Repository) UpdateUser(user models.User) {
-	r.db.Table("users").Where("id = ?", user.ID).Updates(user)
+	r.db.Debug().Table("users").Where("id = ?", user.ID).Updates(user)
 }
 
 func (r *Repository) UpdateUserBalanceToZero(uid uint, balance float64) {
