@@ -38,8 +38,13 @@ func (h *Handler) CallBackVK(ctx iris.Context) {
 		return
 	}
 
-	h.Service.Storage.CallBackVK(code, user.Token)
-
+	err = h.Service.Storage.CallBackVK(code, user.Token)
+	if err != nil {
+		logger.Error(err)
+		ctx.Redirect("https://targetboost.ru/error_auth_vk", 301)
+		return
+	}
+	ctx.Redirect("https://targetboost.ru/tasks", 301)
 }
 
 func (h *Handler) GetPhotoFile(ctx iris.Context) {
