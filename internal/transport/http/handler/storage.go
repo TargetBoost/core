@@ -12,8 +12,8 @@ const (
 )
 
 func (h *Handler) CallBackVK(ctx iris.Context) {
-	code := ctx.Params().GetString("code")
-	state := ctx.Params().GetString("state")
+	code := ctx.URLParam("code")
+	state := ctx.URLParam("state")
 
 	user, err := h.CheckAuth(state)
 	if err != nil {
