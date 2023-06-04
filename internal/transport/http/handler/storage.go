@@ -13,9 +13,9 @@ const (
 
 func (h *Handler) CallBackVK(ctx iris.Context) {
 	code := ctx.Params().GetString("code")
+	state := ctx.Params().GetString("state")
 
-	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
+	user, err := h.CheckAuth(state)
 	if err != nil {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
