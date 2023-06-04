@@ -126,6 +126,8 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	userService.Tg = v.Tg
 	userService.Token = v.Token
 	userService.VKToken = v.VKAccessToken
+	userService.VKUserFirstName = v.VKUserFirstName
+	userService.VKUserLastName = v.VKUserLastName
 
 	return userService
 }

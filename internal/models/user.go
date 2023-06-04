@@ -20,14 +20,17 @@ type UserService struct {
 
 	NumberPhone int64 `json:"number_phone"`
 
-	Execute bool   `json:"execute"`
-	Admin   bool   `json:"admin"`
-	Balance string `json:"balance"`
-	Block   bool   `json:"block"`
-	Cause   string `json:"cause"`
-	Tg      string `json:"tg"`
-	Token   string `json:"token"`
-	VKToken string `json:"vk_token"`
+	Execute         bool   `json:"execute"`
+	Admin           bool   `json:"admin"`
+	Balance         string `json:"balance"`
+	Block           bool   `json:"block"`
+	Cause           string `json:"cause"`
+	Tg              string `json:"tg"`
+	Token           string `json:"token"`
+	VKToken         string `json:"vk_token"`
+	VKUserID        int    `json:"vk_user_id"`
+	VKUserFirstName string `json:"vk_user_first_name"`
+	VKUserLastName  string `json:"vk_user_last_name"`
 }
 
 type CreateUser struct {
