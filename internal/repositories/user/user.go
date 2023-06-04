@@ -30,6 +30,13 @@ func (r *Repository) GetUserByID(id int64) models.User {
 	return u
 }
 
+func (r *Repository) GetUserByToken(token string) models.User {
+	var u models.User
+	r.db.Table("users").Where("token = ? AND deleted_at is null", token).Find(&u)
+
+	return u
+}
+
 func (r *Repository) GetUserByPhoneNumberAndPassword(tg, pass string) models.User {
 	var u models.User
 	r.db.Table("users").Where("tg = ? AND password = ? AND deleted_at is null", tg, pass).Find(&u)

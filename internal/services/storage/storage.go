@@ -5,6 +5,7 @@ import (
 	"core/internal/repositories/storage"
 	"core/internal/repositories/user"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/ivahaev/go-logger"
 	"io"
@@ -69,9 +70,16 @@ func (s *Service) CallBackVK(code, token string) error {
 		return err
 	}
 
+	us := s.userRepository.GetUserByToken(token)
+
+	if us.ID == 0 {
+		return errors.New("user not found")
+	}
+
 	var u models.User
 	u.Token = token
 	u.VKAccessToken = t.AccessToken
+	u.ID = us.ID
 
 	s.userRepository.UpdateUser(u)
 
