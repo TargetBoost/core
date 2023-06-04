@@ -4,6 +4,7 @@ import (
 	"core/internal/models"
 	"core/internal/repositories/storage"
 	"core/internal/repositories/user"
+	"core/internal/vk/api"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -82,6 +83,15 @@ func (s *Service) CallBackVK(code, token string) error {
 	u.ID = us.ID
 
 	s.userRepository.UpdateUser(u)
+
+	vk := api.New(t.AccessToken)
+	vkUser, err := vk.UsersGet(nil)
+	if err != nil {
+		logger.Error(err)
+		return err
+	}
+
+	logger.Debug(vkUser)
 
 	return nil
 }
