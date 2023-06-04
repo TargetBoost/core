@@ -27,6 +27,7 @@ type UserService struct {
 	Cause   string `json:"cause"`
 	Tg      string `json:"tg"`
 	Token   string `json:"token"`
+	VKToken string `json:"vk_token"`
 }
 
 type CreateUser struct {

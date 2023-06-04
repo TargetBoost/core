@@ -26,3 +26,11 @@ func (v *VK) IsMember(groupID, userID int64) (int, error) {
 	}
 	return member, nil
 }
+
+func (v *VK) GetInfo() (api.UsersGetResponse, error) {
+	user, err := v.UsersGet(api.Params{})
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
