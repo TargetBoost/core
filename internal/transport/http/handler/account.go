@@ -564,7 +564,7 @@ func (h *Handler) GetUserByToken(ctx iris.Context) {
 
 // isAdmin check if admin middleware
 func (h *Handler) IsAdmin(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
