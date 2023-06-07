@@ -37,7 +37,7 @@ func (r *Repository) GetUserByID(id int64) models.User {
 
 func (r *Repository) GetUserByToken(token string) models.User {
 	var u models.User
-	r.db.Table("users").Where("token = ? AND deleted_at is null", token).Find(&u)
+	r.db.Debug().Table("users").Where("token = ? AND deleted_at is null", token).Find(&u)
 
 	return u
 }

@@ -552,7 +552,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 // GetUserByToken only one user returned
 func (h *Handler) GetUserByToken(ctx iris.Context) {
-	rawToken := ctx.GetHeader("token")
+	rawToken := ctx.GetHeader("Authorization")
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
