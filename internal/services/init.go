@@ -3,7 +3,6 @@ package services
 import (
 	"core/internal/queue"
 	"core/internal/repositories"
-	"core/internal/services/auth"
 	"core/internal/services/settings"
 	"core/internal/services/storage"
 	"core/internal/services/target"
@@ -15,23 +14,20 @@ type Services struct {
 	repo *repositories.Repositories
 
 	User     *user.Service
-	Auth     *auth.Service
 	Target   *target.Service
 	Storage  *storage.Service
 	Settings *settings.Service
 }
 
 func NewServices(repo *repositories.Repositories, lineBroker chan []queue.Task, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Services {
-	userService := user.NewUserService(repo.User, repo.Feed, lineAppoint, trackMessages)
-	authService := auth.NewAuthService(repo.Auth)
-	TargetService := target.NewTargetService(repo.User, repo.Feed, repo.Storage, lineBroker, trackMessages)
-	storageService := storage.NewStorageService(repo.Storage, repo.User)
-	settingsService := settings.NewSettingsService(repo.Settings)
+	userService := user.NewUserService(repo, lineAppoint, trackMessages)
+	TargetService := target.NewTargetService(repo, lineBroker, trackMessages)
+	storageService := storage.NewStorageService(repo)
+	settingsService := settings.NewSettingsService(repo)
 
 	return &Services{
 		repo:     repo,
 		User:     userService,
-		Auth:     authService,
 		Target:   TargetService,
 		Storage:  storageService,
 		Settings: settingsService,

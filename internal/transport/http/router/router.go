@@ -29,7 +29,7 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	system.Handle("POST", "/auth", serv.Authorization)
 	system.Handle("GET", "/is_auth", serv.IsAuth)
 
-	// User
+	// Account
 	service.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/{id:int64}", serv.GetUserByID)
 	service.Handle("POST", "/pay", serv.Pay)

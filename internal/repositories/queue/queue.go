@@ -1,67 +1,12 @@
-package target
+package queue
 
 import (
 	"core/internal/models"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type Repository struct {
 	db *gorm.DB
-}
-
-func (r *Repository) GetTargets(uid uint) []models.Target {
-	var t []models.Target
-	r.db.Table("targets").Where("uid = ?", uid).Find(&t)
-
-	var targetResult []models.Target
-
-	for _, v := range t {
-		var sc models.SubCount
-
-		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
-
-		v.Count = sc.Count
-
-		var cmc models.ChatMembersChanel
-		chName := strings.Split(v.Link, "/")[len(strings.Split(v.Link, "/"))-1]
-
-		r.db.Table("chat_members_chanels").Where("user_name = ?", strings.ToLower(chName)).Find(&cmc)
-
-		v.CMFileID = cmc.PhotoLink
-		v.Bio = cmc.Bio
-		v.CountSub = cmc.CountSub
-
-		targetResult = append(targetResult, v)
-	}
-
-	return targetResult
-}
-
-func (r *Repository) GetTargetByID(uid uint) models.Target {
-	var t models.Target
-	r.db.Table("targets").Where("id = ?", uid).Find(&t)
-
-	return t
-}
-
-func (r *Repository) GetTargetsToAdmin() []models.TargetToAdmin {
-	var t []models.TargetToAdmin
-	r.db.Table("targets").Select("targets.id, targets.uid, targets.title, targets.link, targets.icon, targets.status, targets.count, targets.total, targets.cost, targets.total_price, u.login").Joins("inner join users u on targets.uid = u.id").Find(&t)
-
-	var targetResult []models.TargetToAdmin
-
-	for _, v := range t {
-		var sc models.SubCount
-
-		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
-
-		v.Count = sc.Count
-
-		targetResult = append(targetResult, v)
-	}
-
-	return targetResult
 }
 
 func (r *Repository) GetTargetsToExecutor(uid int64) []models.Queue {
@@ -74,15 +19,6 @@ func (r *Repository) GetTaskByID(id int64) models.Queue {
 	var t models.Queue
 	r.db.Table("queues").Where("id = ?", id).Find(&t)
 	return t
-}
-
-func (r *Repository) CreateTarget(target *models.Target) *models.Target {
-	r.db.Table("targets").Create(&target)
-	return target
-}
-
-func (r *Repository) UpdateTarget(id uint, target *models.Target) {
-	r.db.Table("targets").Where("id = ?", id).UpdateColumns(&target)
 }
 
 func (r *Repository) CreateTask(queue *models.Queue) {
@@ -133,7 +69,7 @@ func (r *Repository) GetChatMembersByUserName(userName string) models.ChatMember
 	return q
 }
 
-func NewTargetRepository(db *gorm.DB) *Repository {
+func NewQueueRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		db: db,
 	}

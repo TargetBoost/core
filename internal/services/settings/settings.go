@@ -2,23 +2,23 @@ package settings
 
 import (
 	"core/internal/models"
-	"core/internal/repositories/settings"
+	"core/internal/repositories"
 )
 
 type Service struct {
-	settingsRepository *settings.Repository
+	repo *repositories.Repositories
 }
 
-func NewSettingsService(settingsRepository *settings.Repository) *Service {
+func NewSettingsService(repo *repositories.Repositories) *Service {
 	return &Service{
-		settingsRepository: settingsRepository,
+		repo: repo,
 	}
 }
 
 func (s *Service) GetSettings() models.Settings {
-	return s.settingsRepository.GetSettings()
+	return s.repo.Settings.GetSettings()
 }
 
 func (s *Service) SetSettings(settings *models.Settings) {
-	s.settingsRepository.SetSettings(settings)
+	s.repo.Settings.SetSettings(settings)
 }

@@ -1,19 +1,13 @@
-package user
+package account
 
 import (
 	"core/internal/models"
-	"github.com/kataras/iris/v12/x/errors"
+	"errors"
 	"gorm.io/gorm"
 )
 
 type Repository struct {
 	db *gorm.DB
-}
-
-func NewUserRepository(db *gorm.DB) *Repository {
-	return &Repository{
-		db: db,
-	}
 }
 
 func (r *Repository) GetAllUsers() []models.User {
@@ -37,14 +31,14 @@ func (r *Repository) GetUserByToken(token string) models.User {
 	return u
 }
 
-func (r *Repository) GetUserByPhoneNumberAndPassword(tg, pass string) models.User {
+func (r *Repository) GetUserByTgAndPassword(tg, pass string) models.User {
 	var u models.User
 	r.db.Table("users").Where("tg = ? AND password = ? AND deleted_at is null", tg, pass).Find(&u)
 
 	return u
 }
 
-func (r *Repository) GetUserByLogin(tg string) bool {
+func (r *Repository) IsUserByTg(tg string) bool {
 	var u models.User
 	r.db.Table("users").Where("tg = ? AND deleted_at is null", tg).Find(&u)
 
@@ -58,10 +52,10 @@ func (r *Repository) UpdateUser(user models.User) {
 	r.db.Debug().Table("users").Where("id = ?", user.ID).Updates(user)
 }
 
-func (r *Repository) UpdateUserBalanceToZero(uid uint, balance float64) {
+func (r *Repository) UpdateUserBalance(uid uint, balance float64) {
 	var q models.User
 	r.db.Table("users").Where("id = ?", uid).Find(&q)
-	//r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.User{Balance: balance})
+	//r.db.Debug().Table("users").Where("id = ?", uid).Updates(models.Account{Balance: balance})
 	q.Balance = balance
 	r.db.Debug().Save(q)
 }
@@ -81,7 +75,7 @@ func (r *Repository) CreateUser(user *models.CreateUser) error {
 	//u.NumberPhone = user.NumberPhone
 	u.Execute = user.Execute
 
-	if r.GetUserByLogin(u.Tg) {
+	if r.IsUserByTg(u.Tg) {
 		return errors.New("user exists")
 	}
 	r.db.Table("users").Create(&u)
@@ -128,4 +122,21 @@ func (r *Repository) GetTransaction(build string) models.Transaction {
 	var q models.Transaction
 	r.db.Table("transactions").Where("build_id = ?", build).Find(&q)
 	return q
+}
+
+func (r *Repository) IsAuth(token string) (uint, bool) {
+	var u models.User
+	r.db.Table("users").Where("token = ?", token).Find(&u)
+
+	if u.ID != 0 {
+		return u.ID, true
+	}
+
+	return 0, false
+}
+
+func NewAccountRepository(db *gorm.DB) *Repository {
+	return &Repository{
+		db: db,
+	}
 }

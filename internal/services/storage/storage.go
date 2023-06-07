@@ -2,8 +2,7 @@ package storage
 
 import (
 	"core/internal/models"
-	"core/internal/repositories/storage"
-	"core/internal/repositories/user"
+	"core/internal/repositories"
 	"core/internal/vk/api"
 	"encoding/json"
 	"errors"
@@ -14,23 +13,21 @@ import (
 )
 
 type Service struct {
-	storageRepository *storage.Repository
-	userRepository    *user.Repository
+	repo *repositories.Repositories
 }
 
-func NewStorageService(storageRepository *storage.Repository, userRepository *user.Repository) *Service {
+func NewStorageService(repo *repositories.Repositories) *Service {
 	return &Service{
-		storageRepository: storageRepository,
-		userRepository:    userRepository,
+		repo: repo,
 	}
 }
 
 func (s *Service) GetFileByKey(key string) *models.FileStorage {
-	return s.storageRepository.GetFileByKey(key)
+	return s.repo.Storage.GetFileByKey(key)
 }
 
 func (s *Service) SetChatMembers(cid, count int64, title, userName, photoLink, bio string) {
-	s.storageRepository.SetChatMembers(cid, count, title, userName, photoLink, bio)
+	s.repo.Storage.SetChatMembers(cid, count, title, userName, photoLink, bio)
 }
 
 func (s *Service) CallBackVK(code, token string) error {
@@ -71,7 +68,7 @@ func (s *Service) CallBackVK(code, token string) error {
 		return err
 	}
 
-	us := s.userRepository.GetUserByToken(token)
+	us := s.repo.Account.GetUserByToken(token)
 
 	if us.ID == 0 {
 		return errors.New("user not found")
@@ -95,7 +92,7 @@ func (s *Service) CallBackVK(code, token string) error {
 		u.VKUserLastName = vkUser[0].LastName
 	}
 
-	s.userRepository.UpdateUser(u)
+	s.repo.Account.UpdateUser(u)
 
 	logger.Debug(vkUser)
 

@@ -289,7 +289,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": "User not exist",
+				"message": "Account not exist",
 			},
 			"data": nil,
 		})
@@ -569,7 +569,7 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": "User not exist",
+				"message": "Account not exist",
 			},
 			"data": nil,
 		})
