@@ -5,7 +5,7 @@ import (
 )
 
 func (h *Handler) IsAuth(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	if len(rawToken) == 0 {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{
@@ -17,7 +17,7 @@ func (h *Handler) IsAuth(ctx iris.Context) {
 		return
 	}
 
-	id, isAuth := h.Service.Account.IsAuth(rawToken)
+	_, isAuth := h.Service.Account.IsAuth(rawToken)
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{
@@ -29,14 +29,5 @@ func (h *Handler) IsAuth(ctx iris.Context) {
 		return
 	}
 
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"id": id,
-		},
-	})
-	return
+	ctx.Next()
 }

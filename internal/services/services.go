@@ -13,6 +13,21 @@ import (
 )
 
 type Account interface {
+	CreateUser(user models.CreateUser) (*models.User, error)
+	IsAuth(token string) (uint, bool)
+	IsAdmin(token string) bool
+	UpdateUserBalance(id int64, cost float64)
+	UpdateUser(uid uint, b float64)
+	GetAllUsers() []models.UserService
+	GetTasksCashesUser(uid uint) []models.TaskCashToService
+	GetTasksCashesAdmin() []models.TaskCashToService
+	GetUserByID(id int64) models.UserService
+	AuthUser(user models.AuthUser) (*models.User, error)
+	CreateTaskCashes(uid int64, task models.TaskCashToUser) error
+	UpdateTaskCashes(task models.TaskCashToService)
+	CreateTransaction(t *models.TransactionToService)
+	UpdateTransaction(t *models.TransactionToService)
+	GetTransaction(build string) *models.TransactionToService
 }
 
 type Target interface {
@@ -43,7 +58,7 @@ type Settings interface {
 }
 
 type Services struct {
-	Account  *account.Service
+	Account  Account
 	Queue    Queue
 	Target   Target
 	Storage  Storage

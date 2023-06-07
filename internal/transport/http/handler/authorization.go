@@ -5,7 +5,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func (h *Handler) Authorization(ctx iris.Context) {
+func (h *Handler) Login(ctx iris.Context) {
 	var a models.AuthUser
 	err := ctx.ReadJSON(&a)
 	if err != nil {

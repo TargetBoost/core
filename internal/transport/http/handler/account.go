@@ -14,8 +14,8 @@ import (
 	"time"
 )
 
-// CreateUser - registration user
-func (h *Handler) CreateUser(ctx iris.Context) {
+// Registration - registration user
+func (h *Handler) Registration(ctx iris.Context) {
 	// userData - data new user
 	var userData models.CreateUser
 	err := ctx.ReadJSON(&userData)
@@ -30,7 +30,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 		return
 	}
 
-	// CreateUser - service returned data for new user
+	// Registration - service returned data for new user
 	user, err := h.Service.Account.CreateUser(userData)
 	if err != nil {
 		logger.Error(err)
@@ -58,7 +58,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 // GetAllUsers all users returned
 // TODO: проверить, используется ли метод
 func (h *Handler) GetAllUsers(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	u, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -94,7 +94,7 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 
 // CreateTaskCashes create
 func (h *Handler) CreateTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	var task models.TaskCashToUser
 	err := ctx.ReadJSON(&task)
 	if err != nil {
@@ -142,7 +142,7 @@ func (h *Handler) CreateTaskCashes(ctx iris.Context) {
 
 // UpdateTaskCashes create
 func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	var task models.TaskCashToService
 	err := ctx.ReadJSON(&task)
 	if err != nil {
@@ -190,7 +190,7 @@ func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
 }
 
 func (h *Handler) GetTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	u, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -224,7 +224,7 @@ func (h *Handler) GetTaskCashes(ctx iris.Context) {
 }
 
 func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	u, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -270,7 +270,7 @@ func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
 
 // Pay -
 func (h *Handler) Pay(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	var pay models.Pay
 	err := ctx.ReadJSON(&pay)
 	user, err := h.CheckAuth(rawToken)
@@ -552,7 +552,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 // GetUserByID only one user returned
 func (h *Handler) GetUserByID(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -585,4 +585,33 @@ func (h *Handler) GetUserByID(ctx iris.Context) {
 		},
 		"data": user,
 	})
+}
+
+// isAdmin check if admin middleware
+func (h *Handler) IsAdmin(ctx iris.Context) {
+	rawToken := ctx.GetHeader("Login")
+	user, err := h.CheckAuth(rawToken)
+	if err != nil {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": err.Error(),
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	if user.Admin != true {
+		ctx.StatusCode(404)
+		_ = ctx.JSON(iris.Map{
+			"status": iris.Map{
+				"message": "Account not exist",
+			},
+			"data": nil,
+		})
+		return
+	}
+
+	ctx.Next()
 }

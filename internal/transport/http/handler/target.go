@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Handler) GetTargets(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -32,7 +32,7 @@ func (h *Handler) GetTargets(ctx iris.Context) {
 }
 
 func (h *Handler) GetTargetsToAdmin(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -68,7 +68,7 @@ func (h *Handler) GetTargetsToAdmin(ctx iris.Context) {
 }
 
 func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -96,7 +96,7 @@ func (h *Handler) CreateTarget(ctx iris.Context) {
 	var t models.TargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -135,7 +135,7 @@ func (h *Handler) UpdateTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -174,7 +174,7 @@ func (h *Handler) UpdateTargetAdvertiser(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	_, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -213,7 +213,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)

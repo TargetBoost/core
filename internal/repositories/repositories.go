@@ -30,6 +30,7 @@ type Account interface {
 	UpdateTransaction(t *models.TransactionToService)
 	GetTransaction(build string) models.Transaction
 	IsAuth(token string) (uint, bool)
+	IsAdmin(token string) bool
 }
 
 type Target interface {

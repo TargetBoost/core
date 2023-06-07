@@ -11,6 +11,16 @@ type Repository struct {
 	db *gorm.DB
 }
 
+func (r *Repository) IsAdmin(token string) bool {
+	var u models.User
+	r.db.Table("users").Where("token = ? and admin = true", token).Find(&u)
+
+	if u.Admin == true {
+		return true
+	}
+	return false
+}
+
 func (r *Repository) GetAllUsers() []models.User {
 	var u []models.User
 	r.db.Table("users").Where("deleted_at is null").Order("id").Find(&u)

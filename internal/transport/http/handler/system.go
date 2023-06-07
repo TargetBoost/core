@@ -3,21 +3,7 @@ package handler
 import (
 	"core/internal/models"
 	"github.com/kataras/iris/v12"
-	"time"
 )
-
-func (h *Handler) HealthCheck(ctx iris.Context) {
-	ctx.StatusCode(200)
-
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"time": time.Now().Unix(),
-		},
-	})
-}
 
 func (h *Handler) Settings(ctx iris.Context) {
 	ctx.StatusCode(200)
@@ -49,7 +35,7 @@ func (h *Handler) SetSettings(ctx iris.Context) {
 		return
 	}
 
-	rawToken := ctx.GetHeader("Authorization")
+	rawToken := ctx.GetHeader("Login")
 	if len(rawToken) == 0 {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{

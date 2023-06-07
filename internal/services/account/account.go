@@ -24,16 +24,12 @@ type Service struct {
 	trackMessages chan bot.Message
 }
 
-func NewAccountService(repo *repositories.Repositories, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Service {
-	return &Service{
-		repo:          repo,
-		lineAppoint:   lineAppoint,
-		trackMessages: trackMessages,
-	}
-}
-
 func (s *Service) IsAuth(token string) (uint, bool) {
 	return s.repo.Account.IsAuth(token)
+}
+
+func (s *Service) IsAdmin(token string) bool {
+	return s.repo.Account.IsAdmin(token)
 }
 
 func (s *Service) UpdateUserBalance(id int64, cost float64) {
@@ -152,14 +148,6 @@ func (s *Service) CreateUser(user models.CreateUser) (*models.User, error) {
 	return &u, nil
 }
 
-func createToken(login, password string, time time.Time) string {
-	hash := sha256.New()
-	hash.Write([]byte(login + password + time.String()))
-	sha := base64.URLEncoding.EncodeToString(hash.Sum(nil))
-
-	return sha
-}
-
 func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
 	u := s.repo.Account.GetUserByTgAndPassword(strings.ToLower(user.Tg), user.Password)
 
@@ -258,4 +246,20 @@ func (s *Service) GetTransaction(build string) *models.TransactionToService {
 	trans.BuildID = t.BuildID
 
 	return &trans
+}
+
+func createToken(login, password string, time time.Time) string {
+	hash := sha256.New()
+	hash.Write([]byte(login + password + time.String()))
+	sha := base64.URLEncoding.EncodeToString(hash.Sum(nil))
+
+	return sha
+}
+
+func NewAccountService(repo *repositories.Repositories, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Service {
+	return &Service{
+		repo:          repo,
+		lineAppoint:   lineAppoint,
+		trackMessages: trackMessages,
+	}
 }

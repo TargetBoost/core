@@ -18,16 +18,18 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	}
 
 	v1 := iris.Party("/v1")
-	system := v1.Party("/system")
-	service := v1.Party("/service")
+	admin := v1.Party("/admin", serv.IsAdmin)
+	service := v1.Party("/service", serv.IsAuth)
 
 	// System
-	system.Handle("GET", "/health_check", serv.HealthCheck)
-	system.Handle("GET", "/settings", serv.Settings)
-	system.Handle("POST", "/settings", serv.SetSettings)
-	system.Handle("POST", "/registration", serv.CreateUser)
-	system.Handle("POST", "/auth", serv.Authorization)
-	system.Handle("GET", "/is_auth", serv.IsAuth)
+	admin.Handle("GET", "/settings", serv.Settings)
+	admin.Handle("POST", "/settings", serv.SetSettings)
+
+	// Login and Registration
+	v1.Handle("POST", "/registration", serv.Registration)
+	v1.Handle("POST", "/login", serv.Login)
+
+	//service.Handle("GET", "/is_auth", serv.IsAuth)
 
 	// Account
 	service.Handle("GET", "/users", serv.GetAllUsers)
@@ -49,7 +51,6 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	service.Handle("GET", "/admin/target", serv.GetTargetsToAdmin)
 	service.Handle("GET", "/executor/target", serv.GetTargetsToExecutors)
 	service.Handle("POST", "/target", serv.CreateTarget)
-	service.Handle("GET", "/test/video/vast", serv.TestVast)
 	service.Handle("POST", "/check_target", serv.CheckTarget)
 
 	// storage
