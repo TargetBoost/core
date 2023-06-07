@@ -124,30 +124,6 @@ func (h *Handler) UpdateTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Login")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !user.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
-			},
-			"data": nil,
-		})
-		return
-	}
-
 	h.Service.Target.UpdateTarget(t.ID, t.Status)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{

@@ -32,23 +32,23 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	//service.Handle("GET", "/is_auth", serv.IsAuth)
 
 	// Account
-	service.Handle("GET", "/users", serv.GetAllUsers)
+	admin.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/{token:string}", serv.GetUserByToken)
 	service.Handle("POST", "/pay", serv.Pay)
 	service.Handle("GET", "/s/pay/{id:string}", serv.ConfirmPay)
 
-	service.Handle("GET", "/admin/task_cashes", serv.GetTaskCashesAdmin)
-	service.Handle("PUT", "/admin/task_cashes", serv.UpdateTaskCashes)
+	admin.Handle("GET", "/task_cashes", serv.GetTaskCashesAdmin)
+	admin.Handle("PUT", "/task_cashes", serv.UpdateTaskCashes)
 
 	service.Handle("GET", "/task_cashes", serv.GetTaskCashes)
 	service.Handle("POST", "/task_cashes", serv.CreateTaskCashes)
 
 	// Target
 	service.Handle("GET", "/target", serv.GetTargets)
-	service.Handle("PUT", "/admin/target", serv.UpdateTarget)
+	admin.Handle("PUT", "/target", serv.UpdateTarget)
 	service.Handle("PUT", "/target", serv.UpdateTargetAdvertiser)
 
-	service.Handle("GET", "/admin/target", serv.GetTargetsToAdmin)
+	admin.Handle("GET", "/target", serv.GetTargetsToAdmin)
 	service.Handle("GET", "/executor/target", serv.GetTargetsToExecutors)
 	service.Handle("POST", "/target", serv.CreateTarget)
 	service.Handle("POST", "/check_target", serv.CheckTarget)

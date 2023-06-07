@@ -55,33 +55,8 @@ func (h *Handler) Registration(ctx iris.Context) {
 	})
 }
 
-// GetAllUsers all users returned
-// TODO: проверить, используется ли метод
+// GetAllUsers all users returned for admin
 func (h *Handler) GetAllUsers(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !u.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
-			},
-			"data": nil,
-		})
-		return
-	}
-
 	users := h.Service.Account.GetAllUsers()
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
@@ -142,7 +117,6 @@ func (h *Handler) CreateTaskCashes(ctx iris.Context) {
 
 // UpdateTaskCashes create
 func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
 	var task models.TaskCashToService
 	err := ctx.ReadJSON(&task)
 	if err != nil {
@@ -150,29 +124,6 @@ func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
 				"message": "bad data insertion",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !u.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
 			},
 			"data": nil,
 		})
@@ -224,47 +175,12 @@ func (h *Handler) GetTaskCashes(ctx iris.Context) {
 }
 
 func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !u.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	tasks := h.Service.Account.GetTasksCashesAdmin()
-	if err != nil {
-		ctx.StatusCode(200)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-		})
-		return
-	}
-
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
 			"message": nil,
 		},
-		"data": tasks,
+		"data": h.Service.Account.GetTasksCashesAdmin(),
 	})
 }
 
