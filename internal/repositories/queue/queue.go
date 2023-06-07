@@ -2,6 +2,7 @@ package queue
 
 import (
 	"core/internal/models"
+	
 	"gorm.io/gorm"
 )
 
@@ -39,7 +40,7 @@ func (r *Repository) UpdateTask(q models.Queue) {
 	r.db.Debug().Save(qq)
 }
 
-func (r *Repository) GetTaskDISTINCT() []models.Queue {
+func (r *Repository) GetUniqueTask() []models.Queue {
 	var q []models.Queue
 	r.db.Table("queues").Select("DISTINCT ON (t_id) t_id, id").Where("uid = 0").Limit(10).Order("t_id").Find(&q)
 	return q

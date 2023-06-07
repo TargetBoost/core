@@ -2,7 +2,7 @@ package handler
 
 import (
 	"core/internal/services"
-	"core/internal/tg/bot"
+	"core/internal/transport/tg/bot"
 )
 
 type Handler struct {

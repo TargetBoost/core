@@ -5,12 +5,11 @@ import (
 	"core/internal/repositories"
 	"core/internal/services/account"
 	"core/internal/services/queue"
-	q "core/internal/target_broker"
-
 	"core/internal/services/settings"
 	"core/internal/services/storage"
 	"core/internal/services/target"
-	"core/internal/tg/bot"
+	"core/internal/target_broker"
+	"core/internal/transport/tg/bot"
 )
 
 type Account interface {
@@ -51,7 +50,7 @@ type Services struct {
 	Settings Settings
 }
 
-func NewServices(repo *repositories.Repositories, lineBroker chan []q.Task, lineAppoint chan q.Task, trackMessages chan bot.Message) *Services {
+func NewServices(repo *repositories.Repositories, lineBroker chan []target_broker.Task, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Services {
 	accountService := account.NewAccountService(repo, lineAppoint, trackMessages)
 	targetService := target.NewTargetService(repo, lineBroker, trackMessages)
 	storageService := storage.NewStorageService(repo)

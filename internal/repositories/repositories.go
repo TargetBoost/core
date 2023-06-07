@@ -7,6 +7,7 @@ import (
 	"core/internal/repositories/settings"
 	"core/internal/repositories/storage"
 	"core/internal/repositories/target"
+
 	"github.com/ivahaev/go-logger"
 	"gorm.io/gorm"
 )
@@ -45,7 +46,7 @@ type Queue interface {
 	CreateTask(queue *models.Queue)
 	UpdateTaskStatus(q models.Queue)
 	UpdateTask(q models.Queue)
-	GetTaskDISTINCT() []models.Queue
+	GetUniqueTask() []models.Queue
 	GetTaskDISTINCTInWork() []models.Queue
 	GetTaskForUserUID(uid uint, tid uint) []models.Queue
 	GetTaskDISTINCTIsWorkForUser(uid int64) []models.QueueToExecutors
@@ -64,8 +65,6 @@ type Settings interface {
 }
 
 type Repositories struct {
-	db *gorm.DB
-
 	Account  Account
 	Target   Target
 	Queue    Queue
@@ -96,7 +95,6 @@ func NewRepositories(db *gorm.DB) *Repositories {
 	settingsRepository := settings.NewSettingsRepository(db)
 
 	return &Repositories{
-		db:       db,
 		Account:  accountRepository,
 		Target:   targetRepository,
 		Queue:    queueRepository,

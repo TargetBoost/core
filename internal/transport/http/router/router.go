@@ -2,8 +2,8 @@ package router
 
 import (
 	"core/internal/services"
-	"core/internal/tg/bot"
 	"core/internal/transport/http/handler"
+	"core/internal/transport/tg/bot"
 	"github.com/kataras/iris/v12"
 )
 

@@ -1,12 +1,13 @@
 package main
 
 import (
-	"context"
 	"core/internal/repositories"
 	"core/internal/services"
 	"core/internal/target_broker"
-	"core/internal/tg/bot"
 	"core/internal/transport/http/controller"
+	"core/internal/transport/tg/bot"
+
+	"context"
 	"fmt"
 	"gorm.io/gorm"
 	"os"
@@ -14,9 +15,8 @@ import (
 	"syscall"
 	"time"
 
-	"gorm.io/driver/postgres"
-
 	"github.com/ivahaev/go-logger"
+	"gorm.io/driver/postgres"
 )
 
 const (

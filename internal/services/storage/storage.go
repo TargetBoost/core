@@ -3,7 +3,7 @@ package storage
 import (
 	"core/internal/models"
 	"core/internal/repositories"
-	"core/internal/vk/api"
+	"core/internal/transport/vk/api"
 	"encoding/json"
 	"errors"
 	"fmt"

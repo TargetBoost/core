@@ -103,12 +103,6 @@ func (r *Repository) UpdateTask(q models.Queue) {
 	r.db.Debug().Save(qq)
 }
 
-func (r *Repository) GetTaskDISTINCT() []models.Queue {
-	var q []models.Queue
-	r.db.Table("queues").Select("DISTINCT ON (t_id) t_id, id").Where("uid = 0").Limit(10).Order("t_id").Find(&q)
-	return q
-}
-
 func (r *Repository) GetTaskDISTINCTInWork() []models.Queue {
 	var q []models.Queue
 	r.db.Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Find(&q)

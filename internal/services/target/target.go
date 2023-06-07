@@ -4,7 +4,7 @@ import (
 	"core/internal/models"
 	"core/internal/repositories"
 	"core/internal/target_broker"
-	"core/internal/tg/bot"
+	"core/internal/transport/tg/bot"
 	"errors"
 	"github.com/ivahaev/go-logger"
 	"strconv"

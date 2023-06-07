@@ -4,7 +4,7 @@ import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
-	"core/internal/tg/bot"
+	bot2 "core/internal/transport/tg/bot"
 	"fmt"
 	"github.com/ivahaev/go-logger"
 	"time"
@@ -15,12 +15,12 @@ const timeChange = 6000
 type Queue struct {
 	Line        chan []Task
 	LineAppoint chan Task
-	bot         *bot.Bot
+	bot         *bot2.Bot
 	repo        *repositories.Repositories
 	ctx         context.Context
 }
 
-func New(ctx context.Context, r *repositories.Repositories, bot *bot.Bot) Queue {
+func New(ctx context.Context, r *repositories.Repositories, bot *bot2.Bot) Queue {
 	q := Queue{
 		Line:        make(chan []Task, 50),
 		LineAppoint: make(chan Task, 50),
@@ -36,7 +36,7 @@ func (q Queue) AppointTask() {
 	for {
 		select {
 		case t := <-q.LineAppoint:
-			que := q.repo.Queue.GetTaskDISTINCT()
+			que := q.repo.Queue.GetUniqueTask()
 
 			for _, v := range que {
 				tasksUser := q.repo.Queue.GetTaskForUserUID(uint(t.UID), v.TID)
@@ -93,7 +93,7 @@ func (q Queue) AntiFraud() {
 							u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
 
 							// Send task Message to bot sender
-							q.bot.TrackMessages <- bot.Message{
+							q.bot.TrackMessages <- bot2.Message{
 								CID:  v.CIDUsers,
 								Type: 120,
 							}
