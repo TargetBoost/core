@@ -5,7 +5,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func (h *Handler) Settings(ctx iris.Context) {
+func (h *Handler) GetSettings(ctx iris.Context) {
 	ctx.StatusCode(200)
 
 	settings := h.Service.Settings.GetSettings()

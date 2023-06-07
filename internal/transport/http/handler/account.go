@@ -550,40 +550,15 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	//})
 }
 
-// GetUserByID only one user returned
-func (h *Handler) GetUserByID(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if user.ID == 0 {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Account not exist",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	logger.Info(user)
-
+// GetUserByToken only one user returned
+func (h *Handler) GetUserByToken(ctx iris.Context) {
+	rawToken := ctx.GetHeader("token")
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
 			"message": nil,
 		},
-		"data": user,
+		"data": h.Service.Account.GetUserByToken(rawToken),
 	})
 }
 

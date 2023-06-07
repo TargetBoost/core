@@ -22,6 +22,7 @@ type Account interface {
 	GetTasksCashesUser(uid uint) []models.TaskCashToService
 	GetTasksCashesAdmin() []models.TaskCashToService
 	GetUserByID(id int64) models.UserService
+	GetUserByToken(token string) models.UserService
 	AuthUser(user models.AuthUser) (*models.User, error)
 	CreateTaskCashes(uid int64, task models.TaskCashToUser) error
 	UpdateTaskCashes(task models.TaskCashToService)

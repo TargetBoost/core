@@ -7,19 +7,8 @@ import (
 )
 
 func (h *Handler) GetTargets(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
+	rawToken := ctx.GetHeader("token")
+	user := h.Service.Account.GetUserByToken(rawToken)
 	targets := h.Service.Target.GetTargets(user.ID)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{

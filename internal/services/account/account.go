@@ -24,6 +24,36 @@ type Service struct {
 	trackMessages chan bot.Message
 }
 
+func (s *Service) GetUserByToken(token string) models.UserService {
+	var userService models.UserService
+	v := s.repo.Account.GetUserByToken(token)
+
+	task := target_broker.Task{UID: int64(v.ID)}
+	s.lineAppoint <- task
+
+	userService.ID = v.ID
+	userService.CreatedAt = v.CreatedAt
+	userService.Login = v.Login
+	userService.FirstName = v.FirstName
+	userService.LastName = v.LastName
+	userService.MiddleName = v.MiddleName
+	userService.MainImage = v.MainImage
+	userService.SmallImage = v.SmallImage
+	userService.NumberPhone = v.NumberPhone
+	userService.Execute = v.Execute
+	userService.Admin = v.Admin
+	userService.Balance = strconv.FormatFloat(v.Balance, 'g', -1, 64)
+	userService.Block = v.Block
+	userService.Cause = v.Cause
+	userService.Tg = v.Tg
+	userService.Token = v.Token
+	userService.VKToken = v.VKAccessToken
+	userService.VKUserFirstName = v.VKUserFirstName
+	userService.VKUserLastName = v.VKUserLastName
+
+	return userService
+}
+
 func (s *Service) IsAuth(token string) (uint, bool) {
 	return s.repo.Account.IsAuth(token)
 }

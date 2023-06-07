@@ -22,18 +22,18 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	service := v1.Party("/service", serv.IsAuth)
 
 	// System
-	admin.Handle("GET", "/settings", serv.Settings)
 	admin.Handle("POST", "/settings", serv.SetSettings)
 
-	// Login and Registration
+	// Login, Registration, GetSettings (all users permission)
 	v1.Handle("POST", "/registration", serv.Registration)
 	v1.Handle("POST", "/login", serv.Login)
+	v1.Handle("GET", "/settings", serv.GetSettings)
 
 	//service.Handle("GET", "/is_auth", serv.IsAuth)
 
 	// Account
 	service.Handle("GET", "/users", serv.GetAllUsers)
-	service.Handle("GET", "/user/{token:string}", serv.GetUserByID)
+	service.Handle("GET", "/user/{token:string}", serv.GetUserByToken)
 	service.Handle("POST", "/pay", serv.Pay)
 	service.Handle("GET", "/s/pay/{id:string}", serv.ConfirmPay)
 
