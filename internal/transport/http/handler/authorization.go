@@ -19,7 +19,7 @@ func (h *Handler) Authorization(ctx iris.Context) {
 		return
 	}
 
-	user, err := h.Service.User.AuthUser(a)
+	user, err := h.Service.Account.AuthUser(a)
 	if err != nil {
 		ctx.StatusCode(400)
 		_ = ctx.JSON(iris.Map{

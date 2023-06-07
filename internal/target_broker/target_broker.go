@@ -1,4 +1,4 @@
-package queue
+package target_broker
 
 import (
 	"context"
@@ -36,10 +36,10 @@ func (q Queue) AppointTask() {
 	for {
 		select {
 		case t := <-q.LineAppoint:
-			que := q.repo.Target.GetTaskDISTINCT()
+			que := q.repo.Queue.GetTaskDISTINCT()
 
 			for _, v := range que {
-				tasksUser := q.repo.Target.GetTaskForUserUID(uint(t.UID), v.TID)
+				tasksUser := q.repo.Queue.GetTaskForUserUID(uint(t.UID), v.TID)
 				if len(tasksUser) > 0 {
 					continue
 				}
@@ -47,13 +47,13 @@ func (q Queue) AppointTask() {
 
 				v.UpdatedAt = time.Now()
 				v.Status = 1
-				q.repo.Target.UpdateTask(v)
+				q.repo.Queue.UpdateTask(v)
 			}
 		case <-q.ctx.Done():
 			return
 		case <-time.Tick(time.Second * 10):
 			logger.Info("Check GetTaskDISTINCTInWork()")
-			que := q.repo.Target.GetTaskDISTINCTInWork()
+			que := q.repo.Queue.GetTaskDISTINCTInWork()
 			for _, v := range que {
 				if v.UpdatedAt.After(time.Now().Add(6 * time.Minute)) {
 					logger.Info(v.ID, "changed")
@@ -61,7 +61,7 @@ func (q Queue) AppointTask() {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
-					q.repo.Target.UpdateTask(v)
+					q.repo.Queue.UpdateTask(v)
 				}
 			}
 		}
@@ -120,7 +120,7 @@ func (q Queue) Broker() {
 					Title:  v.Title,
 					Status: v.Status,
 				}
-				q.repo.Target.CreateTask(dq)
+				q.repo.Queue.CreateTask(dq)
 			}
 		case <-q.ctx.Done():
 			return

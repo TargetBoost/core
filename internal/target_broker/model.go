@@ -1,4 +1,4 @@
-package queue
+package target_broker
 
 type Task struct {
 	TID    uint    `json:"tid"`

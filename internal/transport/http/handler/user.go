@@ -31,7 +31,7 @@ func (h *Handler) CreateUser(ctx iris.Context) {
 	}
 
 	// CreateUser - service returned data for new user
-	user, err := h.Service.User.CreateUser(userData)
+	user, err := h.Service.Account.CreateUser(userData)
 	if err != nil {
 		logger.Error(err)
 		ctx.StatusCode(200)
@@ -82,7 +82,7 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 		return
 	}
 
-	users := h.Service.User.GetAllUsers()
+	users := h.Service.Account.GetAllUsers()
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
@@ -120,7 +120,7 @@ func (h *Handler) CreateTaskCashes(ctx iris.Context) {
 		return
 	}
 
-	err = h.Service.User.CreateTaskCashes(int64(u.ID), task)
+	err = h.Service.Account.CreateTaskCashes(int64(u.ID), task)
 	if err != nil {
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
@@ -179,7 +179,7 @@ func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
 		return
 	}
 
-	h.Service.User.UpdateTaskCashes(task)
+	h.Service.Account.UpdateTaskCashes(task)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
@@ -203,7 +203,7 @@ func (h *Handler) GetTaskCashes(ctx iris.Context) {
 		return
 	}
 
-	tasks := h.Service.User.GetTasksCashesUser(u.ID)
+	tasks := h.Service.Account.GetTasksCashesUser(u.ID)
 	if err != nil {
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
@@ -248,7 +248,7 @@ func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
 		return
 	}
 
-	tasks := h.Service.User.GetTasksCashesAdmin()
+	tasks := h.Service.Account.GetTasksCashesAdmin()
 	if err != nil {
 		ctx.StatusCode(200)
 		_ = ctx.JSON(iris.Map{
@@ -395,7 +395,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 	trans.Status = t.Status.Value
 	trans.Amount = pay.Value
 
-	h.Service.User.CreateTransaction(&trans)
+	h.Service.Account.CreateTransaction(&trans)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
@@ -413,7 +413,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	logger.Debug(key)
 
-	trans := h.Service.User.GetTransaction(key)
+	trans := h.Service.Account.GetTransaction(key)
 	if trans.Status == "" {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -518,7 +518,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	u := h.Service.User.GetUserByID(int64(trans.UID))
+	u := h.Service.Account.GetUserByID(int64(trans.UID))
 
 	fu, err := strconv.ParseFloat(u.Balance, 64)
 	if err != nil {
@@ -532,11 +532,11 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	h.Service.User.UpdateUser(u.ID, fu+f)
+	h.Service.Account.UpdateUser(u.ID, fu+f)
 
 	trans.Status = "PAID"
 
-	h.Service.User.UpdateTransaction(trans)
+	h.Service.Account.UpdateTransaction(trans)
 
 	ctx.Redirect("https://targetboost.ru/s/pay", 301)
 	//ctx.StatusCode(200)

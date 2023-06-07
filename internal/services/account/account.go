@@ -1,9 +1,9 @@
-package user
+package account
 
 import (
 	"core/internal/models"
-	"core/internal/queue"
 	"core/internal/repositories"
+	"core/internal/target_broker"
 	"core/internal/tg/bot"
 	"crypto/sha256"
 	"encoding/base64"
@@ -20,11 +20,11 @@ import (
 type Service struct {
 	repo *repositories.Repositories
 
-	lineAppoint   chan queue.Task
+	lineAppoint   chan target_broker.Task
 	trackMessages chan bot.Message
 }
 
-func NewUserService(repo *repositories.Repositories, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Service {
+func NewAccountService(repo *repositories.Repositories, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		repo:          repo,
 		lineAppoint:   lineAppoint,
@@ -107,7 +107,7 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
 	v := s.repo.Account.GetUserByID(id)
 
-	task := queue.Task{UID: int64(v.ID)}
+	task := target_broker.Task{UID: int64(v.ID)}
 	s.lineAppoint <- task
 
 	userService.ID = v.ID

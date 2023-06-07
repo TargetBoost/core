@@ -81,7 +81,7 @@ func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
 		return
 	}
 
-	targets := h.Service.Target.GetTargetsToExecutor(int64(user.ID))
+	targets := h.Service.Queue.GetTargetsToExecutor(int64(user.ID))
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
@@ -226,7 +226,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	chatID, cost := h.Service.Target.GetChatID(uint(t.TID))
+	chatID, cost := h.Service.Queue.GetChatID(uint(t.TID))
 	userChatID := h.Service.Target.GetUserID(user.ID)
 
 	logger.Info(chatID, userChatID)
@@ -254,7 +254,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	task := h.Service.Target.GetTaskByID(t.ID)
+	task := h.Service.Queue.GetTaskByID(t.ID)
 	if task.Status != 1 {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -265,8 +265,8 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		})
 		return
 	}
-	h.Service.Target.UpdateTaskStatus(t.ID)
-	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
+	h.Service.Queue.UpdateTaskStatus(t.ID)
+	h.Service.Account.UpdateUserBalance(int64(user.ID), cost)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{

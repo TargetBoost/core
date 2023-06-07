@@ -17,7 +17,7 @@ func (h *Handler) IsAuth(ctx iris.Context) {
 		return
 	}
 
-	id, isAuth := h.Service.Auth.IsAuth(rawToken)
+	id, isAuth := h.Service.Account.IsAuth(rawToken)
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{

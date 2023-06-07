@@ -2,8 +2,8 @@ package target
 
 import (
 	"core/internal/models"
-	"core/internal/queue"
 	"core/internal/repositories"
+	"core/internal/target_broker"
 	"core/internal/tg/bot"
 	"errors"
 	"github.com/ivahaev/go-logger"
@@ -24,11 +24,11 @@ const (
 
 type Service struct {
 	repo          *repositories.Repositories
-	lineBroker    chan []queue.Task
+	lineBroker    chan []target_broker.Task
 	trackMessages chan bot.Message
 }
 
-func NewTargetService(repo *repositories.Repositories, lineBroker chan []queue.Task, trackMessages chan bot.Message) *Service {
+func NewTargetService(repo *repositories.Repositories, lineBroker chan []target_broker.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		repo:          repo,
 		lineBroker:    lineBroker,
@@ -67,14 +67,6 @@ func (s *Service) GetTarget(tid uint) models.TargetService {
 	}
 }
 
-func (s *Service) GetTaskByID(id uint) models.QueueToService {
-	t := s.repo.Queue.GetTaskByID(int64(id))
-
-	return models.QueueToService{
-		Status: t.Status,
-	}
-}
-
 func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	targets := func(t []models.TargetToAdmin, f func(t models.TargetToAdmin) models.TargetService) []models.TargetService {
 		result := make([]models.TargetService, 0, len(t))
@@ -86,35 +78,6 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	}(s.repo.Target.GetTargetsToAdmin(), models.MapToTargetAdmin)
 
 	return targets
-}
-
-func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
-	us := s.repo.Account.GetUserByID(uid)
-	st := strings.ToLower(strings.Split(us.Tg, "@")[len(strings.Split(us.Tg, "@"))-1])
-
-	stu := s.repo.Queue.GetChatMembersByUserName(st)
-
-	if stu.CID == 0 {
-		return []models.QueueToService{}
-	}
-
-	targets := func(t []models.QueueToExecutors, f func(t models.QueueToExecutors) models.QueueToService) []models.QueueToService {
-		result := make([]models.QueueToService, 0, len(t))
-		for _, value := range t {
-			result = append(result, f(value))
-		}
-
-		return result
-	}(s.repo.Queue.GetTaskDISTINCTIsWorkForUser(uid), models.MapToQueueExecutors)
-
-	return targets
-}
-
-func (s *Service) UpdateTaskStatus(id uint) {
-	var q models.Queue
-	q.ID = id
-	q.Status = 3
-	s.repo.Queue.UpdateTaskStatus(q)
 }
 
 func (s *Service) UpdateTarget(id uint, status int64) {
@@ -138,14 +101,6 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 			}
 		}
 	}
-}
-
-func (s *Service) GetChatID(id uint) (int64, float64) {
-	tu := s.GetTarget(id)
-	st := strings.Split(tu.Link, "/")[len(strings.Split(tu.Link, "/"))-1]
-
-	ch := s.repo.Queue.GetChatMembersByUserName(st)
-	return ch.CID, tu.Cost
 }
 
 func (s *Service) GetUserID(id uint) int64 {
@@ -234,13 +189,13 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 
 	tt := s.repo.Target.CreateTarget(&t)
 
-	var q []queue.Task
+	var q []target_broker.Task
 
 	logger.Info(tt)
 
 	var i float64 = 0
 	for i = 0; i < t.Total; i++ {
-		q = append(q, queue.Task{
+		q = append(q, target_broker.Task{
 			TID:    tt.ID,
 			Cost:   t.Cost,
 			Title:  t.Title,

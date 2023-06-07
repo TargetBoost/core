@@ -16,12 +16,6 @@ type Service struct {
 	repo *repositories.Repositories
 }
 
-func NewStorageService(repo *repositories.Repositories) *Service {
-	return &Service{
-		repo: repo,
-	}
-}
-
 func (s *Service) GetFileByKey(key string) *models.FileStorage {
 	return s.repo.Storage.GetFileByKey(key)
 }
@@ -97,4 +91,10 @@ func (s *Service) CallBackVK(code, token string) error {
 	logger.Debug(vkUser)
 
 	return nil
+}
+
+func NewStorageService(repo *repositories.Repositories) *Service {
+	return &Service{
+		repo: repo,
+	}
 }

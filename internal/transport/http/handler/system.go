@@ -61,7 +61,7 @@ func (h *Handler) SetSettings(ctx iris.Context) {
 		return
 	}
 
-	uid, isAuth := h.Service.Auth.IsAuth(rawToken)
+	uid, isAuth := h.Service.Account.IsAuth(rawToken)
 	if !isAuth {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{
@@ -73,7 +73,7 @@ func (h *Handler) SetSettings(ctx iris.Context) {
 		return
 	}
 
-	user := h.Service.User.GetUserByID(int64(uid))
+	user := h.Service.Account.GetUserByID(int64(uid))
 	if !user.Admin {
 		ctx.StatusCode(401)
 		_ = ctx.JSON(iris.Map{

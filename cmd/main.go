@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"core/internal/queue"
 	"core/internal/repositories"
 	"core/internal/services"
+	"core/internal/target_broker"
 	"core/internal/tg/bot"
 	"core/internal/transport/http/controller"
 	"fmt"
@@ -56,7 +56,7 @@ func main() {
 		panic(err)
 	}
 
-	q := queue.New(ctx, repo, b)
+	q := target_broker.New(ctx, repo, b)
 	go q.Broker()
 	go q.AppointTask()
 	go q.AntiFraud()
