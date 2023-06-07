@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Handler) GetTargets(ctx iris.Context) {
-	rawToken := ctx.GetHeader("token")
+	rawToken := ctx.GetHeader("Authorization")
 	user := h.Service.Account.GetUserByToken(rawToken)
 	targets := h.Service.Target.GetTargets(user.ID)
 	ctx.StatusCode(200)
