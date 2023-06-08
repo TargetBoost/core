@@ -69,7 +69,7 @@ func (h *Handler) GetAllUsers(ctx iris.Context) {
 
 // CreateTaskCashes create
 func (h *Handler) CreateTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	var task models.TaskCashToUser
 	err := ctx.ReadJSON(&task)
 	if err != nil {
@@ -83,18 +83,7 @@ func (h *Handler) CreateTaskCashes(ctx iris.Context) {
 		return
 	}
 
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
+	u := h.Service.Account.GetUserByToken(rawToken)
 	err = h.Service.Account.CreateTaskCashes(int64(u.ID), task)
 	if err != nil {
 		ctx.StatusCode(200)
