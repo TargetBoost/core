@@ -142,7 +142,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
