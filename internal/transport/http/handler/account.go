@@ -141,30 +141,9 @@ func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
 }
 
 func (h *Handler) GetTaskCashes(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
-	u, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
+	rawToken := ctx.GetHeader("Authorization")
+	u := h.Service.Account.GetUserByToken(rawToken)
 	tasks := h.Service.Account.GetTasksCashesUser(u.ID)
-	if err != nil {
-		ctx.StatusCode(200)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-		})
-		return
-	}
-
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
