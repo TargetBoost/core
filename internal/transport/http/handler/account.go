@@ -186,31 +186,11 @@ func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
 
 // Pay -
 func (h *Handler) Pay(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	var pay models.Pay
-	err := ctx.ReadJSON(&pay)
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
+	_ = ctx.ReadJSON(&pay)
 
-	if user.ID == 0 {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Account not exist",
-			},
-			"data": nil,
-		})
-		return
-	}
+	user := h.Service.Account.GetUserByToken(rawToken)
 
 	id := uuid.New()
 
@@ -291,8 +271,6 @@ func (h *Handler) Pay(ctx iris.Context) {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		return
 	}
-
-	logger.Debug(t)
 
 	if t.Status.Value != "WAITING" {
 		ctx.StatusCode(404)
@@ -409,8 +387,6 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	logger.Debug(t)
-
 	if t.Status.Value != "PAID" {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -455,15 +431,6 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	h.Service.Account.UpdateTransaction(trans)
 
 	ctx.Redirect("https://targetboost.ru/s/pay", 301)
-	//ctx.StatusCode(200)
-	//_ = ctx.JSON(iris.Map{
-	//	"status": iris.Map{
-	//		"message": nil,
-	//	},
-	//	"data": iris.Map{
-	//		"url": "https://targetboost.ru/s/pay",
-	//	},
-	//})
 }
 
 // GetUserByToken only one user returned
