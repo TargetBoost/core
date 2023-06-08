@@ -143,17 +143,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 	_ = ctx.ReadJSON(&t)
 
 	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
+	user := h.Service.Account.GetUserByToken(rawToken)
 
 	chatID, cost := h.Service.Queue.GetChatID(uint(t.TID))
 	userChatID := h.Service.Target.GetUserID(user.ID)

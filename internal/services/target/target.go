@@ -140,11 +140,13 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		break
 	}
 
-	st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
-	st = strings.ToLower(st)
-	ch := s.repo.Queue.GetChatMembersByUserName(st)
-	if ch.CID == 0 {
-		return errors.New("Вы не добавили нашего бота в этот телеграм канал")
+	if target.Type == tgCommunity {
+		st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
+		st = strings.ToLower(st)
+		ch := s.repo.Queue.GetChatMembersByUserName(st)
+		if ch.CID == 0 {
+			return errors.New("Вы не добавили нашего бота в этот телеграм канал")
+		}
 	}
 
 	u := s.repo.Account.GetUserByID(int64(UID))
@@ -194,7 +196,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 	logger.Info(tt)
 
 	var i float64 = 0
-	for i = 0; i < t.Total; i++ {
+	for i = 0; i <= t.Total; i++ {
 		q = append(q, target_broker.Task{
 			TID:    tt.ID,
 			Cost:   t.Cost,
