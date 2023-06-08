@@ -228,7 +228,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 	m := bot.Message{
 		CID:   cm.CID,
 		Count: t.Total,
-		Type:  2,
+		Type:  0,
 	}
 
 	s.trackMessages <- m
