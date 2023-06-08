@@ -32,7 +32,7 @@ func (h *Handler) GetTargetsToAdmin(ctx iris.Context) {
 }
 
 func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	user := h.Service.Account.GetUserByToken(rawToken)
 	targets := h.Service.Queue.GetTargetsToExecutor(int64(user.ID))
 	ctx.StatusCode(200)
@@ -49,7 +49,7 @@ func (h *Handler) CreateTarget(ctx iris.Context) {
 	var t models.TargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
@@ -103,7 +103,7 @@ func (h *Handler) UpdateTargetAdvertiser(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
 
-	rawToken := ctx.GetHeader("Login")
+	rawToken := ctx.GetHeader("Authorization")
 	_, err := h.CheckAuth(rawToken)
 	if err != nil {
 		ctx.StatusCode(404)
