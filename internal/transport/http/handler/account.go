@@ -432,7 +432,7 @@ func (h *Handler) IsAdmin(ctx iris.Context) {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
-				"message": "Account not exist",
+				"message": "У Вас нет прав доступа",
 			},
 			"data": nil,
 		})
