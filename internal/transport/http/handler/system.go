@@ -21,6 +21,21 @@ func (h *Handler) GetSettings(ctx iris.Context) {
 	})
 }
 
+func (h *Handler) GetProfit(ctx iris.Context) {
+	ctx.StatusCode(200)
+
+	profit := h.Service.Target.GetProfit()
+
+	_ = ctx.JSON(iris.Map{
+		"status": iris.Map{
+			"message": nil,
+		},
+		"data": iris.Map{
+			"profit": profit,
+		},
+	})
+}
+
 func (h *Handler) SetSettings(ctx iris.Context) {
 	var s models.Settings
 	err := ctx.ReadJSON(&s)

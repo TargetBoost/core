@@ -127,6 +127,12 @@ func (r *Repository) GetChatMembersByUserName(userName string) models.ChatMember
 	return q
 }
 
+func (r *Repository) GetProfit() float64 {
+	var q float64
+	r.db.Table("transactions").Select("sum(amount / 2)").Where("status = 'PAID'").Find(&q)
+	return q
+}
+
 func NewTargetRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		db: db,

@@ -28,6 +28,10 @@ type Service struct {
 	trackMessages chan bot.Message
 }
 
+func (s *Service) GetProfit() float64 {
+	return s.repo.Target.GetProfit()
+}
+
 func NewTargetService(repo *repositories.Repositories, lineBroker chan []target_broker.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		repo:          repo,
