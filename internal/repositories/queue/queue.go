@@ -62,7 +62,7 @@ func (r *Repository) GetTaskDISTINCTIsWorkForUser(uid int64) []models.QueueToExe
 	var q []models.QueueToExecutors
 	r.db.Table(
 		"queues").Select(
-		"DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost",
+		"DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost, chat_members_chanels.photo_link, chat_members_chanels.bio, chat_members_chanels.count_sub",
 	).Joins("inner join targets t on queues.t_id = t.id").Joins("inner join chat_members_chanels on chat_members_chanels.user_name = replace(t.link, 'https://t.me/', '') ").Where(
 		"queues.uid = ? and t.status = 1", uid).Order("queues.t_id").Find(&q)
 

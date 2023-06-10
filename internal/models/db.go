@@ -24,17 +24,17 @@ type Queue struct {
 type QueueToExecutors struct {
 	gorm.Model
 
-	TID      uint    `json:"tid"`
-	UID      int64   `json:"uid"`
-	Cost     float64 `json:"cost"`
-	Title    string  `json:"title"`
-	Status   int64   `json:"status"`
-	Icon     string  `json:"icon"` // иконка задания
-	Total    float64 `json:"total"`
-	Link     string  `json:"link"` // ссылка на задание
-	CMFileID string  `json:"cm_file_id"`
-	Bio      string  `json:"bio"`
-	CountSub int64   `json:"count_sub"`
+	TID       uint    `json:"tid"`
+	UID       int64   `json:"uid"`
+	Cost      float64 `json:"cost"`
+	Title     string  `json:"title"`
+	Status    int64   `json:"status"`
+	Icon      string  `json:"icon"` // иконка задания
+	Total     float64 `json:"total"`
+	Link      string  `json:"link"` // ссылка на задание
+	PhotoLink string  `json:"photo_link"`
+	Bio       string  `json:"bio"`
+	CountSub  int64   `json:"count_sub"`
 }
 
 type ChatMembersChanel struct {
@@ -50,18 +50,18 @@ type ChatMembersChanel struct {
 }
 
 type QueueToService struct {
-	ID       uint    `json:"id"`
-	TID      uint    `json:"tid"`
-	UID      int64   `json:"uid"`
-	Cost     float64 `json:"cost"`
-	Title    string  `json:"title"`
-	Status   int64   `json:"status"`
-	Icon     string  `json:"icon"` // иконка задания
-	Total    float64 `json:"total"`
-	Link     string  `json:"link"` // ссылка на задание
-	CMFileID string  `json:"cm_file_id"`
-	Bio      string  `json:"bio"`
-	CountSub int64   `json:"count_sub"`
+	ID        uint    `json:"id"`
+	TID       uint    `json:"tid"`
+	UID       int64   `json:"uid"`
+	Cost      float64 `json:"cost"`
+	Title     string  `json:"title"`
+	Status    int64   `json:"status"`
+	Icon      string  `json:"icon"` // иконка задания
+	Total     float64 `json:"total"`
+	Link      string  `json:"link"` // ссылка на задание
+	PhotoLink string  `json:"photo_link"`
+	Bio       string  `json:"bio"`
+	CountSub  int64   `json:"count_sub"`
 }
 
 type Transaction struct {
