@@ -1,12 +1,13 @@
 package main
 
 import (
-	"context"
-	"core/internal/queue"
 	"core/internal/repositories"
 	"core/internal/services"
-	"core/internal/tg/bot"
+	"core/internal/target_broker"
 	"core/internal/transport/http/controller"
+	"core/internal/transport/tg/bot"
+
+	"context"
 	"fmt"
 	"gorm.io/gorm"
 	"os"
@@ -14,9 +15,8 @@ import (
 	"syscall"
 	"time"
 
-	"gorm.io/driver/postgres"
-
 	"github.com/ivahaev/go-logger"
+	"gorm.io/driver/postgres"
 )
 
 const (
@@ -56,7 +56,7 @@ func main() {
 		panic(err)
 	}
 
-	q := queue.New(ctx, repo, b)
+	q := target_broker.New(ctx, repo, b)
 	go q.Broker()
 	go q.AppointTask()
 	go q.AntiFraud()

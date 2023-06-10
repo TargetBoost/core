@@ -57,7 +57,12 @@ func (h *Handler) GetPhotoFile(ctx iris.Context) {
 
 	ctx.StatusCode(200)
 	ctx.ContentType("image/jpeg")
-	ctx.Write(fileBytes)
+	_, err = ctx.Write(fileBytes)
+	if err != nil {
+		logger.Error(err)
+		ctx.StatusCode(200)
+		return
+	}
 }
 
 func (h *Handler) GetFileByKey(ctx iris.Context) {
@@ -90,16 +95,4 @@ func (h *Handler) GetFileByKey(ctx iris.Context) {
 		})
 		return
 	}
-}
-
-func (h *Handler) TestVast(ctx iris.Context) {
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"code":    500,
-			"message": "Server uploaded a file with an error",
-		},
-		"data": ``,
-	})
-	return
 }

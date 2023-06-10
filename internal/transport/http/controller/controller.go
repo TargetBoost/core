@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 	"core/internal/services"
-	"core/internal/tg/bot"
 	"core/internal/transport/http/router"
+	"core/internal/transport/tg/bot"
 	"fmt"
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/ivahaev/go-logger"

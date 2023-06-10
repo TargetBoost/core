@@ -10,12 +10,6 @@ type Repository struct {
 	db *gorm.DB
 }
 
-func NewTargetRepository(db *gorm.DB) *Repository {
-	return &Repository{
-		db: db,
-	}
-}
-
 func (r *Repository) GetTargets(uid uint) []models.Target {
 	var t []models.Target
 	r.db.Table("targets").Where("uid = ?", uid).Find(&t)
@@ -109,12 +103,6 @@ func (r *Repository) UpdateTask(q models.Queue) {
 	r.db.Debug().Save(qq)
 }
 
-func (r *Repository) GetTaskDISTINCT() []models.Queue {
-	var q []models.Queue
-	r.db.Table("queues").Select("DISTINCT ON (t_id) t_id, id").Where("uid = 0").Limit(10).Order("t_id").Find(&q)
-	return q
-}
-
 func (r *Repository) GetTaskDISTINCTInWork() []models.Queue {
 	var q []models.Queue
 	r.db.Table("queues").Select("t_id, id, uid, updated_at").Where("uid != 0 and status = 1").Find(&q)
@@ -129,7 +117,7 @@ func (r *Repository) GetTaskForUserUID(uid uint, tid uint) []models.Queue {
 
 func (r *Repository) GetTaskDISTINCTIsWorkForUser(uid int64) []models.QueueToExecutors {
 	var q []models.QueueToExecutors
-	r.db.Table("queues").Select("DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost").Joins("inner join targets t on queues.t_id = t.id").Where("queues.uid = ? and t.status = 1", uid).Order("queues.t_id").Find(&q)
+	r.db.Table("queues").Select("DISTINCT ON (queues.t_id) queues.t_id, queues.status, queues.id, t.title, t.link, t.icon, t.cost, replace(t.link, 'https://t.me/', '')").Joins("inner join targets t on queues.t_id = t.id").Where("queues.uid = ? and t.status = 1", uid).Order("queues.t_id").Find(&q)
 	return q
 }
 
@@ -137,4 +125,10 @@ func (r *Repository) GetChatMembersByUserName(userName string) models.ChatMember
 	var q models.ChatMembersChanel
 	r.db.Table("chat_members_chanels").Where("user_name = ?", userName).Find(&q)
 	return q
+}
+
+func NewTargetRepository(db *gorm.DB) *Repository {
+	return &Repository{
+		db: db,
+	}
 }

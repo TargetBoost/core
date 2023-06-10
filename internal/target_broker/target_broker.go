@@ -1,10 +1,10 @@
-package queue
+package target_broker
 
 import (
 	"context"
 	"core/internal/models"
 	"core/internal/repositories"
-	"core/internal/tg/bot"
+	bot2 "core/internal/transport/tg/bot"
 	"fmt"
 	"github.com/ivahaev/go-logger"
 	"time"
@@ -15,12 +15,12 @@ const timeChange = 6000
 type Queue struct {
 	Line        chan []Task
 	LineAppoint chan Task
-	bot         *bot.Bot
+	bot         *bot2.Bot
 	repo        *repositories.Repositories
 	ctx         context.Context
 }
 
-func New(ctx context.Context, r *repositories.Repositories, bot *bot.Bot) Queue {
+func New(ctx context.Context, r *repositories.Repositories, bot *bot2.Bot) Queue {
 	q := Queue{
 		Line:        make(chan []Task, 50),
 		LineAppoint: make(chan Task, 50),
@@ -36,10 +36,10 @@ func (q Queue) AppointTask() {
 	for {
 		select {
 		case t := <-q.LineAppoint:
-			que := q.repo.Feed.GetTaskDISTINCT()
+			que := q.repo.Queue.GetUniqueTask()
 
 			for _, v := range que {
-				tasksUser := q.repo.Feed.GetTaskForUserUID(uint(t.UID), v.TID)
+				tasksUser := q.repo.Queue.GetTaskForUserUID(uint(t.UID), v.TID)
 				if len(tasksUser) > 0 {
 					continue
 				}
@@ -47,13 +47,13 @@ func (q Queue) AppointTask() {
 
 				v.UpdatedAt = time.Now()
 				v.Status = 1
-				q.repo.Feed.UpdateTask(v)
+				q.repo.Queue.UpdateTask(v)
 			}
 		case <-q.ctx.Done():
 			return
 		case <-time.Tick(time.Second * 10):
 			logger.Info("Check GetTaskDISTINCTInWork()")
-			que := q.repo.Feed.GetTaskDISTINCTInWork()
+			que := q.repo.Queue.GetTaskDISTINCTInWork()
 			for _, v := range que {
 				if v.UpdatedAt.After(time.Now().Add(6 * time.Minute)) {
 					logger.Info(v.ID, "changed")
@@ -61,7 +61,7 @@ func (q Queue) AppointTask() {
 					v.UID = 0
 					v.UpdatedAt = time.Now()
 					v.Status = 0
-					q.repo.Feed.UpdateTask(v)
+					q.repo.Queue.UpdateTask(v)
 				}
 			}
 		}
@@ -76,9 +76,9 @@ func (q Queue) AntiFraud() {
 		case <-time.Tick(5 * time.Hour):
 			d := q.repo.Storage.GetStatisticTargetsOnExecutesIsTrue()
 			for _, v := range d {
-				logger.Info(fmt.Sprintf(`User %v check`, v.ID))
+				logger.Info(fmt.Sprintf(`Account %v check`, v.ID))
 				if v.UpdatedAt.Before(time.Now().Add((24 * 14) * time.Hour)) {
-					us := q.repo.User.GetUserByID(v.ID)
+					us := q.repo.Account.GetUserByID(v.ID)
 					if !us.Block {
 						time.Sleep(6 * time.Second)
 						members, err := q.bot.CheckMembers(v.CIDChannels, v.CIDUsers)
@@ -86,19 +86,19 @@ func (q Queue) AntiFraud() {
 							logger.Error(err)
 						}
 						if !members {
-							logger.Info(fmt.Sprintf(`User %v banned`, v.ID))
+							logger.Info(fmt.Sprintf(`Account %v banned`, v.ID))
 							var u models.User
 							u.ID = uint(v.ID)
 							u.Block = true
 							u.Cause = "Вы отписались от каналов раньше чем указано в правилах"
 
 							// Send task Message to bot sender
-							q.bot.TrackMessages <- bot.Message{
+							q.bot.TrackMessages <- bot2.Message{
 								CID:  v.CIDUsers,
 								Type: 120,
 							}
 
-							q.repo.User.UpdateUser(u)
+							q.repo.Account.UpdateUser(u)
 						}
 					}
 				}
@@ -120,7 +120,7 @@ func (q Queue) Broker() {
 					Title:  v.Title,
 					Status: v.Status,
 				}
-				q.repo.Feed.CreateTask(dq)
+				q.repo.Queue.CreateTask(dq)
 			}
 		case <-q.ctx.Done():
 			return

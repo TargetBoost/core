@@ -2,11 +2,9 @@ package target
 
 import (
 	"core/internal/models"
-	"core/internal/queue"
-	"core/internal/repositories/storage"
-	"core/internal/repositories/target"
-	"core/internal/repositories/user"
-	"core/internal/tg/bot"
+	"core/internal/repositories"
+	"core/internal/target_broker"
+	"core/internal/transport/tg/bot"
 	"errors"
 	"github.com/ivahaev/go-logger"
 	"strconv"
@@ -25,20 +23,16 @@ const (
 )
 
 type Service struct {
-	TargetRepository  *target.Repository
-	UserRepository    *user.Repository
-	storageRepository *storage.Repository
-	lineBroker        chan []queue.Task
-	trackMessages     chan bot.Message
+	repo          *repositories.Repositories
+	lineBroker    chan []target_broker.Task
+	trackMessages chan bot.Message
 }
 
-func NewTargetService(userRepository *user.Repository, feedRepository *target.Repository, storageRepository *storage.Repository, lineBroker chan []queue.Task, trackMessages chan bot.Message) *Service {
+func NewTargetService(repo *repositories.Repositories, lineBroker chan []target_broker.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
-		TargetRepository:  feedRepository,
-		UserRepository:    userRepository,
-		storageRepository: storageRepository,
-		lineBroker:        lineBroker,
-		trackMessages:     trackMessages,
+		repo:          repo,
+		lineBroker:    lineBroker,
+		trackMessages: trackMessages,
 	}
 }
 
@@ -50,13 +44,13 @@ func (s *Service) GetTargets(uid uint) []models.TargetService {
 		}
 
 		return result
-	}(s.TargetRepository.GetTargets(uid), models.MapToTarget)
+	}(s.repo.Target.GetTargets(uid), models.MapToTarget)
 
 	return targets
 }
 
 func (s *Service) GetTarget(tid uint) models.TargetService {
-	t := s.TargetRepository.GetTargetByID(tid)
+	t := s.repo.Target.GetTargetByID(tid)
 
 	return models.TargetService{
 		ID:         t.ID,
@@ -73,14 +67,6 @@ func (s *Service) GetTarget(tid uint) models.TargetService {
 	}
 }
 
-func (s *Service) GetTaskByID(id uint) models.QueueToService {
-	t := s.TargetRepository.GetTaskByID(int64(id))
-
-	return models.QueueToService{
-		Status: t.Status,
-	}
-}
-
 func (s *Service) GetTargetsToAdmin() []models.TargetService {
 	targets := func(t []models.TargetToAdmin, f func(t models.TargetToAdmin) models.TargetService) []models.TargetService {
 		result := make([]models.TargetService, 0, len(t))
@@ -89,51 +75,22 @@ func (s *Service) GetTargetsToAdmin() []models.TargetService {
 		}
 
 		return result
-	}(s.TargetRepository.GetTargetsToAdmin(), models.MapToTargetAdmin)
+	}(s.repo.Target.GetTargetsToAdmin(), models.MapToTargetAdmin)
 
 	return targets
-}
-
-func (s *Service) GetTargetsToExecutor(uid int64) []models.QueueToService {
-	us := s.UserRepository.GetUserByID(uid)
-	st := strings.ToLower(strings.Split(us.Tg, "@")[len(strings.Split(us.Tg, "@"))-1])
-
-	stu := s.TargetRepository.GetChatMembersByUserName(st)
-
-	if stu.CID == 0 {
-		return []models.QueueToService{}
-	}
-
-	targets := func(t []models.QueueToExecutors, f func(t models.QueueToExecutors) models.QueueToService) []models.QueueToService {
-		result := make([]models.QueueToService, 0, len(t))
-		for _, value := range t {
-			result = append(result, f(value))
-		}
-
-		return result
-	}(s.TargetRepository.GetTaskDISTINCTIsWorkForUser(uid), models.MapToQueueExecutors)
-
-	return targets
-}
-
-func (s *Service) UpdateTaskStatus(id uint) {
-	var q models.Queue
-	q.ID = id
-	q.Status = 3
-	s.TargetRepository.UpdateTaskStatus(q)
 }
 
 func (s *Service) UpdateTarget(id uint, status int64) {
-	t := s.TargetRepository.GetTargetByID(id)
+	t := s.repo.Target.GetTargetByID(id)
 	t.Status = status
 
-	s.TargetRepository.UpdateTarget(id, &t)
+	s.repo.Target.UpdateTarget(id, &t)
 
 	if status == 1 {
-		u := s.UserRepository.GetAllUsers()
+		u := s.repo.Account.GetAllUsers()
 		for _, v := range u {
 			st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
-			cm := s.TargetRepository.GetChatMembersByUserName(st)
+			cm := s.repo.Queue.GetChatMembersByUserName(st)
 			m := bot.Message{
 				Type: 100,
 				CID:  cm.CID,
@@ -146,19 +103,11 @@ func (s *Service) UpdateTarget(id uint, status int64) {
 	}
 }
 
-func (s *Service) GetChatID(id uint) (int64, float64) {
-	tu := s.GetTarget(id)
-	st := strings.Split(tu.Link, "/")[len(strings.Split(tu.Link, "/"))-1]
-
-	ch := s.TargetRepository.GetChatMembersByUserName(st)
-	return ch.CID, tu.Cost
-}
-
 func (s *Service) GetUserID(id uint) int64 {
-	tu := s.UserRepository.GetUserByID(int64(id))
+	tu := s.repo.Account.GetUserByID(int64(id))
 	st := strings.Split(tu.Tg, "@")[len(strings.Split(tu.Tg, "@"))-1]
 
-	ch := s.TargetRepository.GetChatMembersByUserName(st)
+	ch := s.repo.Queue.GetChatMembersByUserName(st)
 	return ch.CID
 }
 
@@ -191,14 +140,16 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		break
 	}
 
-	st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
-	st = strings.ToLower(st)
-	ch := s.TargetRepository.GetChatMembersByUserName(st)
-	if ch.CID == 0 {
-		return errors.New("Вы не добавили нашего бота в этот телеграм канал")
+	if target.Type == tgCommunity {
+		st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
+		st = strings.ToLower(st)
+		ch := s.repo.Queue.GetChatMembersByUserName(st)
+		if ch.CID == 0 {
+			return errors.New("Вы не добавили нашего бота в этот телеграм канал")
+		}
 	}
 
-	u := s.UserRepository.GetUserByID(int64(UID))
+	u := s.repo.Account.GetUserByID(int64(UID))
 	if u.ID == 0 {
 		return errors.New("user not found")
 	}
@@ -223,7 +174,7 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
 	}
 
-	s.UserRepository.UpdateUserBalanceToZero(u.ID, u.Balance)
+	s.repo.Account.UpdateUserBalance(u.ID, u.Balance)
 
 	t := models.Target{
 		UID:        UID,
@@ -238,15 +189,15 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		TotalPrice: tl,
 	}
 
-	tt := s.TargetRepository.CreateTarget(&t)
+	tt := s.repo.Target.CreateTarget(&t)
 
-	var q []queue.Task
+	var q []target_broker.Task
 
 	logger.Info(tt)
 
 	var i float64 = 0
-	for i = 0; i < t.Total; i++ {
-		q = append(q, queue.Task{
+	for i = 0; i <= t.Total; i++ {
+		q = append(q, target_broker.Task{
 			TID:    tt.ID,
 			Cost:   t.Cost,
 			Title:  t.Title,

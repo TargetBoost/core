@@ -1,11 +1,10 @@
-package user
+package account
 
 import (
 	"core/internal/models"
-	"core/internal/queue"
-	"core/internal/repositories/target"
-	"core/internal/repositories/user"
-	"core/internal/tg/bot"
+	"core/internal/repositories"
+	"core/internal/target_broker"
+	"core/internal/transport/tg/bot"
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
@@ -16,45 +15,73 @@ import (
 	"time"
 )
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+//var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type Service struct {
-	userRepository   *user.Repository
-	targetRepository *target.Repository
+	repo *repositories.Repositories
 
-	lineAppoint   chan queue.Task
+	lineAppoint   chan target_broker.Task
 	trackMessages chan bot.Message
 }
 
-func NewUserService(userRepository *user.Repository, targetRepository *target.Repository, lineAppoint chan queue.Task, trackMessages chan bot.Message) *Service {
-	return &Service{
-		userRepository:   userRepository,
-		targetRepository: targetRepository,
-		lineAppoint:      lineAppoint,
-		trackMessages:    trackMessages,
-	}
+func (s *Service) GetUserByToken(token string) models.UserService {
+	var userService models.UserService
+	v := s.repo.Account.GetUserByToken(token)
+
+	task := target_broker.Task{UID: int64(v.ID)}
+	s.lineAppoint <- task
+
+	userService.ID = v.ID
+	userService.CreatedAt = v.CreatedAt
+	userService.Login = v.Login
+	userService.FirstName = v.FirstName
+	userService.LastName = v.LastName
+	userService.MiddleName = v.MiddleName
+	userService.MainImage = v.MainImage
+	userService.SmallImage = v.SmallImage
+	userService.NumberPhone = v.NumberPhone
+	userService.Execute = v.Execute
+	userService.Admin = v.Admin
+	userService.Balance = strconv.FormatFloat(v.Balance, 'g', -1, 64)
+	userService.Block = v.Block
+	userService.Cause = v.Cause
+	userService.Tg = v.Tg
+	userService.Token = v.Token
+	userService.VKToken = v.VKAccessToken
+	userService.VKUserFirstName = v.VKUserFirstName
+	userService.VKUserLastName = v.VKUserLastName
+
+	return userService
+}
+
+func (s *Service) IsAuth(token string) (uint, bool) {
+	return s.repo.Account.IsAuth(token)
+}
+
+func (s *Service) IsAdmin(token string) bool {
+	return s.repo.Account.IsAdmin(token)
 }
 
 func (s *Service) UpdateUserBalance(id int64, cost float64) {
-	u := s.userRepository.GetUserByID(id)
+	u := s.repo.Account.GetUserByID(id)
 	logger.Info(u.Balance)
 	u.Balance = u.Balance + cost - 1
 	logger.Info(u.Balance, cost)
 
-	s.userRepository.UpdateUser(u)
+	s.repo.Account.UpdateUser(u)
 }
 
 func (s *Service) UpdateUser(uid uint, b float64) {
 	var u models.User
 	u.Balance = b
 	u.ID = uid
-	s.userRepository.UpdateUser(u)
+	s.repo.Account.UpdateUser(u)
 }
 
 func (s *Service) GetAllUsers() []models.UserService {
 	var usersService []models.UserService
 
-	for _, v := range s.userRepository.GetAllUsers() {
+	for _, v := range s.repo.Account.GetAllUsers() {
 		var userService models.UserService
 
 		userService.ID = v.ID
@@ -84,7 +111,7 @@ func (s *Service) GetTasksCashesUser(uid uint) []models.TaskCashToService {
 		}
 
 		return result
-	}(s.userRepository.GetTaskCacheByUID(uid), models.MapToTasksUser)
+	}(s.repo.Account.GetTaskCacheByUID(uid), models.MapToTasksUser)
 
 	return tasks
 }
@@ -97,16 +124,16 @@ func (s *Service) GetTasksCashesAdmin() []models.TaskCashToService {
 		}
 
 		return result
-	}(s.userRepository.GetTaskCacheToAdmin(), models.MapToTasksUser)
+	}(s.repo.Account.GetTaskCacheToAdmin(), models.MapToTasksUser)
 
 	return tasks
 }
 
 func (s *Service) GetUserByID(id int64) models.UserService {
 	var userService models.UserService
-	v := s.userRepository.GetUserByID(id)
+	v := s.repo.Account.GetUserByID(id)
 
-	task := queue.Task{UID: int64(v.ID)}
+	task := target_broker.Task{UID: int64(v.ID)}
 	s.lineAppoint <- task
 
 	userService.ID = v.ID
@@ -142,25 +169,17 @@ func (s *Service) CreateUser(user models.CreateUser) (*models.User, error) {
 	if user.Tg == "" {
 		return nil, errors.New("bad request")
 	}
-	if err := s.userRepository.CreateUser(&user); err != nil {
+	if err := s.repo.Account.CreateUser(&user); err != nil {
 		return nil, err
 	}
 
-	u := s.userRepository.GetUserByPhoneNumberAndPassword(strings.ToLower(user.Tg), user.Password)
+	u := s.repo.Account.GetUserByTgAndPassword(strings.ToLower(user.Tg), user.Password)
 
 	return &u, nil
 }
 
-func createToken(login, password string, time time.Time) string {
-	hash := sha256.New()
-	hash.Write([]byte(login + password + time.String()))
-	sha := base64.URLEncoding.EncodeToString(hash.Sum(nil))
-
-	return sha
-}
-
 func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
-	u := s.userRepository.GetUserByPhoneNumberAndPassword(strings.ToLower(user.Tg), user.Password)
+	u := s.repo.Account.GetUserByTgAndPassword(strings.ToLower(user.Tg), user.Password)
 
 	if u.ID == 0 {
 		return nil, errors.New("error auth")
@@ -168,13 +187,13 @@ func (s *Service) AuthUser(user models.AuthUser) (*models.User, error) {
 
 	token := createToken(user.Tg, user.Password, time.Now())
 	u.Token = token
-	s.userRepository.UpdateUser(u)
+	s.repo.Account.UpdateUser(u)
 
 	return &u, nil
 }
 
 func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error {
-	u := s.userRepository.GetUserByID(uid)
+	u := s.repo.Account.GetUserByID(uid)
 
 	id := uuid.New()
 
@@ -192,7 +211,7 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 
 	u.Balance = u.Balance - task.Total
 
-	s.userRepository.UpdateUserBalanceToZero(u.ID, u.Balance)
+	s.repo.Account.UpdateUserBalance(u.ID, u.Balance)
 
 	var t models.TaskCash
 	t.Status = 0
@@ -200,16 +219,16 @@ func (s *Service) CreateTaskCashes(uid int64, task models.TaskCashToUser) error 
 	t.Number = task.Number
 	t.Total = task.Total
 	t.TransactionID = id.String()
-	s.userRepository.CreateTaskCache(t)
+	s.repo.Account.CreateTaskCache(t)
 
 	st := strings.ToLower(strings.Split(u.Tg, "@")[len(strings.Split(u.Tg, "@"))-1])
 
-	cm := s.targetRepository.GetChatMembersByUserName(st)
+	cm := s.repo.Queue.GetChatMembersByUserName(st)
 
 	m := bot.Message{
 		CID:   cm.CID,
 		Count: t.Total,
-		Type:  2,
+		Type:  0,
 	}
 
 	s.trackMessages <- m
@@ -223,11 +242,11 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 	q.ID = task.ID
 	q.Status = task.Status
 
-	s.userRepository.UpdateTaskCache(q)
-	t := s.userRepository.GetTaskCacheByID(task.ID)
-	u := s.userRepository.GetUserByID(int64(t.UID))
+	s.repo.Account.UpdateTaskCache(q)
+	t := s.repo.Account.GetTaskCacheByID(task.ID)
+	u := s.repo.Account.GetUserByID(int64(t.UID))
 	st := strings.ToLower(strings.Split(u.Tg, "@")[len(strings.Split(u.Tg, "@"))-1])
-	cm := s.targetRepository.GetChatMembersByUserName(st)
+	cm := s.repo.Queue.GetChatMembersByUserName(st)
 
 	m := bot.Message{
 		CID:   cm.CID,
@@ -239,17 +258,17 @@ func (s *Service) UpdateTaskCashes(task models.TaskCashToService) {
 }
 
 func (s *Service) CreateTransaction(t *models.TransactionToService) {
-	s.userRepository.CreateTransaction(t)
+	s.repo.Account.CreateTransaction(t)
 }
 
 func (s *Service) UpdateTransaction(t *models.TransactionToService) {
-	s.userRepository.UpdateTransaction(t)
+	s.repo.Account.UpdateTransaction(t)
 }
 
 func (s *Service) GetTransaction(build string) *models.TransactionToService {
 	var trans models.TransactionToService
 
-	t := s.userRepository.GetTransaction(build)
+	t := s.repo.Account.GetTransaction(build)
 
 	trans.Amount = strconv.FormatFloat(t.Amount, 'g', -1, 64)
 	trans.UID = t.UID
@@ -257,4 +276,20 @@ func (s *Service) GetTransaction(build string) *models.TransactionToService {
 	trans.BuildID = t.BuildID
 
 	return &trans
+}
+
+func createToken(login, password string, time time.Time) string {
+	hash := sha256.New()
+	hash.Write([]byte(login + password + time.String()))
+	sha := base64.URLEncoding.EncodeToString(hash.Sum(nil))
+
+	return sha
+}
+
+func NewAccountService(repo *repositories.Repositories, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Service {
+	return &Service{
+		repo:          repo,
+		lineAppoint:   lineAppoint,
+		trackMessages: trackMessages,
+	}
 }

@@ -8,18 +8,7 @@ import (
 
 func (h *Handler) GetTargets(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
+	user := h.Service.Account.GetUserByToken(rawToken)
 	targets := h.Service.Target.GetTargets(user.ID)
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
@@ -32,56 +21,20 @@ func (h *Handler) GetTargets(ctx iris.Context) {
 }
 
 func (h *Handler) GetTargetsToAdmin(ctx iris.Context) {
-	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !user.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	targets := h.Service.Target.GetTargetsToAdmin()
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
 			"message": nil,
 		},
-		"data": targets,
+		"data": h.Service.Target.GetTargetsToAdmin(),
 	})
 	return
 }
 
 func (h *Handler) GetTargetsToExecutors(ctx iris.Context) {
 	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	targets := h.Service.Target.GetTargetsToExecutor(int64(user.ID))
+	user := h.Service.Account.GetUserByToken(rawToken)
+	targets := h.Service.Queue.GetTargetsToExecutor(int64(user.ID))
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
@@ -134,30 +87,6 @@ func (h *Handler) CreateTarget(ctx iris.Context) {
 func (h *Handler) UpdateTarget(ctx iris.Context) {
 	var t models.UpdateTargetService
 	_ = ctx.ReadJSON(&t)
-
-	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
-
-	if !user.Admin {
-		ctx.StatusCode(401)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "your dont have permission",
-			},
-			"data": nil,
-		})
-		return
-	}
 
 	h.Service.Target.UpdateTarget(t.ID, t.Status)
 	ctx.StatusCode(200)
@@ -214,19 +143,9 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 	_ = ctx.ReadJSON(&t)
 
 	rawToken := ctx.GetHeader("Authorization")
-	user, err := h.CheckAuth(rawToken)
-	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
-		return
-	}
+	user := h.Service.Account.GetUserByToken(rawToken)
 
-	chatID, cost := h.Service.Target.GetChatID(uint(t.TID))
+	chatID, cost := h.Service.Queue.GetChatID(uint(t.TID))
 	userChatID := h.Service.Target.GetUserID(user.ID)
 
 	logger.Info(chatID, userChatID)
@@ -254,7 +173,7 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		return
 	}
 
-	task := h.Service.Target.GetTaskByID(t.ID)
+	task := h.Service.Queue.GetTaskByID(t.ID)
 	if task.Status != 1 {
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
@@ -265,8 +184,8 @@ func (h *Handler) CheckTarget(ctx iris.Context) {
 		})
 		return
 	}
-	h.Service.Target.UpdateTaskStatus(t.ID)
-	h.Service.User.UpdateUserBalance(int64(user.ID), cost)
+	h.Service.Queue.UpdateTaskStatus(t.ID)
+	h.Service.Account.UpdateUserBalance(int64(user.ID), cost)
 
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{

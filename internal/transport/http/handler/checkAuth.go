@@ -10,12 +10,12 @@ func (h *Handler) CheckAuth(rawToken string) (*models.UserService, error) {
 		return nil, errors.New("not token required")
 	}
 
-	uid, isAuth := h.Service.Auth.IsAuth(rawToken)
+	uid, isAuth := h.Service.Account.IsAuth(rawToken)
 	if !isAuth {
 		return nil, errors.New("bad token required")
 	}
 
-	user := h.Service.User.GetUserByID(int64(uid))
+	user := h.Service.Account.GetUserByID(int64(uid))
 	if user.ID == 0 {
 		return nil, errors.New("user not exist")
 	}
