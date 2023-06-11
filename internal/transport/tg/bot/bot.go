@@ -152,29 +152,31 @@ func (b *Bot) GetUpdates() {
 			}
 		}
 		if update.Message != nil {
-			if chat, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.Chat.ID}); err != nil || len(chat.Photos) != 0 {
+			if chat, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.Chat.ID}); err != nil {
 				logger.Debug(chat.Photos)
-				fileID := chat.Photos[0][0].FileID
-				file, err := b.API.GetFile(tgbotapi.FileConfig{
-					FileID: fileID,
-				})
-				if err != nil {
-					logger.Error(err)
-				}
+				if len(chat.Photos) > 0 {
+					fileID := chat.Photos[0][0].FileID
+					file, err := b.API.GetFile(tgbotapi.FileConfig{
+						FileID: fileID,
+					})
+					if err != nil {
+						logger.Error(err)
+					}
 
-				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				if err != nil {
-					logger.Error(err)
-				}
+					//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+					err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+					if err != nil {
+						logger.Error(err)
+					}
 
-				b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+					b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.
 				`)
-				b.API.Send(msg)
-				continue
+					b.API.Send(msg)
+					continue
+				}
 			}
 			logger.Info(update.Message.Chat)
 
