@@ -145,34 +145,6 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
-				//logger.Debug(chat)
-				if chat.ID > 0 && update.MyChatMember != nil {
-					chatUser, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.MyChatMember.From.ID, Limit: 1})
-					if err != nil {
-						logger.Error(err)
-					}
-
-					logger.Debug(update.MyChatMember)
-
-					if len(chatUser.Photos) > 0 {
-						fileID := chatUser.Photos[0][0].FileID
-						file, err := b.API.GetFile(tgbotapi.FileConfig{
-							FileID: fileID,
-						})
-						if err != nil {
-							logger.Error(err)
-						}
-
-						//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-						err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-						if err != nil {
-							logger.Error(err)
-						}
-						b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, chat.Description)
-
-					}
-				}
-
 				logger.Debug(chat)
 				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, chat.Description)
 			}
@@ -204,6 +176,25 @@ func (b *Bot) GetUpdates() {
 			//					continue
 			//				}
 			//			}
+
+			//logger.Debug(chat)
+			if update.Message.Chat.Photo != nil {
+				fileID := update.Message.Chat.Photo.BigFileID
+				file, err := b.API.GetFile(tgbotapi.FileConfig{
+					FileID: fileID,
+				})
+				if err != nil {
+					logger.Error(err)
+				}
+
+				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				if err != nil {
+					logger.Error(err)
+				}
+				b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
+
+			}
 			logger.Info(update.Message.Chat)
 
 			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), "", "")
