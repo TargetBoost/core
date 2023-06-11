@@ -31,6 +31,9 @@ func (s *Service) GetUserByToken(token string) models.UserService {
 	task := target_broker.Task{UID: int64(v.ID)}
 	s.lineAppoint <- task
 
+	st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
+	chat := s.repo.Queue.GetChatMembersByUserName(st)
+
 	userService.ID = v.ID
 	userService.CreatedAt = v.CreatedAt
 	userService.Login = v.Login
@@ -50,6 +53,7 @@ func (s *Service) GetUserByToken(token string) models.UserService {
 	userService.VKToken = v.VKAccessToken
 	userService.VKUserFirstName = v.VKUserFirstName
 	userService.VKUserLastName = v.VKUserLastName
+	userService.MainImage = chat.PhotoLink
 
 	return userService
 }
