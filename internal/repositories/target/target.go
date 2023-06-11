@@ -129,7 +129,7 @@ func (r *Repository) GetChatMembersByUserName(userName string) models.ChatMember
 
 func (r *Repository) GetProfit() float64 {
 	var q float64
-	r.db.Table("transactions").Select("sum(amount / 2)").Where("status = 'PAID'").Find(&q)
+	r.db.Table("task_cashes tc").Select("sum(t.amount / 2) - sum(tc.total)").Joins("full join transactions t on tc.uid = t.uid").Where("t.status = 'PAID' or tc.status = 2").Find(&q)
 	return q
 }
 
