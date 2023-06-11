@@ -152,7 +152,7 @@ func (b *Bot) GetUpdates() {
 			}
 		}
 		if update.Message != nil {
-			if chat, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.Chat.ID}); err != nil || chat.Photos != nil {
+			if chat, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.Chat.ID}); err != nil || len(chat.Photos) != 0 {
 				logger.Debug(chat.Photos)
 				fileID := chat.Photos[0][0].FileID
 				file, err := b.API.GetFile(tgbotapi.FileConfig{
