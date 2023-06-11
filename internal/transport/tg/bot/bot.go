@@ -193,7 +193,12 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 				b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
-
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+Добро пожаловать!
+Вы добавлены в систему.
+				`)
+				b.API.Send(msg)
+				continue
 			}
 			logger.Info(update.Message.Chat)
 
