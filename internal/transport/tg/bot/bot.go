@@ -150,64 +150,14 @@ func (b *Bot) GetUpdates() {
 			}
 		}
 		if update.Message != nil {
-			//			if chat, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.Chat.ID}); err != nil {
-			//				logger.Debug(chat.Photos)
-			//				if len(chat.Photos) > 0 {
-			//					fileID := chat.Photos[0][0].FileID
-			//					file, err := b.API.GetFile(tgbotapi.FileConfig{
-			//						FileID: fileID,
-			//					})
-			//					if err != nil {
-			//						logger.Error(err)
-			//					}
-			//
-			//					//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-			//					err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-			//					if err != nil {
-			//						logger.Error(err)
-			//					}
-			//
-			//					b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
-			//					msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
-			//Добро пожаловать!
-			//Вы добавлены в систему.
-			//				`)
-			//					b.API.Send(msg)
-			//					continue
-			//				}
-			//			}
-
-			//logger.Debug(chat)
-			if update.Message.Chat.Photo != nil {
-				fileID := update.Message.Chat.Photo.BigFileID
-				file, err := b.API.GetFile(tgbotapi.FileConfig{
-					FileID: fileID,
-				})
-				if err != nil {
-					logger.Error(err)
-				}
-
-				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				if err != nil {
-					logger.Error(err)
-				}
-				b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
+			if update.Message.Chat.ID > 0 {
+				//b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), "", "")
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
 Добро пожаловать!
 Вы добавлены в систему.
 				`)
 				b.API.Send(msg)
-				continue
 			}
-			logger.Info(update.Message.Chat)
-
-			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), "", "")
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
-Добро пожаловать!
-Вы добавлены в систему.
-				`)
-			b.API.Send(msg)
 		}
 	}
 }
