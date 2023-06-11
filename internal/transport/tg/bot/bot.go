@@ -121,7 +121,7 @@ func (b *Bot) GetUpdates() {
 
 				//logger.Debug(chat)
 				if chat.ID > 0 {
-					chatUser, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: chat.ID})
+					chatUser, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.Message.From.ID, Limit: 1})
 					if err != nil {
 						logger.Error(err)
 					}
