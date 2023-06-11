@@ -39,6 +39,7 @@ type Target interface {
 	GetTargetByID(uid uint) models.Target
 	GetTargetsToAdmin() []models.TargetToAdmin
 	UpdateTarget(id uint, target *models.Target)
+	GetProfit() float64
 }
 
 type Queue interface {

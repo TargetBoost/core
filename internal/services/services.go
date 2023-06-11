@@ -38,6 +38,7 @@ type Target interface {
 	UpdateTarget(id uint, status int64)
 	GetUserID(id uint) int64
 	CreateTarget(UID uint, target *models.TargetService) error
+	GetProfit() float64
 }
 
 type Storage interface {

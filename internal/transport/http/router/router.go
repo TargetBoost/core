@@ -23,6 +23,7 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 
 	// System
 	admin.Handle("POST", "/settings", serv.SetSettings)
+	admin.Handle("GET", "/profit", serv.GetProfit)
 
 	// Login, Registration, GetSettings (all users permission)
 	v1.Handle("POST", "/registration", serv.Registration)
