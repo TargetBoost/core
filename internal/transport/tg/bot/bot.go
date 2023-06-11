@@ -126,7 +126,7 @@ func (b *Bot) GetUpdates() {
 						logger.Error(err)
 					}
 
-					logger.Debug(chatUser)
+					logger.Debug(update.MyChatMember)
 
 					if len(chatUser.Photos) > 0 {
 						fileID := chatUser.Photos[0][0].FileID
