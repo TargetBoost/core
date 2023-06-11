@@ -152,6 +152,29 @@ func (b *Bot) GetUpdates() {
 			}
 		}
 		if update.Message != nil {
+			if chat, err := b.API.GetChat(tgbotapi.ChatInfoConfig{ChatConfig: tgbotapi.ChatConfig{ChatID: update.Message.Chat.ID}}); err != nil || chat.Photo != nil {
+				fileID := chat.Photo.BigFileID
+				file, err := b.API.GetFile(tgbotapi.FileConfig{
+					FileID: fileID,
+				})
+				if err != nil {
+					logger.Error(err)
+				}
+
+				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				if err != nil {
+					logger.Error(err)
+				}
+
+				b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), file.FileID, "")
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, `
+Добро пожаловать!
+Вы добавлены в систему.
+				`)
+				b.API.Send(msg)
+				continue
+			}
 			logger.Info(update.Message.Chat)
 
 			b.repos.Storage.SetChatMembers(update.Message.Chat.ID, int64(0), update.Message.Chat.Title, strings.ToLower(update.Message.Chat.UserName), "", "")
