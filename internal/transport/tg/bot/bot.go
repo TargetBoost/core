@@ -119,6 +119,32 @@ func (b *Bot) GetUpdates() {
 					logger.Error(err)
 				}
 
+				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", chat.Description)
+				continue
+			} else {
+				fileID := chat.Photo.BigFileID
+				file, err := b.API.GetFile(tgbotapi.FileConfig{
+					FileID: fileID,
+				})
+				if err != nil {
+					logger.Error(err)
+				}
+
+				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
+				if err != nil {
+					logger.Error(err)
+				}
+
+				count, err := b.API.GetChatMembersCount(tgbotapi.ChatMemberCountConfig{
+					ChatConfig: tgbotapi.ChatConfig{
+						ChatID: update.MyChatMember.Chat.ID,
+					},
+				})
+				if err != nil {
+					logger.Error(err)
+				}
+
 				//logger.Debug(chat)
 				if chat.ID > 0 && update.MyChatMember != nil {
 					chatUser, err := b.API.GetUserProfilePhotos(tgbotapi.UserProfilePhotosConfig{UserID: update.MyChatMember.From.ID, Limit: 1})
@@ -145,32 +171,6 @@ func (b *Bot) GetUpdates() {
 						b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), file.FileID, chat.Description)
 
 					}
-				}
-
-				b.repos.Storage.SetChatMembers(update.MyChatMember.Chat.ID, int64(count), update.MyChatMember.Chat.Title, strings.ToLower(update.MyChatMember.Chat.UserName), "", chat.Description)
-				continue
-			} else {
-				fileID := chat.Photo.BigFileID
-				file, err := b.API.GetFile(tgbotapi.FileConfig{
-					FileID: fileID,
-				})
-				if err != nil {
-					logger.Error(err)
-				}
-
-				//logger.Info(fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				err = downloadFile(fmt.Sprintf(filesPath, file.FileID), fmt.Sprintf(tgFilesPath, b.token, file.FilePath))
-				if err != nil {
-					logger.Error(err)
-				}
-
-				count, err := b.API.GetChatMembersCount(tgbotapi.ChatMemberCountConfig{
-					ChatConfig: tgbotapi.ChatConfig{
-						ChatID: update.MyChatMember.Chat.ID,
-					},
-				})
-				if err != nil {
-					logger.Error(err)
 				}
 
 				logger.Debug(chat)
