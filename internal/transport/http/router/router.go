@@ -30,8 +30,6 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	v1.Handle("POST", "/login", serv.Login)
 	v1.Handle("GET", "/settings", serv.GetSettings)
 
-	//service.Handle("GET", "/is_auth", serv.IsAuth)
-
 	// Account
 	admin.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/{token:string}", serv.GetUserByToken)
