@@ -4,6 +4,7 @@ import (
 	"core/internal/services"
 	"core/internal/transport/http/handler"
 	"core/internal/transport/tg/bot"
+	"github.com/gin-gonic/gin"
 	"github.com/kataras/iris/v12"
 )
 
@@ -11,15 +12,15 @@ type Router struct {
 	iris *iris.Application
 }
 
-func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot) *iris.Application {
+func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.Engine {
 	serv := handler.Handler{
 		Service: services,
 		Bot:     bot,
 	}
 
-	v1 := iris.Party("/v1")
-	admin := v1.Party("/admin", serv.IsAdmin)
-	service := v1.Party("/service", serv.IsAuth)
+	v1 := app.Group("/v1")
+	admin := v1.Group("/admin", serv.IsAdmin)
+	service := v1.Group("/service", serv.IsAuth)
 
 	// System
 	admin.Handle("POST", "/settings", serv.SetSettings)
@@ -55,9 +56,9 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	service.Handle("POST", "/check_target", serv.CheckTarget)
 
 	// storage
-	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
+	//v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
 	v1.Handle("GET", "/file_ch/{key:string}", serv.GetPhotoFile)
 	v1.Handle("GET", "/callback_vk", serv.CallBackVK)
 
-	return iris
+	return app
 }
