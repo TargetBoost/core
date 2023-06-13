@@ -11,7 +11,7 @@ func (h *Handler) IsAuth(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	if len(rawToken) == 0 {
 		logger.Debug("rawToken == 0")
-		ctx.JSON(401,
+		ctx.AbortWithStatusJSON(401,
 			gin.H{
 				"status": gin.H{
 					"message": errorAuth,
@@ -23,7 +23,7 @@ func (h *Handler) IsAuth(ctx *gin.Context) {
 
 	_, isAuth := h.Service.Account.IsAuth(rawToken)
 	if !isAuth {
-		ctx.JSON(401,
+		ctx.AbortWithStatusJSON(401,
 			gin.H{
 				"status": gin.H{
 					"message": errorAuth,
