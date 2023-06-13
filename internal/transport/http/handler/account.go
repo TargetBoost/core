@@ -21,7 +21,7 @@ func (h *Handler) Registration(ctx *gin.Context) {
 	var userData models.CreateUser
 	err := ctx.BindJSON(&userData)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": errorDataInsertion,
@@ -35,7 +35,7 @@ func (h *Handler) Registration(ctx *gin.Context) {
 	user, err := h.Service.Account.CreateUser(userData)
 	if err != nil {
 		logger.Error(err)
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": fmt.Sprintf(errorService, "регистрации"),
@@ -74,7 +74,7 @@ func (h *Handler) CreateTaskCashes(ctx *gin.Context) {
 	var task models.TaskCashToUser
 	err := ctx.BindJSON(&task)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": "bad data insertion",
@@ -87,7 +87,7 @@ func (h *Handler) CreateTaskCashes(ctx *gin.Context) {
 	u := h.Service.Account.GetUserByToken(rawToken)
 	err = h.Service.Account.CreateTaskCashes(int64(u.ID), task)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -111,7 +111,7 @@ func (h *Handler) UpdateTaskCashes(ctx *gin.Context) {
 	var task models.TaskCashToService
 	err := ctx.BindJSON(&task)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": "bad data insertion",
@@ -243,7 +243,7 @@ func (h *Handler) Pay(ctx *gin.Context) {
 	}
 
 	if t.Status.Value != "WAITING" {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "Ошибка шлюза",
@@ -269,14 +269,13 @@ func (h *Handler) Pay(ctx *gin.Context) {
 				"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/s/pay/%s", id.String(), pay.Value, id.String()),
 			},
 		})
-	return
 }
 
 func (h *Handler) ConfirmPay(ctx *gin.Context) {
 	key := ctx.Query("id")
 	trans := h.Service.Account.GetTransaction(key)
 	if trans.Status == "" {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "Transaction is not validate",
@@ -287,7 +286,7 @@ func (h *Handler) ConfirmPay(ctx *gin.Context) {
 	}
 
 	if trans.Status != "WAITING" {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "Transaction is PAID before",
@@ -355,7 +354,7 @@ func (h *Handler) ConfirmPay(ctx *gin.Context) {
 	}
 
 	if t.Status.Value != "PAID" {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "Transaction is WAIT status",
@@ -367,7 +366,7 @@ func (h *Handler) ConfirmPay(ctx *gin.Context) {
 
 	f, err := strconv.ParseFloat(trans.Amount, 64)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -381,7 +380,7 @@ func (h *Handler) ConfirmPay(ctx *gin.Context) {
 
 	fu, err := strconv.ParseFloat(u.Balance, 64)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -414,7 +413,7 @@ func (h *Handler) IsAdmin(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -425,7 +424,7 @@ func (h *Handler) IsAdmin(ctx *gin.Context) {
 	}
 
 	if user.Admin != true {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "У Вас нет прав доступа",

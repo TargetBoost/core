@@ -18,7 +18,7 @@ func (h *Handler) CallBackVK(ctx *gin.Context) {
 
 	user, err := h.CheckAuth(state)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -29,7 +29,7 @@ func (h *Handler) CallBackVK(ctx *gin.Context) {
 	}
 
 	if user == nil {
-		ctx.JSON(405,
+		ctx.AbortWithStatusJSON(405,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -52,7 +52,7 @@ func (h *Handler) GetPhotoFile(ctx *gin.Context) {
 	key := ctx.Query("key")
 	fileBytes, err := os.ReadFile(fmt.Sprintf(directoryPath, key))
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),

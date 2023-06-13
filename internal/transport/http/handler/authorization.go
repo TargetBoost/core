@@ -10,7 +10,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 	var a models.AuthUser
 	err := ctx.BindJSON(&a)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -22,7 +22,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 
 	user, err := h.Service.Account.AuthUser(a)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),

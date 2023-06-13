@@ -52,7 +52,7 @@ func (h *Handler) CreateTarget(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -64,7 +64,7 @@ func (h *Handler) CreateTarget(ctx *gin.Context) {
 
 	err = h.Service.Target.CreateTarget(user.ID, &t)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -106,7 +106,7 @@ func (h *Handler) UpdateTargetAdvertiser(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	_, err := h.CheckAuth(rawToken)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -117,7 +117,7 @@ func (h *Handler) UpdateTargetAdvertiser(ctx *gin.Context) {
 	}
 
 	if t.Status != 3 {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "У Вас нет прав перевести кампанию в такой статус",
@@ -152,7 +152,7 @@ func (h *Handler) CheckTarget(ctx *gin.Context) {
 
 	status, err := h.Bot.CheckMembers(chatID, userChatID)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": err.Error(),
@@ -175,7 +175,7 @@ func (h *Handler) CheckTarget(ctx *gin.Context) {
 
 	task := h.Service.Queue.GetTaskByID(t.ID)
 	if task.Status != 1 {
-		ctx.JSON(http.StatusNotFound,
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
 			gin.H{
 				"status": gin.H{
 					"message": "Вы уже выполнили это задание",

@@ -37,7 +37,7 @@ func (h *Handler) SetSettings(ctx *gin.Context) {
 	var s models.Settings
 	err := ctx.BindJSON(&s)
 	if err != nil {
-		ctx.JSON(400,
+		ctx.AbortWithStatusJSON(400,
 			gin.H{
 				"status": gin.H{
 					"message": "bad data insertion",
