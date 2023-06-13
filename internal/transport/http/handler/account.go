@@ -272,7 +272,7 @@ func (h *Handler) Pay(ctx *gin.Context) {
 }
 
 func (h *Handler) ConfirmPay(ctx *gin.Context) {
-	key := ctx.Query("id")
+	key := ctx.Param("id")
 	trans := h.Service.Account.GetTransaction(key)
 	if trans.Status == "" {
 		ctx.AbortWithStatusJSON(http.StatusNotFound,

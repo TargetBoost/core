@@ -49,7 +49,7 @@ func (h *Handler) CallBackVK(ctx *gin.Context) {
 }
 
 func (h *Handler) GetPhotoFile(ctx *gin.Context) {
-	key := ctx.Query("key")
+	key := ctx.Param("key")
 	fileBytes, err := os.ReadFile(fmt.Sprintf(directoryPath, key))
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound,
