@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ivahaev/go-logger"
 	"net/http"
-	"time"
 )
 
 //type Controller struct {
@@ -18,23 +17,8 @@ import (
 //}
 
 func NewController(ctx context.Context, services *services.Services, bot *bot.Bot) *http.Server {
-	app := gin.Default()
-	app.Use(globalMiddleware)
-
-	//iris.RegisterOnInterrupt(func() {
-	//	err := app.Shutdown(ctx)
-	//	if err != nil {
-	//		logger.Error(err)
-	//	}
-	//})
-
-	//crs := cors.New(cors.Options{
-	//	AllowedOrigins:   []string{"*"},
-	//	AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-	//	AllowCredentials: true,
-	//	Debug:            false,
-	//})
-	//app.Use(crs)
+	app := gin.New()
+	//app.Use(globalMiddleware)
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://targetboost.ru", "https://staging.targetboost.ru"},
@@ -42,10 +26,6 @@ func NewController(ctx context.Context, services *services.Services, bot *bot.Bo
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://targetboost.ru"
-		},
-		MaxAge: 12 * time.Hour,
 	}))
 
 	irisRouter := router.NewRouter(app, services, bot)
