@@ -37,7 +37,7 @@ func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.
 
 	// Pay
 	service.Handle("POST", "/pay", serv.Pay)
-	v1.Handle("GET", "/s/pay/{id:string}", serv.ConfirmPay)
+	v1.Handle("GET", "/s/pay/:id", serv.ConfirmPay)
 
 	admin.Handle("GET", "/task_cashes", serv.GetTaskCashesAdmin)
 	admin.Handle("PUT", "/task_cashes", serv.UpdateTaskCashes)
@@ -57,7 +57,7 @@ func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.
 
 	// storage
 	//v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
-	v1.Handle("GET", "/file_ch/{key:string}", serv.GetPhotoFile)
+	v1.Handle("GET", "/file_ch/:key", serv.GetPhotoFile)
 	v1.Handle("GET", "/callback_vk", serv.CallBackVK)
 
 	return app
