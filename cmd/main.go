@@ -66,7 +66,7 @@ func main() {
 	go b.SenderUpdates()
 
 	serv := services.NewServices(repo, q.Line, q.LineAppoint, b.TrackMessages)
-	srv := controller.NewController(ctx, serv, b)
+	srv := controller.NewController(serv, b)
 
 	go func() {
 		// service connections

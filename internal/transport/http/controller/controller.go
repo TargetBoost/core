@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"core/internal/services"
 	"core/internal/transport/http/router"
 	"core/internal/transport/tg/bot"
@@ -12,11 +11,7 @@ import (
 	"net/http"
 )
 
-//type Controller struct {
-//	Services *services.Services
-//}
-
-func NewController(ctx context.Context, services *services.Services, bot *bot.Bot) *http.Server {
+func NewController(services *services.Services, bot *bot.Bot) *http.Server {
 	app := gin.New()
 	//app.Use(globalMiddleware)
 
