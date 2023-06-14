@@ -59,7 +59,7 @@ func main() {
 	q := target_broker.New(ctx, repo, b)
 	go q.Broker()
 	go q.AppointTask()
-	go q.AntiFraud()
+	//go q.AntiFraud()
 
 	go b.GetUpdates()
 	go b.SenderUpdates()
