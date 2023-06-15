@@ -7,14 +7,11 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-type Router struct {
-	iris *iris.Application
-}
-
 func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot) *iris.Application {
 	serv := handler.Handler{
-		Service: services,
-		Bot:     bot,
+		Service:      services,
+		Bot:          bot,
+		StackCallPay: make(map[string]string),
 	}
 
 	v1 := iris.Party("/v1")

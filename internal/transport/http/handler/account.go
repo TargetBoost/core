@@ -259,6 +259,8 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 	h.Service.Account.CreateTransaction(&trans)
 
+	h.StackCallPay[id.String()] = pay.Value
+
 	ctx.StatusCode(200)
 	_ = ctx.JSON(iris.Map{
 		"status": iris.Map{
@@ -272,6 +274,11 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 func (h *Handler) ConfirmPay(ctx iris.Context) {
 	key := ctx.Params().GetString("id")
+
+	if h.StackCallPay[key] == "LOCK" {
+		ctx.Redirect("https://targetboost.ru/", 301)
+		return
+	}
 
 	logger.Debug(key)
 
@@ -356,6 +363,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	}
 
 	if t.Status.Value != "PAID" {
+		h.StackCallPay[key] = "WAITING"
 		ctx.StatusCode(404)
 		_ = ctx.JSON(iris.Map{
 			"status": iris.Map{
@@ -397,6 +405,8 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	h.Service.Account.UpdateUser(u.ID, fu+f)
 
 	trans.Status = "PAID"
+
+	h.StackCallPay[key] = "PAID"
 
 	h.Service.Account.UpdateTransaction(trans)
 

@@ -6,6 +6,7 @@ import (
 )
 
 type Handler struct {
-	Service *services.Services
-	Bot     *bot.Bot
+	Service      *services.Services
+	Bot          *bot.Bot
+	StackCallPay map[string]string
 }
