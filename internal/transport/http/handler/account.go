@@ -275,9 +275,11 @@ func (h *Handler) Pay(ctx iris.Context) {
 func (h *Handler) ConfirmPay(ctx iris.Context) {
 	key := ctx.Params().GetString("id")
 
-	if h.StackCallPay[key] == "LOCK" {
-		ctx.Redirect("https://targetboost.ru/", 301)
-		return
+	if k, ok := h.StackCallPay[key]; ok == true {
+		if k == "LOCK" {
+			ctx.Redirect("https://targetboost.ru/", 301)
+			return
+		}
 	}
 
 	logger.Debug(key)
@@ -400,16 +402,11 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
-	logger.Debug(fu, f, "INFO")
-
 	h.Service.Account.UpdateUser(u.ID, fu+f)
-
 	trans.Status = "PAID"
-
 	h.StackCallPay[key] = "PAID"
 
 	h.Service.Account.UpdateTransaction(trans)
-
 	ctx.Redirect("https://targetboost.ru/s/pay", 301)
 }
 
