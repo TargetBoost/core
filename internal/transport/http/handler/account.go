@@ -392,6 +392,8 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 		return
 	}
 
+	logger.Debug(fu, f, "INFO")
+
 	h.Service.Account.UpdateUser(u.ID, fu+f)
 
 	trans.Status = "PAID"
