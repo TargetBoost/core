@@ -11,7 +11,7 @@ type Repository struct {
 
 func (r Repository) GetCommentsByParent(id uint) models.CommentParent {
 	var q models.CommentParent
-	r.db.Table("comments").Where("parent_id = ?", id).Find(&q)
+	r.db.Table("comments").Where("id = ?", id).Find(&q)
 	return q
 }
 
