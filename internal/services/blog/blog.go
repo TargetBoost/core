@@ -45,7 +45,7 @@ func (s Service) GetBlog() []models.BlogService {
 				parentComment := s.repo.Blog.GetCommentsByParent(vc.ParentID)
 				userParent := s.repo.Account.GetUserByID(int64(parentComment.UID))
 
-				st := strings.ToLower(strings.Split(user.Tg, "@")[len(strings.Split(user.Tg, "@"))-1])
+				st := strings.ToLower(strings.Split(userParent.Tg, "@")[len(strings.Split(userParent.Tg, "@"))-1])
 				chat := s.repo.Queue.GetChatMembersByUserName(st)
 
 				comment.Parent = &models.CommentParent{
