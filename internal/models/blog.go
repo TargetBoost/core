@@ -38,6 +38,7 @@ type Comment struct {
 	gorm.Model
 	ParentID uint `json:"parent_id"`
 
+	CID  uint   `json:"cid"`
 	UID  uint   `json:"uid"`
 	Text string `json:"text"`
 }
