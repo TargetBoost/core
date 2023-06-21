@@ -3,6 +3,7 @@ package blog
 import (
 	"core/internal/models"
 	"core/internal/repositories"
+	"strings"
 )
 
 type Service struct {
@@ -30,7 +31,9 @@ func (s Service) GetBlog() []models.BlogService {
 			var comment models.CommentService
 
 			user := s.repo.Account.GetUserByID(int64(vc.UID))
-			comment.MainImage = user.MainImage
+			st := strings.ToLower(strings.Split(user.Tg, "@")[len(strings.Split(user.Tg, "@"))-1])
+			chat := s.repo.Queue.GetChatMembersByUserName(st)
+			comment.MainImage = chat.PhotoLink
 			comment.Login = user.Tg
 			comment.Text = vc.Text
 
