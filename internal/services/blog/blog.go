@@ -30,6 +30,7 @@ func (s Service) GetBlog() []models.BlogService {
 		c := s.repo.Blog.GetComments(bs.ID)
 
 		var comments []models.CommentService
+
 		for _, vc := range c {
 			var comment models.CommentService
 
@@ -47,7 +48,7 @@ func (s Service) GetBlog() []models.BlogService {
 				st := strings.ToLower(strings.Split(user.Tg, "@")[len(strings.Split(user.Tg, "@"))-1])
 				chat := s.repo.Queue.GetChatMembersByUserName(st)
 
-				comment.Parent = models.CommentParent{
+				comment.Parent = &models.CommentParent{
 					CID:       parentComment.CID,
 					UID:       parentComment.UID,
 					Text:      parentComment.Text,

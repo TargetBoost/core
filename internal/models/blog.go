@@ -52,7 +52,7 @@ type CommentParent struct {
 }
 
 type CommentService struct {
-	Parent CommentParent `json:"parent"`
+	Parent *CommentParent `json:"parent"`
 
 	MainImage string `json:"main_image"`
 	Login     string `json:"login"`
