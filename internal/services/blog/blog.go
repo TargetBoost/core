@@ -40,7 +40,24 @@ func (s Service) GetBlog() []models.BlogService {
 			comment.Login = user.Tg
 			comment.Text = vc.Text
 
+			if vc.ParentID != 0 {
+				parentComment := s.repo.Blog.GetCommentsByParent(vc.ParentID)
+				userParent := s.repo.Account.GetUserByID(int64(parentComment.UID))
+
+				st := strings.ToLower(strings.Split(user.Tg, "@")[len(strings.Split(user.Tg, "@"))-1])
+				chat := s.repo.Queue.GetChatMembersByUserName(st)
+
+				comment.Parent = models.CommentParent{
+					CID:       parentComment.CID,
+					UID:       parentComment.UID,
+					Text:      parentComment.Text,
+					Login:     userParent.Tg,
+					MainImage: chat.PhotoLink,
+				}
+			}
+
 			comments = append(comments, comment)
+
 		}
 
 		bs.Comments = comments
