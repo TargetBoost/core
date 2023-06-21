@@ -72,7 +72,7 @@ type Blog interface {
 	CreateEntry(e models.CreateBlog)
 	UpdateEntry(e models.UpdateBlog, id uint)
 	AddComment(c models.Comment)
-	GetComments(id uint) []models.Comment
+	GetComments(id uint) []models.CommentService
 }
 
 type Repositories struct {

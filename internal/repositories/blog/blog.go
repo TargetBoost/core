@@ -13,8 +13,8 @@ func (r Repository) AddComment(c models.Comment) {
 	r.db.Table("comments").Create(c)
 }
 
-func (r Repository) GetComments(id uint) []models.Comment {
-	var q []models.Comment
+func (r Repository) GetComments(id uint) []models.CommentService {
+	var q []models.CommentService
 	r.db.Table("comments").Where("c_id = ?", id).Find(&q)
 	return q
 }

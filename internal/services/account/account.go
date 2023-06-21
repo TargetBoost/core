@@ -140,13 +140,16 @@ func (s *Service) GetUserByID(id int64) models.UserService {
 	task := target_broker.Task{UID: int64(v.ID)}
 	s.lineAppoint <- task
 
+	st := strings.ToLower(strings.Split(v.Tg, "@")[len(strings.Split(v.Tg, "@"))-1])
+	chat := s.repo.Queue.GetChatMembersByUserName(st)
+
 	userService.ID = v.ID
 	userService.CreatedAt = v.CreatedAt
 	userService.Login = v.Login
 	userService.FirstName = v.FirstName
 	userService.LastName = v.LastName
 	userService.MiddleName = v.MiddleName
-	userService.MainImage = v.MainImage
+	userService.MainImage = chat.PhotoLink
 	userService.SmallImage = v.SmallImage
 	userService.NumberPhone = v.NumberPhone
 	userService.Execute = v.Execute

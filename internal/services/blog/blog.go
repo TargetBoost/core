@@ -23,7 +23,21 @@ func (s Service) GetBlog() []models.BlogService {
 		bs.Subject = v.Subject
 		bs.Text = v.Text
 		bs.UID = v.UID
-		bs.Comments = s.repo.Blog.GetComments(bs.ID)
+		c := s.repo.Blog.GetComments(bs.ID)
+
+		var comments []models.CommentService
+		for _, vc := range c {
+			var comment models.CommentService
+
+			user := s.repo.Account.GetUserByID(int64(vc.UID))
+			comment.MainImage = user.MainImage
+			comment.Login = user.Tg
+			comment.Text = vc.Text
+
+			comments = append(comments, comment)
+		}
+
+		bs.Comments = comments
 
 		bss = append(bss, bs)
 	}
