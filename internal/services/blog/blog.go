@@ -20,6 +20,7 @@ func (s Service) GetBlog() []models.BlogService {
 	for _, v := range b {
 		var bs models.BlogService
 		bs.ID = v.ID
+		bs.Subject = v.Subject
 		bs.Text = v.Text
 		bs.UID = v.UID
 		bs.Comments = s.repo.Blog.GetComments(bs.ID)
