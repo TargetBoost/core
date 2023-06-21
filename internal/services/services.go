@@ -61,7 +61,7 @@ type Settings interface {
 }
 
 type Blog interface {
-	GetBlog() models.Blog
+	GetBlog() []models.Blog
 }
 
 type Services struct {

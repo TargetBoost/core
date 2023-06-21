@@ -9,8 +9,8 @@ type Repository struct {
 	db *gorm.DB
 }
 
-func (r Repository) GetRecords() models.Blog {
-	var q models.Blog
+func (r Repository) GetRecords() []models.Blog {
+	var q []models.Blog
 	r.db.Table("blogs").Find(&q)
 	return q
 }

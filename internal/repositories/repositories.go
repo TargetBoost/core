@@ -68,7 +68,7 @@ type Settings interface {
 }
 
 type Blog interface {
-	GetRecords() models.Blog
+	GetRecords() []models.Blog
 	CreateEntry(e models.CreateBlog)
 	UpdateEntry(e models.UpdateBlog, id uint)
 }
