@@ -10,7 +10,10 @@ type Service struct {
 	repo *repositories.Repositories
 }
 
-func (s Service) AddComment(c models.Comment) {
+func (s Service) AddComment(c models.Comment, token string) {
+	user := s.repo.Account.GetUserByToken(token)
+
+	c.UID = user.ID
 	s.repo.Blog.AddComment(c)
 }
 

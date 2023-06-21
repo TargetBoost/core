@@ -36,6 +36,7 @@ func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.
 	// Account
 	admin.Handle("GET", "/users", serv.GetAllUsers)
 	service.Handle("GET", "/user/:token", serv.GetUserByToken)
+	service.Handle("POST", "/blog/comment", serv.CreateComment)
 
 	// Pay
 	service.Handle("POST", "/pay", serv.Pay)
