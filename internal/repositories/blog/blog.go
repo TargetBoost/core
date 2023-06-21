@@ -15,7 +15,7 @@ func (r Repository) AddComment(c models.Comment) {
 
 func (r Repository) GetComments(id uint) []models.CommentService {
 	var q []models.CommentService
-	r.db.Table("comments").Where("c_id = ?", id).Find(&q)
+	r.db.Table("comments").Where("c_id = ?", id).Limit(20).Find(&q)
 	return q
 }
 
