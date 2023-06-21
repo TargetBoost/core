@@ -5,6 +5,7 @@ import (
 	"core/internal/models"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/ivahaev/go-logger"
 	"github.com/kataras/iris/v12"
@@ -15,18 +16,18 @@ import (
 )
 
 // Registration - registration user
-func (h *Handler) Registration(ctx iris.Context) {
+func (h *Handler) Registration(ctx *gin.Context) {
 	// userData - data new user
 	var userData models.CreateUser
-	err := ctx.ReadJSON(&userData)
+	err := ctx.BindJSON(&userData)
 	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": errorDataInsertion,
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(400,
+			gin.H{
+				"status": gin.H{
+					"message": errorDataInsertion,
+				},
+				"data": nil,
+			})
 		return
 	}
 
@@ -34,129 +35,130 @@ func (h *Handler) Registration(ctx iris.Context) {
 	user, err := h.Service.Account.CreateUser(userData)
 	if err != nil {
 		logger.Error(err)
-		ctx.StatusCode(200)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": fmt.Sprintf(errorService, "регистрации"),
-			},
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": fmt.Sprintf(errorService, "регистрации"),
+				},
+				"data": nil,
+			})
 		return
 	}
-
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"token": user.Token,
-			"id":    user.ID,
-		},
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": gin.H{
+				"token": user.Token,
+				"id":    user.ID,
+			},
+		})
 }
 
 // GetAllUsers all users returned for admin
-func (h *Handler) GetAllUsers(ctx iris.Context) {
+func (h *Handler) GetAllUsers(ctx *gin.Context) {
 	users := h.Service.Account.GetAllUsers()
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": users,
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": users,
+		})
 }
 
 // CreateTaskCashes create
-func (h *Handler) CreateTaskCashes(ctx iris.Context) {
+func (h *Handler) CreateTaskCashes(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	var task models.TaskCashToUser
-	err := ctx.ReadJSON(&task)
+	err := ctx.BindJSON(&task)
 	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "bad data insertion",
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(400,
+			gin.H{
+				"status": gin.H{
+					"message": "bad data insertion",
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	u := h.Service.Account.GetUserByToken(rawToken)
 	err = h.Service.Account.CreateTaskCashes(int64(u.ID), task)
 	if err != nil {
-		ctx.StatusCode(200)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": err.Error(),
+				},
+				"data": nil,
+			})
 		return
 	}
 
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{},
-	})
-}
-
-// UpdateTaskCashes create
-func (h *Handler) UpdateTaskCashes(ctx iris.Context) {
-	var task models.TaskCashToService
-	err := ctx.ReadJSON(&task)
-	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "bad data insertion",
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
 			},
 			"data": nil,
 		})
+}
+
+// UpdateTaskCashes create
+func (h *Handler) UpdateTaskCashes(ctx *gin.Context) {
+	var task models.TaskCashToService
+	err := ctx.BindJSON(&task)
+	if err != nil {
+		ctx.AbortWithStatusJSON(400,
+			gin.H{
+				"status": gin.H{
+					"message": "bad data insertion",
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	h.Service.Account.UpdateTaskCashes(task)
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{},
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": nil,
+		})
 }
 
-func (h *Handler) GetTaskCashes(ctx iris.Context) {
+func (h *Handler) GetTaskCashes(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	u := h.Service.Account.GetUserByToken(rawToken)
 	tasks := h.Service.Account.GetTasksCashesUser(u.ID)
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": tasks,
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": tasks,
+		})
 }
 
-func (h *Handler) GetTaskCashesAdmin(ctx iris.Context) {
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": h.Service.Account.GetTasksCashesAdmin(),
-	})
+func (h *Handler) GetTaskCashesAdmin(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": h.Service.Account.GetTasksCashesAdmin(),
+		})
 }
 
 // Pay -
-func (h *Handler) Pay(ctx iris.Context) {
+func (h *Handler) Pay(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	var pay models.Pay
-	_ = ctx.ReadJSON(&pay)
+	_ = ctx.BindJSON(&pay)
 
 	user := h.Service.Account.GetUserByToken(rawToken)
 
@@ -189,7 +191,7 @@ func (h *Handler) Pay(ctx iris.Context) {
 	req, err := http.NewRequest(http.MethodPut, reqURL, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		logger.Errorf("could not create HTTP request: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
@@ -200,14 +202,14 @@ func (h *Handler) Pay(ctx iris.Context) {
 	res, err := httpClient.Do(req)
 	if err != nil {
 		logger.Errorf("could not send HTTP request: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.Status(iris.StatusInternalServerError)
 			logger.Error(err)
 			return
 		}
@@ -236,18 +238,18 @@ func (h *Handler) Pay(ctx iris.Context) {
 
 	if err := json.NewDecoder(res.Body).Decode(&t); err != nil {
 		logger.Errorf("could not parse JSON response: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
 	if t.Status.Value != "WAITING" {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Ошибка шлюза",
-			},
-			"data": "",
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": "Ошибка шлюза",
+				},
+				"data": nil,
+			})
 		return
 	}
 
@@ -258,26 +260,23 @@ func (h *Handler) Pay(ctx iris.Context) {
 	trans.Amount = pay.Value
 
 	h.Service.Account.CreateTransaction(&trans)
-
-	h.StackCallPay[id.String()] = pay.Value
-
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/s/pay/%s", id.String(), pay.Value, id.String()),
-		},
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": gin.H{
+				"url": fmt.Sprintf("https://oplata.qiwi.com/create?publicKey=48e7qUxn9T7RyYE1MVZswX1FRSbE6iyCj2gCRwwF3Dnh5XrasNTx3BGPiMsyXQFNKQhvukniQG8RTVhYm3iP3f4HArt65TUfZCPMYWpVH2XN4KRVBdZrHB6RTHkUcsdeHGekuM4JXb4Cd5JvDucawYX8bSof9fjuacyrjAfPGRNegJXbgdK19u2QSSwVk&billId=%s&amount=%s&account=5&customFields[themeCode]=Andrei-ShQU6cQ2pop&successUrl=https://targetboost.ru/core/v1/s/pay/%s", id.String(), pay.Value, id.String()),
+			},
+		})
 }
 
-func (h *Handler) ConfirmPay(ctx iris.Context) {
-	key := ctx.Params().GetString("id")
+func (h *Handler) ConfirmPay(ctx *gin.Context) {
+	key := ctx.Param("id")
 
 	if k, ok := h.StackCallPay[key]; ok == true {
 		if k == "LOCK" {
-			ctx.Redirect("https://targetboost.ru/", 301)
+			ctx.Redirect(301, "https://targetboost.ru/")
 			return
 		}
 	}
@@ -286,24 +285,24 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	trans := h.Service.Account.GetTransaction(key)
 	if trans.Status == "" {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Transaction is not validate",
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": "Transaction is not validate",
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	if trans.Status != "WAITING" {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Transaction is PAID before",
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": "Transaction is PAID before",
+				},
+				"data": nil,
+			})
 		return
 	}
 
@@ -313,7 +312,7 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	req, err := http.NewRequest(http.MethodGet, reqURL, nil)
 	if err != nil {
 		logger.Errorf("could not create HTTP request: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
@@ -324,14 +323,14 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 	res, err := httpClient.Do(req)
 	if err != nil {
 		logger.Errorf("could not send HTTP request: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.Status(iris.StatusInternalServerError)
 			logger.Error(err)
 			return
 		}
@@ -360,31 +359,30 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	if err := json.NewDecoder(res.Body).Decode(&t); err != nil {
 		logger.Errorf("could not parse JSON response: %v", err)
-		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.Status(iris.StatusInternalServerError)
 		return
 	}
 
 	if t.Status.Value != "PAID" {
-		h.StackCallPay[key] = "WAITING"
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "Transaction is WAIT status",
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": "Transaction is WAIT status",
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	f, err := strconv.ParseFloat(trans.Amount, 64)
 	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": err.Error(),
+				},
+				"data": nil,
+			})
 		return
 	}
 
@@ -392,59 +390,57 @@ func (h *Handler) ConfirmPay(ctx iris.Context) {
 
 	fu, err := strconv.ParseFloat(u.Balance, 64)
 	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": err.Error(),
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	h.Service.Account.UpdateUser(u.ID, fu+f)
 	trans.Status = "PAID"
-	h.StackCallPay[key] = "PAID"
-
 	h.Service.Account.UpdateTransaction(trans)
-	ctx.Redirect("https://targetboost.ru/s/pay", 301)
+	ctx.Redirect(301, "https://targetboost.ru/s/pay")
 }
 
 // GetUserByToken only one user returned
-func (h *Handler) GetUserByToken(ctx iris.Context) {
+func (h *Handler) GetUserByToken(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": h.Service.Account.GetUserByToken(rawToken),
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": h.Service.Account.GetUserByToken(rawToken),
+		})
 }
 
 // isAdmin check if admin middleware
-func (h *Handler) IsAdmin(ctx iris.Context) {
+func (h *Handler) IsAdmin(ctx *gin.Context) {
 	rawToken := ctx.GetHeader("Authorization")
 	user, err := h.CheckAuth(rawToken)
 	if err != nil {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": err.Error(),
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": err.Error(),
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	if user.Admin != true {
-		ctx.StatusCode(404)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "У Вас нет прав доступа",
-			},
-			"data": nil,
-		})
+		ctx.AbortWithStatusJSON(http.StatusNotFound,
+			gin.H{
+				"status": gin.H{
+					"message": "У Вас нет прав доступа",
+				},
+				"data": nil,
+			})
 		return
 	}
 

@@ -4,6 +4,7 @@ import (
 	"core/internal/models"
 	"core/internal/repositories"
 	"core/internal/services/account"
+	"core/internal/services/blog"
 	"core/internal/services/queue"
 	"core/internal/services/settings"
 	"core/internal/services/storage"
@@ -59,12 +60,17 @@ type Settings interface {
 	SetSettings(settings *models.Settings)
 }
 
+type Blog interface {
+	GetBlog() []models.Blog
+}
+
 type Services struct {
 	Account  Account
 	Queue    Queue
 	Target   Target
 	Storage  Storage
 	Settings Settings
+	Blog     Blog
 }
 
 func NewServices(repo *repositories.Repositories, lineBroker chan []target_broker.Task, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Services {
@@ -73,6 +79,7 @@ func NewServices(repo *repositories.Repositories, lineBroker chan []target_broke
 	storageService := storage.NewStorageService(repo)
 	settingsService := settings.NewSettingsService(repo)
 	queueService := queue.NewQueueService(repo)
+	blogService := blog.NewBlogService(repo)
 
 	return &Services{
 		Account:  accountService,
@@ -80,5 +87,6 @@ func NewServices(repo *repositories.Repositories, lineBroker chan []target_broke
 		Target:   targetService,
 		Storage:  storageService,
 		Settings: settingsService,
+		Blog:     blogService,
 	}
 }

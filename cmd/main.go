@@ -6,6 +6,7 @@ import (
 	"core/internal/target_broker"
 	"core/internal/transport/http/controller"
 	"core/internal/transport/tg/bot"
+	"net/http"
 
 	"context"
 	"fmt"
@@ -65,14 +66,27 @@ func main() {
 	go b.SenderUpdates()
 
 	serv := services.NewServices(repo, q.Line, q.LineAppoint, b.TrackMessages)
-	go controller.NewController(ctx, serv, b)
+	srv := controller.NewController(serv, b)
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Errorf("listen: %s\n", err)
+		}
+	}()
 
 	<-GracefulShutdown()
 	_, forceCancel := context.WithTimeout(ctx, shutDownDuration)
-
+	defer forceCancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Errorf("Server Shutdown: %s", err.Error())
+	}
+	select {
+	case <-ctx.Done():
+		logger.Info("timeout of 5 seconds.")
+	}
 	logger.Notice("Graceful Shutdown")
 
-	defer forceCancel()
 }
 
 func GracefulShutdown() chan os.Signal {

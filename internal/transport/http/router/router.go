@@ -4,19 +4,24 @@ import (
 	"core/internal/services"
 	"core/internal/transport/http/handler"
 	"core/internal/transport/tg/bot"
+	"github.com/gin-gonic/gin"
 	"github.com/kataras/iris/v12"
 )
 
-func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot) *iris.Application {
+type Router struct {
+	iris *iris.Application
+}
+
+func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.Engine {
 	serv := handler.Handler{
 		Service:      services,
 		Bot:          bot,
 		StackCallPay: make(map[string]string),
 	}
 
-	v1 := iris.Party("/v1")
-	admin := v1.Party("/admin", serv.IsAdmin)
-	service := v1.Party("/service", serv.IsAuth)
+	v1 := app.Group("/v1")
+	admin := v1.Group("/admin", serv.IsAdmin)
+	service := v1.Group("/service", serv.IsAuth)
 
 	// System
 	admin.Handle("POST", "/settings", serv.SetSettings)
@@ -26,16 +31,15 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	v1.Handle("POST", "/registration", serv.Registration)
 	v1.Handle("POST", "/login", serv.Login)
 	v1.Handle("GET", "/settings", serv.GetSettings)
-
-	//service.Handle("GET", "/is_auth", serv.IsAuth)
+	v1.Handle("GET", "/blog", serv.GetBlog)
 
 	// Account
 	admin.Handle("GET", "/users", serv.GetAllUsers)
-	service.Handle("GET", "/user/{token:string}", serv.GetUserByToken)
+	service.Handle("GET", "/user/:token", serv.GetUserByToken)
 
 	// Pay
 	service.Handle("POST", "/pay", serv.Pay)
-	v1.Handle("GET", "/s/pay/{id:string}", serv.ConfirmPay)
+	v1.Handle("GET", "/s/pay/:id", serv.ConfirmPay)
 
 	admin.Handle("GET", "/task_cashes", serv.GetTaskCashesAdmin)
 	admin.Handle("PUT", "/task_cashes", serv.UpdateTaskCashes)
@@ -54,9 +58,9 @@ func NewRouter(iris *iris.Application, services *services.Services, bot *bot.Bot
 	service.Handle("POST", "/check_target", serv.CheckTarget)
 
 	// storage
-	v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
-	v1.Handle("GET", "/file_ch/{key:string}", serv.GetPhotoFile)
+	//v1.Handle("GET", "/file/{key:string}", serv.GetFileByKey)
+	v1.Handle("GET", "/file_ch/:key", serv.GetPhotoFile)
 	v1.Handle("GET", "/callback_vk", serv.CallBackVK)
 
-	return iris
+	return app
 }

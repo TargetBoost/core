@@ -2,60 +2,57 @@ package handler
 
 import (
 	"core/internal/models"
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func (h *Handler) GetSettings(ctx iris.Context) {
-	ctx.StatusCode(200)
-
+func (h *Handler) GetSettings(ctx *gin.Context) {
 	settings := h.Service.Settings.GetSettings()
-
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"snow": settings.Snow,
-			"rain": settings.Rain,
-		},
-	})
-}
-
-func (h *Handler) GetProfit(ctx iris.Context) {
-	ctx.StatusCode(200)
-
-	profit := h.Service.Target.GetProfit()
-
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": iris.Map{
-			"profit": profit,
-		},
-	})
-}
-
-func (h *Handler) SetSettings(ctx iris.Context) {
-	var s models.Settings
-	err := ctx.ReadJSON(&s)
-	if err != nil {
-		ctx.StatusCode(400)
-		_ = ctx.JSON(iris.Map{
-			"status": iris.Map{
-				"message": "bad data insertion",
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
 			},
-			"data": nil,
+			"data": gin.H{
+				"snow": settings.Snow,
+				"rain": settings.Rain,
+			},
 		})
+}
+
+func (h *Handler) GetProfit(ctx *gin.Context) {
+	profit := h.Service.Target.GetProfit()
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": gin.H{
+				"profit": profit,
+			},
+		})
+}
+
+func (h *Handler) SetSettings(ctx *gin.Context) {
+	var s models.Settings
+	err := ctx.BindJSON(&s)
+	if err != nil {
+		ctx.AbortWithStatusJSON(400,
+			gin.H{
+				"status": gin.H{
+					"message": "bad data insertion",
+				},
+				"data": nil,
+			})
 		return
 	}
 
 	h.Service.Settings.SetSettings(&s)
-	ctx.StatusCode(200)
-	_ = ctx.JSON(iris.Map{
-		"status": iris.Map{
-			"message": nil,
-		},
-		"data": nil,
-	})
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"status": gin.H{
+				"message": nil,
+			},
+			"data": nil,
+		})
 }
