@@ -10,7 +10,7 @@ type Repository struct {
 }
 
 func (r Repository) AddComment(c models.Comment) {
-	r.db.Table("comments").Create(c)
+	r.db.Table("comments").Create(&c)
 }
 
 func (r Repository) GetComments(id uint) []models.CommentService {
@@ -26,7 +26,7 @@ func (r Repository) GetRecords() []models.Blog {
 }
 
 func (r Repository) CreateEntry(e models.CreateBlog) {
-	r.db.Table("blogs").Create(e)
+	r.db.Table("blogs").Create(&e)
 }
 
 func (r Repository) UpdateEntry(e models.UpdateBlog, id uint) {
