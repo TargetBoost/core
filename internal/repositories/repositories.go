@@ -3,6 +3,7 @@ package repositories
 import (
 	"core/internal/models"
 	"core/internal/repositories/account"
+	"core/internal/repositories/blog"
 	"core/internal/repositories/queue"
 	"core/internal/repositories/settings"
 	"core/internal/repositories/storage"
@@ -66,12 +67,19 @@ type Settings interface {
 	SetSettings(s *models.Settings)
 }
 
+type Blog interface {
+	GetRecords() models.Blog
+	CreateEntry(e models.CreateBlog)
+	UpdateEntry(e models.UpdateBlog, id uint)
+}
+
 type Repositories struct {
 	Account  Account
 	Target   Target
 	Queue    Queue
 	Storage  Storage
 	Settings Settings
+	Blog     Blog
 }
 
 func NewRepositories(db *gorm.DB) *Repositories {
@@ -96,6 +104,7 @@ func NewRepositories(db *gorm.DB) *Repositories {
 	queueRepository := queue.NewQueueRepository(db)
 	storageRepository := storage.NewStorageRepository(db)
 	settingsRepository := settings.NewSettingsRepository(db)
+	blogRepository := blog.NewBlogRepository(db)
 
 	return &Repositories{
 		Account:  accountRepository,
@@ -103,5 +112,6 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		Queue:    queueRepository,
 		Storage:  storageRepository,
 		Settings: settingsRepository,
+		Blog:     blogRepository,
 	}
 }

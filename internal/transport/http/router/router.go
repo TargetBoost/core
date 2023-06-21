@@ -30,6 +30,7 @@ func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.
 	v1.Handle("POST", "/registration", serv.Registration)
 	v1.Handle("POST", "/login", serv.Login)
 	v1.Handle("GET", "/settings", serv.GetSettings)
+	v1.Handle("GET", "/blog", serv.GetBlog)
 
 	// Account
 	admin.Handle("GET", "/users", serv.GetAllUsers)

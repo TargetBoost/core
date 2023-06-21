@@ -10,3 +10,16 @@ type Blog struct {
 	Subject string
 	Views   int64
 }
+
+type CreateBlog struct {
+	UID     uint
+	Text    string
+	Subject string
+	Views   int64
+}
+
+type UpdateBlog struct {
+	Text    string
+	Subject string
+	Views   int64
+}
