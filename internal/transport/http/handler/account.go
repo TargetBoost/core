@@ -273,6 +273,16 @@ func (h *Handler) Pay(ctx *gin.Context) {
 
 func (h *Handler) ConfirmPay(ctx *gin.Context) {
 	key := ctx.Param("id")
+
+	if k, ok := h.StackCallPay[key]; ok == true {
+		if k == "LOCK" {
+			ctx.Redirect(301, "https://targetboost.ru/")
+			return
+		}
+	}
+
+	logger.Debug(key)
+
 	trans := h.Service.Account.GetTransaction(key)
 	if trans.Status == "" {
 		ctx.AbortWithStatusJSON(http.StatusNotFound,

@@ -37,7 +37,7 @@ func (r *Repository) SetChatMembers(cid, countSub int64, title, userName, photoL
 	q.Bio = bio
 	q.CountSub = countSub
 
-	if err := r.db.Table("chat_members_chanels").Where("c_id = ?", cid).Update("photo_link", photoLink).Update("bio", bio).Update("count_sub", countSub).Error; err != nil {
+	if err := r.db.Debug().Table("chat_members_chanels").Where("c_id = ?", cid).Update("photo_link", photoLink).Update("bio", bio).Update("count_sub", countSub).Error; err != nil {
 		r.db.Table("chat_members_chanels").Create(&q) // create new record from newUser
 	}
 }

@@ -14,8 +14,9 @@ type Router struct {
 
 func NewRouter(app *gin.Engine, services *services.Services, bot *bot.Bot) *gin.Engine {
 	serv := handler.Handler{
-		Service: services,
-		Bot:     bot,
+		Service:      services,
+		Bot:          bot,
+		StackCallPay: make(map[string]string),
 	}
 
 	v1 := app.Group("/v1")
