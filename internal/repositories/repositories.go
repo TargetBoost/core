@@ -71,6 +71,8 @@ type Blog interface {
 	GetRecords() []models.Blog
 	CreateEntry(e models.CreateBlog)
 	UpdateEntry(e models.UpdateBlog, id uint)
+	AddComment(c models.Comment)
+	GetComments(id uint) []models.Comment
 }
 
 type Repositories struct {
@@ -93,7 +95,9 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		&models.ChatMembersChanel{},
 		&models.TaskCash{},
 		&models.Transaction{},
+
 		&models.Blog{},
+		&models.Comment{},
 	)
 	if err != nil {
 		logger.Error(err)

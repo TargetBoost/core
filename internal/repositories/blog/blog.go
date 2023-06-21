@@ -9,6 +9,16 @@ type Repository struct {
 	db *gorm.DB
 }
 
+func (r Repository) AddComment(c models.Comment) {
+	r.db.Table("comments").Create(c)
+}
+
+func (r Repository) GetComments(id uint) []models.Comment {
+	var q []models.Comment
+	r.db.Table("comments").Where("id = ?", id).Find(&q)
+	return q
+}
+
 func (r Repository) GetRecords() []models.Blog {
 	var q []models.Blog
 	r.db.Table("blogs").Find(&q)

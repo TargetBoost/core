@@ -62,6 +62,7 @@ type Settings interface {
 
 type Blog interface {
 	GetBlog() []models.Blog
+	AddComment(c models.Comment)
 }
 
 type Services struct {

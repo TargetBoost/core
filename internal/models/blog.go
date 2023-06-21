@@ -11,6 +11,16 @@ type Blog struct {
 	Views   int64  `json:"views"`
 }
 
+type BlogService struct {
+	gorm.Model
+
+	UID      uint      `json:"uid"`
+	Text     string    `json:"text"`
+	Subject  string    `json:"subject"`
+	Views    int64     `json:"views"`
+	Comments []Comment `json:"comments"`
+}
+
 type CreateBlog struct {
 	UID     uint
 	Text    string
@@ -22,4 +32,12 @@ type UpdateBlog struct {
 	Text    string
 	Subject string
 	Views   int64
+}
+
+type Comment struct {
+	gorm.Model
+	ParentID uint `json:"parent_id"`
+
+	UID  uint   `json:"uid"`
+	Text string `json:"text"`
 }
