@@ -80,7 +80,7 @@ func NewServices(repo *repositories.Repositories, lineBroker chan []target_broke
 	storageService := storage.NewStorageService(repo)
 	settingsService := settings.NewSettingsService(repo)
 	queueService := queue.NewQueueService(repo)
-	blogService := blog.NewBlogService(repo)
+	blogService := blog.NewBlogService(repo, lineAppoint, trackMessages)
 
 	return &Services{
 		Account:  accountService,
