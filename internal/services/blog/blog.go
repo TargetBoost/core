@@ -37,6 +37,7 @@ func (s Service) GetBlog() []models.BlogService {
 			user := s.repo.Account.GetUserByID(int64(vc.UID))
 			st := strings.ToLower(strings.Split(user.Tg, "@")[len(strings.Split(user.Tg, "@"))-1])
 			chat := s.repo.Queue.GetChatMembersByUserName(st)
+			comment.ID = vc.ID
 			comment.MainImage = chat.PhotoLink
 			comment.Login = user.Tg
 			comment.Text = vc.Text

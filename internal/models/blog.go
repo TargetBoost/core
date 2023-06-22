@@ -52,6 +52,7 @@ type CommentParent struct {
 }
 
 type CommentService struct {
+	ID     uint           `json:"id"`
 	Parent *CommentParent `json:"parent"`
 
 	MainImage string `json:"main_image"`
