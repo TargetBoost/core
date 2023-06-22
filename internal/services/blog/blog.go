@@ -3,15 +3,33 @@ package blog
 import (
 	"core/internal/models"
 	"core/internal/repositories"
+	"core/internal/target_broker"
+	"core/internal/transport/tg/bot"
 	"strings"
 )
 
 type Service struct {
 	repo *repositories.Repositories
+
+	lineAppoint   chan target_broker.Task
+	trackMessages chan bot.Message
 }
 
 func (s Service) AddComment(c models.Comment, token string) {
 	user := s.repo.Account.GetUserByToken(token)
+
+	if c.ParentID != 0 {
+		parentComment := s.repo.Blog.GetCommentsByParent(c.ParentID)
+		userByID := s.repo.Account.GetUserByID(int64(parentComment.UID))
+
+		st := strings.ToLower(strings.Split(userByID.Tg, "@")[len(strings.Split(userByID.Tg, "@"))-1])
+		chat := s.repo.Queue.GetChatMembersByUserName(st)
+
+		s.trackMessages <- bot.Message{
+			CID:  chat.CID,
+			Type: 1337,
+		}
+	}
 
 	c.UID = user.ID
 	s.repo.Blog.AddComment(c)
@@ -71,8 +89,11 @@ func (s Service) GetBlog() []models.BlogService {
 	return bss
 }
 
-func NewBlogService(repo *repositories.Repositories) *Service {
+func NewBlogService(repo *repositories.Repositories, lineAppoint chan target_broker.Task, trackMessages chan bot.Message) *Service {
 	return &Service{
 		repo: repo,
+
+		lineAppoint:   lineAppoint,
+		trackMessages: trackMessages,
 	}
 }
