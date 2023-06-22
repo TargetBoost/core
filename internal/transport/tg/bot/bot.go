@@ -82,6 +82,13 @@ func (b *Bot) SenderUpdates() {
 				if err != nil {
 					logger.Error(err)
 				}
+
+			case 1337:
+				msg := tgbotapi.NewMessage(m.CID, `Кто-то ответил на Ваш комментарий`)
+				_, err := b.API.Send(msg)
+				if err != nil {
+					logger.Error(err)
+				}
 			default:
 				msg := tgbotapi.NewMessage(m.CID, fmt.Sprintf(`Заявка на вывод средств создана (%vруб.)`, m.Count))
 				_, err := b.API.Send(msg)
