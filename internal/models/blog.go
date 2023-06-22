@@ -43,8 +43,17 @@ type Comment struct {
 	Text string `json:"text"`
 }
 
+type CommentParent struct {
+	CID       uint   `json:"cid"`
+	UID       uint   `json:"uid"`
+	Text      string `json:"text"`
+	MainImage string `json:"main_image"`
+	Login     string `json:"login"`
+}
+
 type CommentService struct {
-	ParentID uint `json:"parent_id"`
+	ID     uint           `json:"id"`
+	Parent *CommentParent `json:"parent"`
 
 	MainImage string `json:"main_image"`
 	Login     string `json:"login"`
