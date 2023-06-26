@@ -107,49 +107,37 @@ type User struct {
 
 type Target struct {
 	gorm.Model
+
 	// основные данные
-	UID                uint   `json:"uid"` // кто создал задачу
-	NameCompany        string `json:"name_company"`
-	DescriptionCompany string `json:"description_company"`
-	Type               []struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type"`
-	Link   string `json:"link"`
-	Limit  string `json:"limit"`
-	TypeAd struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type_ad"`
-	Status int64 `json:"status"`
+	UID                uint          `json:"uid"` // кто создал задачу
+	NameCompany        string        `json:"name_company"`
+	DescriptionCompany string        `json:"description_company"`
+	Type               []TypeTargets `json:"type"`
+	Link               string        `json:"link"`
+	Limit              string        `json:"limit"`
+	TypeAd             TypeTargets   `json:"type_ad"`
+	Status             int64         `json:"status"`
 }
 
 type TargetToAdmin struct {
 	gorm.Model
 
 	// основные данные
-	UID                uint   `json:"uid"` // кто создал задачу
-	NameCompany        string `json:"name_company"`
-	DescriptionCompany string `json:"description_company"`
-	Type               []struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type"`
-	Link   string `json:"link"`
-	Limit  string `json:"limit"`
-	TypeAd struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type_ad"`
-	Status int64 `json:"status"`
+	UID                uint          `json:"uid"` // кто создал задачу
+	NameCompany        string        `json:"name_company"`
+	DescriptionCompany string        `json:"description_company"`
+	Type               []TypeTargets `json:"type"`
+	Link               string        `json:"link"`
+	Limit              string        `json:"limit"`
+	TypeAd             TypeTargets   `json:"type_ad"`
+	Status             int64         `json:"status"`
+}
+
+type TypeTargets struct {
+	gorm.Model
+	Value string `json:"value"`
+	Label string `json:"label"`
+	Color string `json:"color"`
 }
 
 type TargetToExecutors struct {

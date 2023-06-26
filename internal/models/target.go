@@ -1,7 +1,5 @@
 package models
 
-import "gorm.io/gorm"
-
 type UpdateTargetService struct {
 	ID     uint  `json:"id"`
 	TID    int64 `json:"tid"`
@@ -9,22 +7,12 @@ type UpdateTargetService struct {
 }
 
 type TargetService struct {
-	NameCompany        string `json:"name_company"`
-	DescriptionCompany string `json:"description_company"`
-	Type               []struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type"`
-	Link   string `json:"link"`
-	Limit  string `json:"limit"`
-	TypeAd struct {
-		gorm.Model
-		Value string `json:"value"`
-		Label string `json:"label"`
-		Color string `json:"color"`
-	} `json:"type_ad"`
+	NameCompany        string        `json:"name_company"`
+	DescriptionCompany string        `json:"description_company"`
+	Type               []TypeTargets `json:"type"`
+	Link               string        `json:"link"`
+	Limit              string        `json:"limit"`
+	TypeAd             TypeTargets   `json:"type_ad"`
 }
 
 //
