@@ -99,6 +99,7 @@ func NewRepositories(db *gorm.DB) *Repositories {
 
 		&models.Blog{},
 		&models.Comment{},
+		&models.Campaign{},
 	)
 	if err != nil {
 		logger.Error(err)

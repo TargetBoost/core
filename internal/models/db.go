@@ -105,6 +105,20 @@ type User struct {
 	VKUserLastName  string `json:"vk_user_last_name"`
 }
 
+type Campaign struct {
+	gorm.Model
+
+	// основные данные
+	UID                uint          `json:"uid"` // кто создал задачу
+	NameCompany        string        `json:"name_company"`
+	DescriptionCompany string        `json:"description_company"`
+	Type               []TypeTargets `json:"type"`
+	Link               string        `json:"link"`
+	Limit              string        `json:"limit"`
+	//TypeAd             TypeTargets   `json:"type_ad"`
+	Status int64 `json:"status"`
+}
+
 type Target struct {
 	gorm.Model
 
