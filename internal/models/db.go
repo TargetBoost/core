@@ -112,6 +112,7 @@ type Target struct {
 	NameCompany        string `json:"name_company"`
 	DescriptionCompany string `json:"description_company"`
 	Type               []struct {
+		gorm.Model
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
@@ -119,6 +120,7 @@ type Target struct {
 	Link   string `json:"link"`
 	Limit  string `json:"limit"`
 	TypeAd struct {
+		gorm.Model
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
@@ -134,17 +136,19 @@ type TargetToAdmin struct {
 	NameCompany        string `json:"name_company"`
 	DescriptionCompany string `json:"description_company"`
 	Type               []struct {
+		gorm.Model
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type"`
+	} `json:"type" gorm:"foreignKey:TypeRefer"`
 	Link   string `json:"link"`
 	Limit  string `json:"limit"`
 	TypeAd struct {
+		gorm.Model
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type_ad"`
+	} `json:"type_ad" gorm:"foreignKey:TypeAdRefer"`
 	Status int64 `json:"status"`
 }
 
