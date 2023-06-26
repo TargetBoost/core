@@ -126,7 +126,7 @@ type TargetToAdmin struct {
 	UID                uint          `json:"uid"` // кто создал задачу
 	NameCompany        string        `json:"name_company"`
 	DescriptionCompany string        `json:"description_company"`
-	Type               []TypeTargets `json:"type"`
+	Type               []TypeTargets `json:"type" gorm:"foreignkey:TypeID"`
 	Link               string        `json:"link"`
 	Limit              string        `json:"limit"`
 	//TypeAd             TypeTargets   `json:"type_ad"`
