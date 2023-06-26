@@ -88,7 +88,7 @@ type Repositories struct {
 func NewRepositories(db *gorm.DB) *Repositories {
 	err := db.AutoMigrate(
 		&models.User{},
-		&models.Target{},
+		//&models.Target{},
 		&models.FileStorage{},
 		&models.Settings{},
 		//&models.TargetToExecutors{},
