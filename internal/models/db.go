@@ -115,14 +115,14 @@ type Target struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type" gorm:"foreignKey:TypeID;references:TypeID"`
+	} `json:"type" gorm:"foreignKey:TypeID;references:Value"`
 	Link   string `json:"link"`
 	Limit  string `json:"limit"`
 	TypeAd struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type_ad" gorm:"foreignKey:TypeADID;references:ADID"`
+	} `json:"type_ad" gorm:"foreignKey:TypeADID;references:Value"`
 	Status int64 `json:"status"`
 }
 
