@@ -116,7 +116,7 @@ type Target struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type" gorm:"foreignKey:TypeRefer"`
+	} `json:"type"`
 	Link   string `json:"link"`
 	Limit  string `json:"limit"`
 	TypeAd struct {
@@ -124,7 +124,7 @@ type Target struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type_ad" gorm:"foreignKey:TypeAdRefer"`
+	} `json:"type_ad"`
 	Status int64 `json:"status"`
 }
 
@@ -140,7 +140,7 @@ type TargetToAdmin struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type" gorm:"foreignKey:TypeRefer"`
+	} `json:"type"`
 	Link   string `json:"link"`
 	Limit  string `json:"limit"`
 	TypeAd struct {
@@ -148,7 +148,7 @@ type TargetToAdmin struct {
 		Value string `json:"value"`
 		Label string `json:"label"`
 		Color string `json:"color"`
-	} `json:"type_ad" gorm:"foreignKey:TypeAdRefer"`
+	} `json:"type_ad"`
 	Status int64 `json:"status"`
 }
 
