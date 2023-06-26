@@ -4,37 +4,23 @@ import "strconv"
 
 func MapToTarget(t Target) TargetService {
 	return TargetService{
-		ID:         t.ID,
-		UID:        t.UID,
-		Title:      t.Title,
-		Link:       t.Link,
-		Icon:       t.Icon,
-		Status:     t.Status,
-		Count:      strconv.Itoa(int(t.Count)),
-		Total:      strconv.Itoa(int(t.Total)),
-		Cost:       t.Cost,
-		Cause:      t.Cause,
-		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
-		CMFileID:   t.CMFileID,
-		Bio:        t.Bio,
-		CountSub:   t.CountSub,
+		NameCompany:        t.NameCompany,
+		DescriptionCompany: t.DescriptionCompany,
+		Type:               t.Type,
+		Link:               t.Link,
+		Limit:              t.Limit,
+		TypeAd:             t.TypeAd,
 	}
 }
 
 func MapToTargetAdmin(t TargetToAdmin) TargetService {
 	return TargetService{
-		ID:         t.ID,
-		UID:        t.UID,
-		Title:      t.Title,
-		Link:       t.Link,
-		Icon:       t.Icon,
-		Status:     t.Status,
-		Count:      strconv.Itoa(int(t.Count)),
-		Total:      strconv.Itoa(int(t.Total)),
-		Cost:       t.Cost,
-		Cause:      t.Cause,
-		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
-		Login:      t.Login,
+		NameCompany:        t.NameCompany,
+		DescriptionCompany: t.DescriptionCompany,
+		Type:               t.Type,
+		Link:               t.Link,
+		Limit:              t.Limit,
+		TypeAd:             t.TypeAd,
 	}
 }
 

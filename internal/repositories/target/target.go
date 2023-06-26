@@ -21,16 +21,10 @@ func (r *Repository) GetTargets(uid uint) []models.Target {
 
 		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
 
-		v.Count = sc.Count
-
 		var cmc models.ChatMembersChanel
 		chName := strings.Split(v.Link, "/")[len(strings.Split(v.Link, "/"))-1]
 
 		r.db.Table("chat_members_chanels").Where("user_name = ?", strings.ToLower(chName)).Find(&cmc)
-
-		v.CMFileID = cmc.PhotoLink
-		v.Bio = cmc.Bio
-		v.CountSub = cmc.CountSub
 
 		targetResult = append(targetResult, v)
 	}
@@ -55,8 +49,6 @@ func (r *Repository) GetTargetsToAdmin() []models.TargetToAdmin {
 		var sc models.SubCount
 
 		r.db.Table("queues").Select("count(t_id)").Where("t_id = ? and status = 3", v.ID).Find(&sc)
-
-		v.Count = sc.Count
 
 		targetResult = append(targetResult, v)
 	}

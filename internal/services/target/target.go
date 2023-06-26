@@ -5,9 +5,6 @@ import (
 	"core/internal/repositories"
 	"core/internal/target_broker"
 	"core/internal/transport/tg/bot"
-	"errors"
-	"github.com/ivahaev/go-logger"
-	"strconv"
 	"strings"
 )
 
@@ -57,17 +54,12 @@ func (s *Service) GetTarget(tid uint) models.TargetService {
 	t := s.repo.Target.GetTargetByID(tid)
 
 	return models.TargetService{
-		ID:         t.ID,
-		UID:        t.UID,
-		Title:      t.Title,
-		Link:       t.Link,
-		Icon:       t.Icon,
-		Status:     t.Status,
-		Count:      strconv.Itoa(int(t.Count)),
-		Total:      strconv.Itoa(int(t.Total)),
-		Cost:       t.Cost,
-		Cause:      t.Cause,
-		TotalPrice: strconv.Itoa(int(t.TotalPrice)),
+		NameCompany:        t.NameCompany,
+		DescriptionCompany: t.DescriptionCompany,
+		Type:               t.Type,
+		Link:               t.Link,
+		Limit:              t.Limit,
+		TypeAd:             t.TypeAd,
 	}
 }
 
@@ -116,99 +108,31 @@ func (s *Service) GetUserID(id uint) int64 {
 }
 
 func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
-	var title string
-	switch target.Type {
-	case vkCommunity:
-		title = "Вступить в сообщество"
-		break
-	case vkLike:
-		title = "Поставить лайк на запись"
-		break
-	case vkAddFriends:
-		title = "Добавить в друзья"
-		break
-	case tgCommunity:
-		title = "Подписаться на канал"
-		break
-	case ytChanel:
-		title = "Подписаться на канал"
-		break
-	case ytWatch:
-		title = "Посмотреть видео"
-		break
-	case ytLike:
-		title = "Поставить лайк"
-		break
-	case ytDislike:
-		title = "Поставить дизлайк"
-		break
-	}
-
-	if target.Type == tgCommunity {
-		st := strings.Split(target.Link, "/")[len(strings.Split(target.Link, "/"))-1]
-		st = strings.ToLower(st)
-		ch := s.repo.Queue.GetChatMembersByUserName(st)
-		if ch.CID == 0 {
-			return errors.New("Вы не добавили нашего бота в этот телеграм канал")
-		}
-	}
-
-	u := s.repo.Account.GetUserByID(int64(UID))
-	if u.ID == 0 {
-		return errors.New("user not found")
-	}
-
-	if target.Cost < 0 {
-		return errors.New("error create task")
-	}
-
-	if u.Balance < target.Cost {
-		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
-	}
-
-	ft, err := strconv.Atoi(target.Total)
-	if err != nil {
-		return err
-	}
-
-	tl := target.Cost * float64(ft)
-
-	u.Balance = u.Balance - tl
-	if u.Balance < 0 {
-		return errors.New("Вашего баланса недостаточно для создания рекламной кампании")
-	}
-
-	s.repo.Account.UpdateUserBalance(u.ID, u.Balance)
 
 	t := models.Target{
-		UID:        UID,
-		Title:      title,
-		Link:       target.Link,
-		Icon:       target.Icon,
-		Status:     0,
-		Count:      0,
-		Total:      float64(ft),
-		Cost:       target.Cost,
-		Type:       target.Type,
-		TotalPrice: tl,
+		UID:         UID,
+		NameCompany: target.NameCompany,
+		Link:        target.Link,
+		TypeAd:      target.TypeAd,
+		Type:        target.Type,
 	}
 
-	tt := s.repo.Target.CreateTarget(&t)
+	_ = s.repo.Target.CreateTarget(&t)
 
-	var q []target_broker.Task
+	//var q []target_broker.Task
+	//
+	//logger.Info(tt)
 
-	logger.Info(tt)
-
-	var i float64 = 0
-	for i = 0; i <= t.Total; i++ {
-		q = append(q, target_broker.Task{
-			TID:    tt.ID,
-			Cost:   t.Cost,
-			Title:  t.Title,
-			Status: t.Status,
-		})
-	}
-
-	s.lineBroker <- q
+	//var i float64 = 0
+	//for i = 0; i <= t.Total; i++ {
+	//	q = append(q, target_broker.Task{
+	//		TID:    tt.ID,
+	//		Cost:   t.Cost,
+	//		Title:  t.Title,
+	//		Status: t.Status,
+	//	})
+	//}
+	//
+	//s.lineBroker <- q
 	return nil
 }

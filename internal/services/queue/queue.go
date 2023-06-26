@@ -52,7 +52,7 @@ func (s *Service) GetChatID(id uint) (int64, float64) {
 	st := strings.Split(tu.Link, "/")[len(strings.Split(tu.Link, "/"))-1]
 
 	ch := s.repo.Queue.GetChatMembersByUserName(st)
-	return ch.CID, tu.Cost
+	return ch.CID, 0
 }
 
 func NewQueueService(repo *repositories.Repositories) *Service {
