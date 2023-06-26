@@ -59,7 +59,7 @@ func (s *Service) GetTarget(tid uint) models.TargetService {
 		Type:               t.Type,
 		Link:               t.Link,
 		Limit:              t.Limit,
-		TypeAd:             t.TypeAd,
+		//TypeAd:             t.TypeAd,
 	}
 }
 
@@ -113,8 +113,8 @@ func (s *Service) CreateTarget(UID uint, target *models.TargetService) error {
 		UID:         UID,
 		NameCompany: target.NameCompany,
 		Link:        target.Link,
-		TypeAd:      target.TypeAd,
-		Type:        target.Type,
+		//TypeAd:      target.TypeAd,
+		Type: target.Type,
 	}
 
 	_ = s.repo.Target.CreateTarget(&t)
