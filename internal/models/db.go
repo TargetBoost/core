@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"github.com/lib/pq"
 	"time"
 
 	"gorm.io/gorm"
@@ -112,7 +113,7 @@ type Campaign struct {
 	UID         uint
 	Name        string
 	Description string
-	TargetID    []int
+	TargetID    pq.Int64Array `gorm:"type:integer[]"`
 	Link        string
 	Limit       int64
 	Status      int64
