@@ -115,8 +115,8 @@ type Target struct {
 	Type               []TypeTargets `json:"type"`
 	Link               string        `json:"link"`
 	Limit              string        `json:"limit"`
-	TypeAd             TypeTargets   `json:"type_ad"`
-	Status             int64         `json:"status"`
+	//TypeAd             TypeTargets   `json:"type_ad"`
+	Status int64 `json:"status"`
 }
 
 type TargetToAdmin struct {
@@ -129,8 +129,8 @@ type TargetToAdmin struct {
 	Type               []TypeTargets `json:"type"`
 	Link               string        `json:"link"`
 	Limit              string        `json:"limit"`
-	TypeAd             TypeTargets   `json:"type_ad"`
-	Status             int64         `json:"status"`
+	//TypeAd             TypeTargets   `json:"type_ad"`
+	Status int64 `json:"status"`
 }
 
 type TypeTargets struct {

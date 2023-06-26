@@ -1,9 +1,7 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"strconv"
-	"time"
 )
 
 func MapToTarget(t Target) TargetService {
@@ -13,25 +11,25 @@ func MapToTarget(t Target) TargetService {
 		Type:               t.Type,
 		Link:               t.Link,
 		Limit:              t.Limit,
-		TypeAd: struct {
-			gorm.Model
-			Value string `json:"value"`
-			Label string `json:"label"`
-			Color string `json:"color"`
-		}{
-			Model: gorm.Model{
-				ID:        t.TypeAd.ID,
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-				DeletedAt: gorm.DeletedAt{
-					Time:  time.Time{},
-					Valid: false,
-				},
-			},
-			Value: t.TypeAd.Value,
-			Label: t.TypeAd.Label,
-			Color: t.TypeAd.Color,
-		},
+		//TypeAd: struct {
+		//	gorm.Model
+		//	Value string `json:"value"`
+		//	Label string `json:"label"`
+		//	Color string `json:"color"`
+		//}{
+		//	Model: gorm.Model{
+		//		ID:        t.TypeAd.ID,
+		//		CreatedAt: time.Time{},
+		//		UpdatedAt: time.Time{},
+		//		DeletedAt: gorm.DeletedAt{
+		//			Time:  time.Time{},
+		//			Valid: false,
+		//		},
+		//	},
+		//	Value: t.TypeAd.Value,
+		//	Label: t.TypeAd.Label,
+		//	Color: t.TypeAd.Color,
+		//},
 	}
 }
 
@@ -42,25 +40,25 @@ func MapToTargetAdmin(t TargetToAdmin) TargetService {
 		Type:               t.Type,
 		Link:               t.Link,
 		Limit:              t.Limit,
-		TypeAd: struct {
-			gorm.Model
-			Value string `json:"value"`
-			Label string `json:"label"`
-			Color string `json:"color"`
-		}{
-			Model: gorm.Model{
-				ID:        t.TypeAd.ID,
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-				DeletedAt: gorm.DeletedAt{
-					Time:  time.Time{},
-					Valid: false,
-				},
-			},
-			Value: t.TypeAd.Value,
-			Label: t.TypeAd.Label,
-			Color: t.TypeAd.Color,
-		},
+		//TypeAd: struct {
+		//	gorm.Model
+		//	Value string `json:"value"`
+		//	Label string `json:"label"`
+		//	Color string `json:"color"`
+		//}{
+		//	Model: gorm.Model{
+		//		ID:        t.TypeAd.ID,
+		//		CreatedAt: time.Time{},
+		//		UpdatedAt: time.Time{},
+		//		DeletedAt: gorm.DeletedAt{
+		//			Time:  time.Time{},
+		//			Valid: false,
+		//		},
+		//	},
+		//	Value: t.TypeAd.Value,
+		//	Label: t.TypeAd.Label,
+		//	Color: t.TypeAd.Color,
+		//},
 	}
 }
 
