@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"github.com/lib/pq"
 	"time"
 
 	"gorm.io/gorm"
@@ -104,19 +103,6 @@ type User struct {
 	VKUserID        int    `json:"vk_user_id"`
 	VKUserFirstName string `json:"vk_user_first_name"`
 	VKUserLastName  string `json:"vk_user_last_name"`
-}
-
-type Campaign struct {
-	gorm.Model
-
-	// основные данные
-	UID         uint
-	Name        string
-	Description string
-	TargetID    pq.Int64Array `gorm:"type:integer[]"`
-	Link        string
-	Limit       int64
-	Status      int64
 }
 
 type Target struct {
