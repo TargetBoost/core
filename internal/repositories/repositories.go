@@ -91,7 +91,6 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		//&models.Target{},
 		&models.FileStorage{},
 		&models.Settings{},
-		//&models.TargetToExecutors{},
 		&models.Queue{},
 		&models.ChatMembersChanel{},
 		&models.TaskCash{},

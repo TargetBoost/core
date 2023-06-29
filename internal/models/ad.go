@@ -24,5 +24,5 @@ type Status struct {
 type Type struct {
 	ID    uint `gorm:"primarykey"`
 	Value string
-	Meta  interface{}
+	Meta  string
 }
